@@ -2,7 +2,7 @@
 # usage: scanjs file.txt
 # output: urls found with 200 http responses
 scanjs(){
-	now=$(date +"%m_%d_%Y")
+	now=$(date +"%Y%m%d%H%M%S")
 	echo "Scan started $now. Log file: scanjs_$now.txt" | tee -a scanjs_$now.txt
 	cat $1 | while read line; do 
 		FILENAME=$line
