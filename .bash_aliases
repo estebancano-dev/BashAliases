@@ -3,7 +3,7 @@
 # output: urls found with 200 http responses
 scanjs(){
 	now=$(date +"%Y%m%d%H%M%S")
-	echo "Scan started $now. Log file: scanjs_$now.txt" | tee -a scanjs_$now.txt
+	echo "Scanjs started $now. Log file: scanjs_$now.txt" | tee -a scanjs_$now.txt
 	cat $1 | while read line; do 
 		FILENAME=$line
 		FUZZ="FUZZ"
@@ -29,6 +29,31 @@ scanjs(){
 		SECONDS=0
 		ffuf -u "$FILENAME$FUZZ$EXT" -s -c -mc "200" -w ~/tools/__diccionarios/5.txt | tee -a scanjs_$now.txt
 		echo "Finished in $SECONDS seconds" | tee -a scanjs_$now.txt
+	done
+}
+
+# scans for subdomains files with https://github.com/ffuf/ffuf on a list of urls in a file
+# usage: scansub file.txt
+# output: urls found with XXX http responses
+scansub(){
+	now=$(date +"%Y%m%d%H%M%S")
+	http="http://"
+	https="https://"
+	#echo "Scansub started $now. Log file: scansub_$now.txt" | tee -a scansub_$now.txt
+	cat $1 | while read line; do 
+		foo=${line/$http/}
+		foo=${line/$https/}
+		length=$(curl -s -H \"Host: nonexistent.$foo\" $line |wc -c)
+		echo "a $length"		
+		#echo "Scanning...$line" | tee -a scansub_$now.txt
+		#echo "Wordlist 1.txt..." | tee -a scansub_$now.txt
+		#SECONDS=0
+		#ffuf -u "$line" -s -c -w ~/tools/__diccionarios/1y4.txt | tee -a scansub_$now.txt
+		#echo "Finished in $SECONDS seconds" | tee -a scansub_$now.txt
+		#echo "Wordlist 2.txt..." | tee -a scansub_$now.txt
+		#SECONDS=0
+		#ffuf -u "$line" -s -c -w ~/tools/__diccionarios/2y3.txt | tee -a scansub_$now.txt
+		#echo "Finished in $SECONDS seconds" | tee -a scansub_$now.txt
 	done
 }
 
@@ -62,6 +87,11 @@ ipinfo(){
 check(){
 	assetfinder $1 | httprobe
 }
+# reloads aliases in current terminal without the need to close and start a new
+reload(){
+	source ~/.bash_aliases
+	echo ".bash_aliases reloaded"
+}
 # updates OS?
 update(){
 	sudo apt update && sudo apt upgrade -y
@@ -72,8 +102,6 @@ update(){
 	sudo apt-get clean
 	sudo apt-get autoclean
 }
-
-
 
 #------ Tools ------
 dirsearch(){
