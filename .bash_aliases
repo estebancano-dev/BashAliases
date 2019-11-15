@@ -35,6 +35,7 @@ scanjs(){
 # scans for subdomains files with https://github.com/ffuf/ffuf on a list of urls in a file
 # usage: scansub file.txt
 # output: urls found with XXX http responses
+# TODO
 scansub(){
 	now=$(date +"%Y%m%d%H%M%S")
 	http="http://"
