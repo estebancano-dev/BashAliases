@@ -35,25 +35,29 @@ scanjs(){
 # scans for subdomains files with https://github.com/ffuf/ffuf on a list of urls in a file
 # usage: scansub file.txt
 # output: urls found with XXX http responses
-# TODO
 scansub(){
 	now=$(date +"%Y%m%d%H%M%S")
+	h="http://FUZZ."
 	http="http://"
 	https="https://"
-	#echo "Scansub started $now. Log file: scansub_$now.txt" | tee -a scansub_$now.txt
-	cat $1 | while read line; do 
+	echo "Scansub started $now. Log file: scansub_$now.txt" | tee -a scansub_$now.txt
+	cat $1 | while read line; do
+		if [ ${line:0:8} = "https://" ]; then
+		    h="https://FUZZ."
+		fi 
 		foo=${line/$http/}
 		foo=${line/$https/}
+echo "curl -s -H \"Host: nonexistent.$foo\" $line |wc -c"
 		length=$(curl -s -H \"Host: nonexistent.$foo\" $line |wc -c)
-		echo "a $length"		
+echo "ffuf -u \"$h$foo\" -s -c -w ~/tools/__diccionarios/1y4.txt -fs $length | tee -a scansub_$now.txt"
 		#echo "Scanning...$line" | tee -a scansub_$now.txt
-		#echo "Wordlist 1.txt..." | tee -a scansub_$now.txt
+		#echo "Wordlist 1y4.txt..." | tee -a scansub_$now.txt
 		#SECONDS=0
-		#ffuf -u "$line" -s -c -w ~/tools/__diccionarios/1y4.txt | tee -a scansub_$now.txt
+		#ffuf -u "$h$foo" -s -c -w ~/tools/__diccionarios/1y4.txt -fs $length | tee -a scansub_$now.txt
 		#echo "Finished in $SECONDS seconds" | tee -a scansub_$now.txt
-		#echo "Wordlist 2.txt..." | tee -a scansub_$now.txt
+		#echo "Wordlist 2y3.txt..." | tee -a scansub_$now.txt
 		#SECONDS=0
-		#ffuf -u "$line" -s -c -w ~/tools/__diccionarios/2y3.txt | tee -a scansub_$now.txt
+		#ffuf -u "$h$foo" -s -c -w ~/tools/__diccionarios/2y3.txt | tee -a scansub_$now.txt
 		#echo "Finished in $SECONDS seconds" | tee -a scansub_$now.txt
 	done
 }
@@ -86,7 +90,7 @@ ipinfo(){
 }
 
 check(){
-	assetfinder $1 | httprobe
+	assetfinder $1 | httprobe | grep $1
 }
 # reloads aliases in current terminal without the need to close and start a new
 reload(){
@@ -95,10 +99,9 @@ reload(){
 }
 # updates OS?
 update(){
-	sudo apt update && sudo apt upgrade -y
-	sudo apt dist-upgrade
+	sudo apt update && sudo apt dist-upgrade -y
 	pip install --upgrade pip
-	pip-review --interactive
+	pip-review --auto
 	sudo apt autoremove
 	sudo apt-get clean
 	sudo apt-get autoclean
