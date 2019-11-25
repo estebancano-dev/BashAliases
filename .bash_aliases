@@ -47,9 +47,9 @@ scansub(){
 		fi 
 		foo=${line/$http/}
 		foo=${line/$https/}
-echo "curl -s -H \"Host: nonexistent.$foo\" $line |wc -c"
+		echo "curl -s -H \"Host: nonexistent.$foo\" $line |wc -c"
 		length=$(curl -s -H \"Host: nonexistent.$foo\" $line |wc -c)
-echo "ffuf -u \"$h$foo\" -s -c -w ~/tools/__diccionarios/1y4.txt -fs $length | tee -a scansub_$now.txt"
+		echo "ffuf -u \"$h$foo\" -s -c -w ~/tools/__diccionarios/1y4.txt -fs $length | tee -a scansub_$now.txt"
 		#echo "Scanning...$line" | tee -a scansub_$now.txt
 		#echo "Wordlist 1y4.txt..." | tee -a scansub_$now.txt
 		#SECONDS=0
@@ -109,21 +109,53 @@ update(){
 
 #------ Tools ------
 dirsearch(){
+	PS3='Please enter your choice: '
+	options=("dirsearch default" "all ext" "js" "js,_js,js_,js1,js2" "js w/ dicc 1-4" "Quit")
+	select opt in "${options[@]}"
+	do
+		case $opt in
+			"dirsearch default")
+				dirsearch1 $1
+				;;
+			"all ext")
+				dirsearch2 $1
+				;;
+			"js")
+				dirsearch3 $1
+				;;
+			"js,_js,js_,js1,js2")
+				dirsearch4 $1
+				;;
+			"js w/ dicc 1-4")
+				dirsearch5 $1
+				;;
+			"Quit")
+				break
+				;;
+			*) echo "invalid option $REPLY";;
+		esac
+	done
+}
+dirsearch1(){
 	cd ~/tools/dirsearch*
 	python3 dirsearch.py -x 301,302 -f -u $1 -e json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf
 }
-
-dirsearchjs(){
+dirsearch2(){
 	cd ~/tools/dirsearch*
-	python3 dirsearch.py -x 301,302 -f -u $1 -e js,_js,js2
+	python3 dirsearch.py -x 301,302 -f -u $1 -e json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf -w ~/tools/__diccionarios/commonwords.txt
 }
-dirsearchjs2(){
+dirsearch3(){
 	cd ~/tools/dirsearch*
-	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/1.txt
-	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/2.txt
-	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/3.txt
-	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/4.txt
-	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/5.txt
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
+}
+dirsearch4(){
+	cd ~/tools/dirsearch*
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js,_js,js_,js1,js2 -w ~/tools/__diccionarios/commonwords.txt
+}
+dirsearch5(){
+	cd ~/tools/dirsearch*
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w ~/tools/__diccionarios/2y3.txt
 }
 
 sqlmap(){
@@ -167,6 +199,6 @@ install(){
 	#pip-review --local --interactive
 }
 
-export GOROOT=/usr/local/go
+export GOROOT=/usr/lib/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
