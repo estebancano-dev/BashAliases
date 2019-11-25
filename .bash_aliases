@@ -67,8 +67,12 @@ scansub(){
 # output: fileunique.txt
 uniquelines(){
 	FILENAME=$1
-	sort -u $1 > "${FILENAME%%.*}unique.${FILENAME#*.}"
-	echo "Duplicated lines deleted. File created: ${FILENAME%%.*}unique.${FILENAME#*.}"
+	NEWFILENAME="${FILENAME%%.*}unique.${FILENAME#*.}"
+	totallines=$(wc -l $FILENAME | awk '{ print $1 }')
+	sort -u $FILENAME > $NEWFILENAME
+	totalnewlines=$(wc -l $NEWFILENAME | awk '{ print $1 }')
+	total=$((totallines - totalnewlines))
+	echo "$total from $totallines duplicated lines deleted. File created: $NEWFILENAME"
 }
 
 # creates a new file with email accounts found in source file
@@ -116,18 +120,23 @@ dirsearch(){
 		case $opt in
 			"dirsearch default")
 				dirsearch1 $1
+				break
 				;;
 			"all ext")
 				dirsearch2 $1
+				break
 				;;
 			"js")
 				dirsearch3 $1
+				break
 				;;
 			"js,_js,js_,js1,js2")
 				dirsearch4 $1
+				break
 				;;
 			"js w/ dicc 1-4")
 				dirsearch5 $1
+				break
 				;;
 			"Quit")
 				break
