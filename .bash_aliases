@@ -109,64 +109,62 @@ update(){
 
 #------ Tools ------
 dirsearch(){
-cd ~/tools/dirsearch*
-python3 dirsearch.py -x 301,302 -f -u $1 -e json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf
+	cd ~/tools/dirsearch*
+	python3 dirsearch.py -x 301,302 -f -u $1 -e json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf
 }
 
 dirsearchjs(){
-cd ~/tools/dirsearch*
-python3 dirsearch.py -x 301,302 -f -u $1 -e js,_js,js2
+	cd ~/tools/dirsearch*
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js,_js,js2
 }
 dirsearchjs2(){
-cd ~/tools/dirsearch*
-python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/1.txt
-python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/2.txt
-python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/3.txt
-python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/4.txt
-python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/5.txt
+	cd ~/tools/dirsearch*
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/1.txt
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/2.txt
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/3.txt
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/4.txt
+	python3 dirsearch.py -x 301,302 -f -u $1 -e js -w db/5.txt
 }
 
 sqlmap(){
-cd ~/tools/sqlmap*
-python3 sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --dump --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
+	cd ~/tools/sqlmap*
+	python3 sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --dump --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
 }
 
 netcat(){
-nc -lvnp 3333
+	nc -lvnp 3333
 }
 
 # recon hackerone 25/09/2019 ekoparty
 recon(){
-curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1 > ~/recon/$1.txt
-cd ~/tools/dirsearch
-cat ~/recon/$1.txt | while read line; do httprobe $line > ~/recon/$1_httprobe.txt; done | 
-cat ~/recon/$1_httprobe.txt | while read line; do python3 dirsearch.py -f -u $1 -e json,js,html 
-#,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf;
-done
+	curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1 > ~/recon/$1.txt
+	cd ~/tools/dirsearch
+	cat ~/recon/$1.txt | while read line; do httprobe $line > ~/recon/$1_httprobe.txt; done | 
+	cat ~/recon/$1_httprobe.txt | while read line; do python3 dirsearch.py -f -u $1 -e json,js,html 
+	#,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf;
+	done
 
 }
 #para instalar todas las aplicaciones que utilizo
 install(){
-cd ~
-mkdir tools
-cd tools
-sudo apt update
-sudo apt upgrade
-sudo apt dist-upgrade
-sudo apt-get -y install python3-pip
-pip install pip-review
-sudo apt-get install golang-go
-git clone https://github.com/maurosoria/dirsearch.git
-git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
-git clone https://github.com/GerbenJavado/LinkFinder.git
-go get -u github.com/tomnomnom/httprobe
-go get -u github.com/tomnomnom/assetfinder
-go get -u github.com/ffuf/ffuf
-sudo apt autoremove
-sudo apt-get clean
-sudo apt-get autoclean
-pip install --upgrade pip
-pip-review --local --interactive
+	cd ~
+	mkdir tools
+	cd tools
+	sudo apt update && sudo apt dist-upgrade -y
+	#sudo apt-get -y install python3-pip
+	#pip install pip-review
+	sudo apt-get install golang-go
+	git clone https://github.com/maurosoria/dirsearch.git
+	#git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
+	git clone https://github.com/GerbenJavado/LinkFinder.git
+	go get -u github.com/tomnomnom/httprobe
+	go get -u github.com/tomnomnom/assetfinder
+	go get -u github.com/ffuf/ffuf
+	sudo apt autoremove
+	sudo apt-get clean
+	sudo apt-get autoclean
+	#pip install --upgrade pip
+	#pip-review --local --interactive
 }
 
 export GOROOT=/usr/local/go
