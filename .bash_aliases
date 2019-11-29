@@ -86,7 +86,7 @@ grepemails(){
 
 linkfinder(){
 	cd ~/tools/LinkFinder
-	python3 linkfinder.py -i $1 -d
+	python3 linkfinder.py -i $1 -d -o cli
 }
 
 ipinfo(){
@@ -114,11 +114,11 @@ update(){
 #------ Tools ------
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("dirsearch default" "all ext" "js" "js,_js,js_,js1,js2" "js w/ dicc 1-4" "Quit")
+	options=("dirsearch no ext" "all ext" "js" "js,_js,js_,js1,js2" "js w/ dicc 1-4" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
-			"dirsearch default")
+			"dirsearch no ext")
 				dirsearch1 $1
 				break
 				;;
@@ -147,24 +147,24 @@ dirsearch(){
 }
 dirsearch1(){
 	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400,403 -f -u $1 -e ,json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf
+	python3 dirsearch.py -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
 }
 dirsearch2(){
 	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400,403 -f -u $1 -e ,json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf -w ~/tools/__diccionarios/commonwords.txt
+	python3 dirsearch.py -x 301,302,400 -f -u $1 -e ,json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf -w ~/tools/__diccionarios/commonwords.txt
 }
 dirsearch3(){
 	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400,403 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
+	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
 }
 dirsearch4(){
 	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400,403 -f -u $1 -e js,_js,js_,js1,js2 -w ~/tools/__diccionarios/commonwords.txt
+	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2 -w ~/tools/__diccionarios/commonwords.txt
 }
 dirsearch5(){
 	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400,403 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
-	python3 dirsearch.py -x 301,302,400,403 -f -u $1 -e js -w ~/tools/__diccionarios/2y3.txt
+	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
+	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/2y3.txt
 }
 
 sqlmap(){
@@ -182,14 +182,16 @@ netcat(){
 	nc -lvnp 3333
 }
 
-# recon hackerone 25/09/2019 ekoparty
+# recon esteban
 recon(){
-	curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1 > ~/recon/$1.txt
-	cd ~/tools/dirsearch
-	cat ~/recon/$1.txt | while read line; do httprobe $line > ~/recon/$1_httprobe.txt; done | 
-	cat ~/recon/$1_httprobe.txt | while read line; do python3 dirsearch.py -f -u $1 -e json,js,html 
+	dig +nocmd $1 any +multiline +noall +answer
+
+	#curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1 > ~/recon/$1.txt
+	#cd ~/tools/dirsearch
+	#cat ~/recon/$1.txt | while read line; do httprobe $line > ~/recon/$1_httprobe.txt; done | 
+	#cat ~/recon/$1_httprobe.txt | while read line; do python3 dirsearch.py -f -u $1 -e json,js,html 
 	#,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf;
-	done
+	#done
 
 }
 #para instalar todas las aplicaciones que utilizo
