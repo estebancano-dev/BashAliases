@@ -204,6 +204,9 @@ install(){
 	git clone https://github.com/maurosoria/dirsearch.git
 	git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
 	git clone https://github.com/GerbenJavado/LinkFinder.git
+	cd LinkFinder
+	python setup.py install
+	pip3 install -r requirements.txt	
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
