@@ -94,8 +94,13 @@ ipinfo(){
 }
 
 check(){
-	assetfinder $1 | httprobe | grep $1
+	assetfinder $1 | grep $1 | httprobe
 }
+
+checkwebalive(){
+	nmap -sn -Pn $1 --script hostmap-crtsh | awk '{ print $2 }' | grep $1 | check $1
+}
+
 # reloads aliases in current terminal without the need to close and start a new
 reload(){
 	source ~/.bash_aliases
@@ -104,8 +109,8 @@ reload(){
 # updates OS?
 update(){
 	sudo apt update && sudo apt dist-upgrade -y
-	pip install --upgrade pip
-	pip-review --auto
+	#pip install --upgrade pip
+	#pip-review --auto
 	sudo apt autoremove
 	sudo apt-get clean
 	sudo apt-get autoclean
