@@ -97,6 +97,14 @@ check(){
 	assetfinder $1 | grep $1 | httprobe
 }
 
+subdomains(){
+	amass enum --passive -o ~/tools/amass$1.txt -d $1
+}
+
+massdns(){
+	./bin/massdns $1
+}
+
 checkwebalive(){
 	nmap -sn -Pn $1 --script hostmap-crtsh | awk '{ print $2 }' | grep $1 | check $1
 }
@@ -224,6 +232,11 @@ install(){
 	#pip-review --local --interactive
 }
 
-export GOROOT=/usr/lib/go
+reinstall(){
+	cd ~/
+	wget https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases
+	reload
+}
+export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
