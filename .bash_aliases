@@ -98,10 +98,10 @@ check(){
 }
 
 subdomains(){
-	amass enum --passive -o ~/tools/subd$1.txt -d $1 | massdns ~/tools/subd$1.txt
+	amass enum --passive -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
 }
 
-massdns(){
+mdns(){
 	./root/tools/massdns/bin/massdns -r $1 -w ~/tools/subd$1results.txt
 }
 
