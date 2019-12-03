@@ -98,7 +98,7 @@ check(){
 }
 
 subdomains(){
-	amass enum --passive -o ~/tools/amass$1.txt -d $1
+	amass enum --passive -o ~/tools/amass$1.txt -d $1 | massdns $1
 }
 
 massdns(){
@@ -234,7 +234,7 @@ install(){
 
 reinstall(){
 	cd ~/
-	curl https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases > .bash_aliases
+	curl https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases?1 > .bash_aliases
 	reload
 }
 export GOROOT=/usr/local/go
