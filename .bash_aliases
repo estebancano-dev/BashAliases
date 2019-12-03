@@ -234,7 +234,7 @@ install(){
 
 reinstall(){
 	cd ~/
-	curl https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases?1 > .bash_aliases
+	curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases > .bash_aliases
 	reload
 }
 export GOROOT=/usr/local/go
