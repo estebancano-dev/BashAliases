@@ -234,7 +234,7 @@ install(){
 
 reinstall(){
 	cd ~/
-	wget https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases
+	curl https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases > .bash_aliases
 	reload
 }
 export GOROOT=/usr/local/go
