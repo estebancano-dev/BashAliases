@@ -98,11 +98,11 @@ check(){
 }
 
 subdomains(){
-	amass enum --passive -o ~/tools/amass$1.txt -d $1 | massdns $1
+	amass enum --passive -o ~/tools/subd$1.txt -d $1 | massdns ~/tools/subd$1.txt
 }
 
 massdns(){
-	./bin/massdns $1
+	./bin/massdns -r $1 -w ~/tools/subd$1results.txt
 }
 
 checkwebalive(){
