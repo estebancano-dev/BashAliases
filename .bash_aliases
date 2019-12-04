@@ -239,7 +239,6 @@ reinstall(){
 	git clone https://github.com/estebancano-dev/BashAliases.git
 	cp ~/BashAliases/.bash_aliases ~/
 	rm -R ~/BashAliases 
-	#sudo curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases > .bash_aliases
 	reload
 }
 export GOROOT=/usr/local/go
