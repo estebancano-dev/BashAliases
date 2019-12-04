@@ -103,7 +103,7 @@ subdomains(){
 }
 
 mdns(){
-	cd ~/tools/massdns/
+	cd ~/tools/massdns/bin/
 	./massdns -r $1 -w ~/tools/subd$1results.txt
 }
 
