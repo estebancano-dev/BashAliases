@@ -98,7 +98,8 @@ check(){
 }
 
 subdomains(){
-	amass enum --passive -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
+	#amass enum --passive -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
+	amass enum -src -brute -min-for-recursive 2 -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
 }
 
 mdns(){
@@ -234,7 +235,8 @@ install(){
 
 reinstall(){
 	cd ~/
-	curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases?$(date +%s) > .bash_aliases
+	sudo rm .bash_aliases
+	sudo curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/estebancano-dev/BashAliases/master/.bash_aliases?$(date +%s) > .bash_aliases
 	reload
 }
 export GOROOT=/usr/local/go
