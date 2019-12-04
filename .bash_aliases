@@ -99,7 +99,7 @@ check(){
 
 subdomains(){
 	#amass enum --passive -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
-	amass enum -src -brute -min-for-recursive 2 -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
+	amass enum -src -brute -min-for-recursive 2 -o ~/tools/subd$1.txt -d $1 #| mdns ~/tools/subd$1.txt
 }
 
 mdns(){
