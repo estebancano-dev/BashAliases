@@ -249,7 +249,7 @@ reinstall(){
 	rm -R ~/BashAliases 
 	git clone https://github.com/estebancano-dev/commonwords.git
 	cp ~/commonwords/*.txt ~/tools/__diccionarios
-	rm -R ~/BashAliases 
+	rm -R ~/commonwords 
 	reload
 }
 export GOROOT=/usr/local/go
