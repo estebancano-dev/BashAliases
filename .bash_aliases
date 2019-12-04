@@ -243,8 +243,12 @@ install(){
 
 reinstall(){
 	cd ~/
+	mkdir -p tools/__diccionarios
 	git clone https://github.com/estebancano-dev/BashAliases.git
 	cp ~/BashAliases/.bash_aliases ~/
+	rm -R ~/BashAliases 
+	git clone https://github.com/estebancano-dev/commonwords.git
+	cp ~/commonwords/*.txt ~/tools/__diccionarios
 	rm -R ~/BashAliases 
 	reload
 }
