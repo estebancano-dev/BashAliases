@@ -99,7 +99,14 @@ check(){
 
 subdomains(){
 	#amass enum --passive -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
-	amass enum -src -brute -min-for-recursive 2 -o ~/tools/subd$1.txt -d $1 #| mdns ~/tools/subd$1.txt
+	echo "Doing amass..."
+	amass enum -src -brute -min-for-recursive 2 -o ~/tools/subd$1.txt -d $1
+	echo "Doing massdns..."
+	mdns ~/tools/subd$1.txt
+	echo "massdns results..."
+	cat ~/tools/subd$1results.txt
+	echo "Doing httprobe..."
+	cat ~/tools/subd$1results.txt | httprobe
 }
 
 mdns(){
