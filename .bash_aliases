@@ -103,7 +103,8 @@ subdomains(){
 }
 
 mdns(){
-	./bin/massdns -r $1 -w ~/tools/subd$1results.txt
+	cd ~/tools/massdns/bin/
+	./massdns -r $1 -w ~/tools/subd$1results.txt
 }
 
 checkwebalive(){
