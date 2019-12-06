@@ -104,14 +104,14 @@ subdomains(){
 	echo "Doing massdns..."
 	mdns ~/tools/subd$1.txt
 	echo "massdns results..."
-	cat ~/tools/subd$1results.txt
+	cat ~/tools/subd$1.txt
 	echo "Doing httprobe..."
-	cat ~/tools/subd$1results.txt | httprobe
+	cat ~/tools/subd$1.txt | httprobe
 }
 
 mdns(){
 	cd ~/tools/massdns/bin/
-	./massdns -w ~/tools/subd$1results.txt $1
+	./massdns -w ~/tools/subd$1.txt $1
 }
 
 checkwebalive(){
