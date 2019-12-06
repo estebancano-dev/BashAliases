@@ -55,9 +55,9 @@ scansub(){
 		#SECONDS=0
 		#ffuf -u "$h$foo" -s -c -w ~/tools/__diccionarios/1y4.txt -fs $length | tee -a scansub_$now.txt
 		#echo "Finished in $SECONDS seconds" | tee -a scansub_$now.txt
-		#echo "Wordlist 2y3.txt..." | tee -a scansub_$now.txt
+		#echo "Wordlist 3y2.txt..." | tee -a scansub_$now.txt
 		#SECONDS=0
-		#ffuf -u "$h$foo" -s -c -w ~/tools/__diccionarios/2y3.txt | tee -a scansub_$now.txt
+		#ffuf -u "$h$foo" -s -c -w ~/tools/__diccionarios/3y2.txt | tee -a scansub_$now.txt
 		#echo "Finished in $SECONDS seconds" | tee -a scansub_$now.txt
 	done
 }
@@ -186,7 +186,7 @@ dirsearch4(){
 dirsearch5(){
 	cd ~/tools/dirsearch
 	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
-	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/2y3.txt
+	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3y2.txt
 }
 
 sqlmap(){
