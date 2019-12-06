@@ -98,9 +98,9 @@ check(){
 }
 
 subdomains(){
-	#amass enum --passive -o ~/tools/subd$1.txt -d $1 | mdns ~/tools/subd$1.txt
+	#amass enum --passive -d $1 | awk '{ print $2 }' > ~/tools/subd$1.txt | mdns ~/tools/subd$1.txt
 	echo "Doing amass..."
-	amass enum -src -brute -min-for-recursive 2 -o ~/tools/subd$1.txt -d $1
+	amass enum -src -brute -min-for-recursive 2 -d $1 | awk '{ print $2 }' > ~/tools/subd$1.txt
 	echo "Doing massdns..."
 	mdns ~/tools/subd$1.txt
 	echo "massdns results..."
@@ -111,7 +111,7 @@ subdomains(){
 
 mdns(){
 	cd ~/tools/massdns/bin/
-	./massdns -r $1 -w ~/tools/subd$1results.txt
+	./massdns -w ~/tools/subd$1results.txt $1
 }
 
 checkwebalive(){
