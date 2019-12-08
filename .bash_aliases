@@ -243,6 +243,7 @@ install(){
 }
 
 reinstall(){
+	echo -e "\e[32m"
 	cd ~/
 	mkdir -p tools/__diccionarios
 	git clone https://github.com/estebancano-dev/BashAliases.git
@@ -252,6 +253,7 @@ reinstall(){
 	cp ~/commonwords/*.txt ~/tools/__diccionarios
 	rm -R ~/commonwords 
 	reload
+	echo -e "\033[0m"
 }
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
