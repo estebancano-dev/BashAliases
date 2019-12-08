@@ -108,7 +108,7 @@ subdomains(){
 	echo -e "\e[32m\nDoing httprobe...\033[0m"
 	cat ~/tools/subd$1.txt | httprobe
 	echo -e "\e[32m\nDoing Nmap to check if alive...\033[0m"
-	nmap -sP -Pn -iL ~/tools/subd$1.txt
+	nmap -sP -Pn -T5 -iL ~/tools/subd$1.txt
 	echo -e "\e[32mThe End\033[0m"
 }
 
