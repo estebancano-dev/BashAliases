@@ -111,7 +111,7 @@ subdomains(){
 
 massdns(){
 	cd ~/tools/massdns/bin/
-	./massdns -r lists/resolvers.txt -w ~/tools/subd$1.txt $1
+	./massdns -r lists/resolvers.txt -w ~/tools/subd$1.txt
 }
 
 checkwebalive(){
