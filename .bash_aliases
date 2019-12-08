@@ -140,7 +140,6 @@ update(){
 	sudo apt-get autoclean
 }
 
-#------ Tools ------
 dirsearch(){
 	PS3='Please enter your choice: '
 	options=("dirsearch no ext" "all ext" "js" "js,_js,js_,js1,js2" "js w/ dicc 1-4" "Quit")
@@ -148,23 +147,24 @@ dirsearch(){
 	do
 		case $opt in
 			"dirsearch no ext")
-				dirsearch1 $1
+				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"all ext")
-				dirsearch2 $1
+				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e ,json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js")
-				dirsearch3 $1
+				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js,_js,js_,js1,js2")
-				dirsearch4 $1
+				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2 -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js w/ dicc 1-4")
-				dirsearch5 $1
+				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
+				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3y2.txt
 				break
 				;;
 			"Quit")
@@ -174,32 +174,6 @@ dirsearch(){
 		esac
 	done
 }
-dirsearch1(){
-	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
-}
-dirsearch2(){
-	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400 -f -u $1 -e ,json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf -w ~/tools/__diccionarios/commonwords.txt
-}
-dirsearch3(){
-	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
-}
-dirsearch4(){
-	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2 -w ~/tools/__diccionarios/commonwords.txt
-}
-dirsearch5(){
-	cd ~/tools/dirsearch
-	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
-	python3 dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3y2.txt
-}
-
-sqlmap(){
-	cd ~/tools/sqlmap
-	python3 sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --dump --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
-}
 
 nmap2(){
 	PS3='Please enter your choice: '
@@ -208,7 +182,7 @@ nmap2(){
 	do
 		case $opt in
 			"alive")
-				nmap -sS -Pn -T5 -p80,443 --script "vuln" $1
+				nmap -sP -Pn -T5 $1
 				break
 				;;
 			"fast")
@@ -231,10 +205,14 @@ nmap2(){
 	done
 }
 
+sqlmap(){
+	cd ~/tools/sqlmap
+	python3 sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --dump --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
+}
+
 netcat(){
 	nc -lvnp 3333
 }
-
 
 #para instalar todas las aplicaciones que utilizo
 install(){
@@ -257,6 +235,7 @@ install(){
 	sudo apt-get autoclean
 }
 
+# para descargar la ultima version de .bash_aliases y commonwords
 reinstall(){
 	echo -e "\e[32m"
 	cd ~/
