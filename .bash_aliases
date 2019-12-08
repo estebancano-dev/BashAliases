@@ -102,7 +102,7 @@ subdomains(){
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
 	amass enum --passive -d $1 -o ~/tools/subd$1.txt > /dev/null 2>&1
 	echo -e "\e[32mDoing massdns..."
-	massdns ~/tools/subd$1.txt
+	massdns $1
 	echo -e "\e[32mmassdns results..."
 	cat ~/tools/subd$1.txt
 	echo -e "\e[32mDoing httprobe..."
@@ -111,7 +111,7 @@ subdomains(){
 
 massdns(){
 	cd ~/tools/massdns/bin/
-	./massdns -r lists/resolvers.txt -w ~/tools/subd$1.txt
+	./massdns -r lists/resolvers.txt -w ~/tools/subd$1massdns.txt ~/tools/subd$1.txt
 }
 
 checkwebalive(){
