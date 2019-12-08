@@ -98,16 +98,16 @@ check(){
 }
 
 subdomains(){
-	echo -e "\e[32mDoing amass...\033[0m\n"
+	echo -e "\e[32mDoing amass...\033[0m"
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
 	amass enum --passive -d $1 -o ~/tools/subd$1.txt > /dev/null 2>&1
-	echo -e "\e[32mDoing massdns...\033[0m\n"
+	echo -e "\e[32mDoing massdns...\033[0m"
 	massdns $1
-	echo -e "\e[32mmassdns results...\033[0m\n"
+	echo -e "\e[32mmassdns results...\033[0m"
 	cat ~/tools/subd$1.txt
-	echo -e "\e[32mDoing httprobe...\033[0m\n"
+	echo -e "\e[32m\nDoing httprobe...\033[0m"
 	cat ~/tools/subd$1.txt | httprobe
-	echo -e "\e[32mThe End\033[0m\n"
+	echo -e "\e[32mThe End\033[0m"
 }
 
 massdns(){
