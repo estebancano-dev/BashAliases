@@ -98,21 +98,21 @@ check(){
 }
 
 subdomains(){
-	echo -e "\e[32mDoing amass..."
+	echo -e "\e[32mDoing amass...\n"
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
 	amass enum --passive -d $1 -o ~/tools/subd$1.txt > /dev/null 2>&1
-	echo -e "\e[32mDoing massdns..."
+	echo -e "\e[32mDoing massdns...\n"
 	massdns $1
-	echo -e "\e[32mmassdns results..."
+	echo -e "\e[32mmassdns results...\n"
 	cat ~/tools/subd$1.txt
-	echo -e "\e[32mDoing httprobe..."
+	echo -e "\e[32mDoing httprobe...\n"
 	cat ~/tools/subd$1.txt | httprobe
 	echo -e "\033[0m"
 }
 
 massdns(){
 	cd ~/tools/massdns/bin/
-	./massdns -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/subd$1massdns.txt ~/tools/subd$1.txt
+	./massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/subd$1massdns.txt ~/tools/subd$1.txt
 }
 
 checkwebalive(){
