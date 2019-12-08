@@ -194,7 +194,7 @@ nmap2(){
 				break
 				;;
 			"all ports")
-				nmap -sS -Pn -T5 -p- $1
+				nmap -sS -Pn -T5 -p- --host-timeout 30m $1
 				break
 				;;
 			"Quit")
