@@ -107,6 +107,7 @@ subdomains(){
 	cat ~/tools/subd$1.txt
 	echo -e "\e[32mDoing httprobe..."
 	cat ~/tools/subd$1.txt | httprobe
+	echo -e "\033[0m"
 }
 
 massdns(){
