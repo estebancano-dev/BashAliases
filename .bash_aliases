@@ -98,6 +98,7 @@ check(){
 }
 
 # Given a domain name, scans for subdomains, tries to resolve them, shows web services and check for alive ones
+# Uses: amass, massdns, httprobe, nmap
 # usage: subdomains domain.com
 # output: list of pasive subdomains
 subdomains(){
@@ -200,36 +201,47 @@ sqlmap(){
 	python3 sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --dump --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
 }
 
-map(){
-	nmap -p80,443 --script "vuln" $1
-	
-	#nmap -sS --data-length 15 --badsum -f --script=$1
+nmap2(){
+	PS3='Please enter your choice: '
+	options=("alive" "fast" "web vulns" "all ports" "Quit")
+	select opt in "${options[@]}"
+	do
+		case $opt in
+			"alive")
+				nmap -sS -Pn -T5 -p80,443 --script "vuln" $1
+				break
+				;;
+			"fast")
+				nmap -sS -Pn -T5 -F $1
+				break
+				;;
+			"web vulns")
+				nmap -sS -Pn -T5 -p80,443 --script "vuln" $1
+				break
+				;;
+			"web vulns")
+				nmap -sS -Pn -T5 -p- $1
+				break
+				;;
+			"Quit")
+				break
+				;;
+			*) echo "invalid option $REPLY";;
+		esac
+	done
 }
 
 netcat(){
 	nc -lvnp 3333
 }
 
-# recon esteban
-recon(){
-	dig +nocmd $1 any +multiline +noall +answer
 
-	#curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1 > ~/recon/$1.txt
-	#cd ~/tools/dirsearch
-	#cat ~/recon/$1.txt | while read line; do httprobe $line > ~/recon/$1_httprobe.txt; done | 
-	#cat ~/recon/$1_httprobe.txt | while read line; do python3 dirsearch.py -f -u $1 -e json,js,html 
-	#,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf;
-	#done
-
-}
 #para instalar todas las aplicaciones que utilizo
 install(){
 	cd ~
 	mkdir tools
 	cd tools
 	sudo apt update && sudo apt dist-upgrade -y
-	#sudo apt-get -y install python3-pip
-	#pip install pip-review
 	sudo apt-get install golang-go
 	git clone https://github.com/maurosoria/dirsearch.git
 	git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
@@ -243,8 +255,6 @@ install(){
 	sudo apt autoremove
 	sudo apt-get clean
 	sudo apt-get autoclean
-	#pip install --upgrade pip
-	#pip-review --local --interactive
 }
 
 reinstall(){
