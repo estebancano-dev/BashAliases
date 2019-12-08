@@ -219,7 +219,7 @@ nmap2(){
 				nmap -sS -Pn -T5 -p80,443 --script "vuln" $1
 				break
 				;;
-			"web vulns")
+			"all ports")
 				nmap -sS -Pn -T5 -p- $1
 				break
 				;;
