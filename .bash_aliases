@@ -102,7 +102,6 @@ check(){
 # usage: subdomains domain.com
 # output: list of pasive subdomains
 subdomains(){
-	
 	echo -e "\e[32mDoing amass...\033[0m"
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
 	amass enum --passive -d $1 -o ~/tools/subd$1.txt > /dev/null 2>&1
@@ -123,7 +122,7 @@ subdomains(){
 #}
 
 getips(){
-	egrep -o -h ‘[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}’ $1 | sort -u > $1ips.txt
+	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' $1 | sort -u > $1ips.txt
 }
 
 checkwebalive(){
