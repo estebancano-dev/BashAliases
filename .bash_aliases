@@ -107,7 +107,7 @@ subdomains(){
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
 	amass enum --passive -d $1 -o ~/tools/subd$1.txt > /dev/null 2>&1
 	echo -e "\e[32mDoing massdns...\033[0m"
-	massdns $1
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/subd$1massdns.txt ~/tools/subd$1.txt
 	echo -e "\e[32mmassdns results...\033[0m"
 	cat ~/tools/subd$1massdns.txt
 	echo -e "\e[32m\nDoing httprobe...\033[0m"
@@ -117,9 +117,13 @@ subdomains(){
 	echo -e "\e[32mThe End\033[0m"
 }
 
-massdns(){
-	cd ~/tools/massdns/bin/
-	./massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/subd$1massdns.txt ~/tools/subd$1.txt
+#massdns(){
+#	cd ~/tools/massdns/bin/
+#	./massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/subd$1massdns.txt ~/tools/subd$1.txt
+#}
+
+getips(){
+	egrep -o -h ‘[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}’ $1 | sort -u > $1ips.txt
 }
 
 checkwebalive(){
@@ -227,10 +231,16 @@ install(){
 	sudo apt update && sudo apt dist-upgrade -y
 	sudo apt-get install golang-go
 	git clone https://github.com/maurosoria/dirsearch.git
+	git clone https://github.com/blechschmidt/massdns.git
+	cd massdns
+	make
 	git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
 	git clone https://github.com/GerbenJavado/LinkFinder.git
 	cd LinkFinder
 	python setup.py install
+	git clone https://github.com/robertdavidgraham/masscan
+	cd masscan
+	make
 	pip3 install -r requirements.txt	
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
