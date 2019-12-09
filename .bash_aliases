@@ -142,7 +142,7 @@ update(){
 
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("dirsearch no ext" "all ext" "js" "js,_js,js_,js1,js2" "js w/ dicc 1-4" "Quit")
+	options=("dirsearch no ext" "all ext" "js" "js,_js,js_,js1,js2" "js w/ dicc 1-4" "custom ext" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
@@ -165,6 +165,10 @@ dirsearch(){
 			"js w/ dicc 1-4")
 				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
 				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3y2.txt
+				break
+				;;
+			"custom ext")
+				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"Quit")
