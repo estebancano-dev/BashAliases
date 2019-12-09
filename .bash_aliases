@@ -104,8 +104,7 @@ check(){
 subdomains(){
 	echo -e "\e[32mDoing amass...\033[0m"
 	mkdir -p ~/tools/recon/$1
-	#amass enum -v -src -ip -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/recon/$1/1amass$1.txt < /dev/null 2>&1
-	amass enum --passive -d $1 -o ~/tools/recon/$1/1amass$1.txt > /dev/null 2>&1
+	amass enum -active -brute -d $1 -o ~/tools/recon/$1/1amass$1.txt > /dev/null 2>&1
 	echo -e "\e[32mDoing massdns...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/recon/$1/2massdns$1.txt ~/tools/recon/$1/1amass$1.txt
 	echo -e "\e[32mDoing httprobe...\033[0m"
