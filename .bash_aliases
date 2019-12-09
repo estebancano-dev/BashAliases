@@ -115,7 +115,7 @@ subdomains(){
 	echo -e "\e[32m\nDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL ~/tools/amass$1.txt > ~/tools/nmap$1.txt
 	echo -e "\e[32m\nDoing Masscan...\033[0m"
-	masscan -p20,21-23,25,53,80,110-111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080 -iL ~/tools/amass$1.txt > ~/tools/masscan$1.txt
+	masscan -p20,21-23,25,53,80,110-111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080 -iL ~/tools/amass$1.txt -oG ~/tools/masscan$1.txt
 	echo -e "\e[32mThe End\033[0m"
 }
 
