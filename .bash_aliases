@@ -100,12 +100,12 @@ check(){
 # Given a domain name, scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
 # Uses: amass, massdns, httprobe, nmap, masscan
 # usage: subdomains domain.com
-# output: list of pasive subdomains
+# output: list of alive subdomains and port mapping
 subdomains(){
 	echo -e "\e[32mDoing amass...\033[0m"
 	mkdir -p ~/tools/recon/$1
-	amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/recon/$1/amass$1.txt < /dev/null 2>&1
-	#amass enum --passive -d $1 -o ~/tools/recon/$1/amass$1.txt > /dev/null 2>&1
+	amass enum -v -src -ip -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/recon/$1/amass$1.txt < /dev/null 2>&1
+	#amass enum -active -d $1 -o ~/tools/recon/$1/amass$1.txt > /dev/null 2>&1
 	echo -e "\e[32mDoing massdns...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/recon/$1/massdns$1.txt ~/tools/recon/$1/amass$1.txt
 	echo -e "\e[32m\nDoing httprobe...\033[0m"
