@@ -105,17 +105,17 @@ subdomains(){
 	echo -e "\e[32mDoing amass...\033[0m"
 	mkdir -p tools/recon/$1
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
-	amass enum --passive -d $1 -o ~/tools/amass$1.txt > /dev/null 2>&1
+	amass enum --passive -d $1 -o ~/tools/recon/$1/amass$1.txt > /dev/null 2>&1
 	echo -e "\e[32mDoing massdns...\033[0m"
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/massdns$1.txt ~/tools/amass$1.txt
-	echo -e "\e[32mmassdns results...\033[0m"
-	cat ~/tools/massdns$1.txt
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/recon/$1/massdns$1.txt ~/tools/recon/$1/amass$1.txt
+	#echo -e "\e[32mmassdns results...\033[0m"
+	#cat ~/tools/recon/$1/massdns$1.txt
 	echo -e "\e[32m\nDoing httprobe...\033[0m"
-	cat ~/tools/amass$1.txt | httprobe
+	cat ~/tools/recon/$1/amass$1.txt | httprobe
 	echo -e "\e[32m\nDoing Nmap to check if alive...\033[0m"
-	nmap -sP -Pn -T5 -iL ~/tools/amass$1.txt > ~/tools/nmap$1.txt
+	nmap -sP -Pn -T5 -iL ~/tools/recon/$1/amass$1.txt > ~/tools/recon/$1/nmap$1.txt
 	echo -e "\e[32m\nDoing Masscan...\033[0m"
-	masscan -p20,21-23,25,53,80,110-111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080 -iL ~/tools/amass$1.txt -oG ~/tools/masscan$1.txt
+	masscan -p20,21-23,25,53,80,110-111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080 -iL ~/tools/recon/$1/amass$1.txt -oG ~/tools/recon/$1/masscan$1.txt
 	echo -e "\e[32mThe End\033[0m"
 }
 
