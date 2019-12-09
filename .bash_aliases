@@ -148,28 +148,28 @@ dirsearch(){
 	do
 		case $opt in
 			"dirsearch no ext")
-				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"all ext")
-				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e ,json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,bck,tmp,_js,_tmp,asp,aspx,php,php3,php4,php5,txt,shtm,shtml,phtm,phtml,jhtml,pl,jsp,cfm,cfml,py,rb,cfg,zip,pdf,gz,tar,tar.gz,tgz,doc,docx,xls,xlsx,conf -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js")
-				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js,_js,js_,js1,js2")
-				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2 -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2 -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js w/ dicc 1-4")
-				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
-				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3y2.txt
+				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1y4.txt
+				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3y2.txt
 				break
 				;;
 			"custom ext")
-				python3 ~/tools/dirsearch/dirsearch.py -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"Quit")
