@@ -103,6 +103,7 @@ check(){
 # output: list of pasive subdomains
 subdomains(){
 	echo -e "\e[32mDoing amass...\033[0m"
+	mkdir -p tools/recon/$1
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
 	amass enum --passive -d $1 -o ~/tools/amass$1.txt > /dev/null 2>&1
 	echo -e "\e[32mDoing massdns...\033[0m"
