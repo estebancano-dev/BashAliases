@@ -256,7 +256,7 @@ install(){
 reinstall(){
 	echo -e "\e[32m"
 	cd ~/
-	mkdir -p tools/{__diccionarios,recon}
+	mkdir -p ~/tools/{__diccionarios,recon}
 	git clone https://github.com/estebancano-dev/BashAliases.git
 	cp ~/BashAliases/.bash_aliases ~/
 	rm -R ~/BashAliases 
