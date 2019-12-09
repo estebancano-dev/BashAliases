@@ -102,6 +102,7 @@ check(){
 # usage: subdomains domain.com
 # output: list of pasive subdomains
 subdomains(){
+	
 	echo -e "\e[32mDoing amass...\033[0m"
 	#amass enum -src -brute -min-for-recursive 2 -d $1 | awk -F ']' '{print $2}' > ~/tools/subd$1.txt
 	amass enum --passive -d $1 -o ~/tools/subd$1.txt > /dev/null 2>&1
@@ -198,7 +199,7 @@ nmap2(){
 				break
 				;;
 			"all ports")
-				nmap -sS -Pn -T5 -p- --host-timeout 30m $1
+				nmap -sS -Pn -T5 -p- --host-timeout 60m $1
 				break
 				;;
 			"Quit")
@@ -221,7 +222,7 @@ netcat(){
 #para instalar todas las aplicaciones que utilizo
 install(){
 	cd ~
-	mkdir tools
+	mkdir -p tools/{__diccionarios,recon}
 	cd tools
 	sudo apt update && sudo apt dist-upgrade -y
 	sudo apt-get install golang-go
@@ -234,6 +235,7 @@ install(){
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
+	reinstall
 	sudo apt autoremove
 	sudo apt-get clean
 	sudo apt-get autoclean
@@ -243,7 +245,7 @@ install(){
 reinstall(){
 	echo -e "\e[32m"
 	cd ~/
-	mkdir -p tools/__diccionarios
+	mkdir -p tools/{__diccionarios,recon}
 	git clone https://github.com/estebancano-dev/BashAliases.git
 	cp ~/BashAliases/.bash_aliases ~/
 	rm -R ~/BashAliases 
