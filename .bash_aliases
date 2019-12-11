@@ -148,39 +148,41 @@ dirsearch(){
 	do
 		case $opt in
 			"no ext")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e ,
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,
 				break
 				;;
 			"no ext dicc")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"all ext")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js,_js,js_,js1,js2,~js")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2,~js -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2,~js -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js dicc 1-4")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1.txt
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/2.txt
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/2.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/3.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/4.txt
 				break
 				;;
 			"custom ext")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"all ext dicc 1-4")
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,php3,php4,php5,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/1.txt
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,php3,php4,php5,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/2.txt
-				python3 ~/tools/dirsearch/dirsearch.py --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,php3,php4,php5,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/3.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,php3,php4,php5,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/1.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,php3,php4,php5,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/2.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,php3,php4,php5,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/3.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,php3,php4,php5,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,~pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,~docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/4.txt
 				break
 				;;
 			"Quit")
