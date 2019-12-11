@@ -181,7 +181,8 @@ dirsearch(){
 				break
 				;;
 			"all ext dicc 1-4")
-				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/1.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html -w ~/tools/__diccionarios/1.txt
+				#,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,xls,xlsx,conf,~conf,do,action
 				break
 				;;
 			"Quit")
