@@ -95,7 +95,7 @@ check(){
 # output: list of alive subdomains and open ports
 subdomains(){
 	mkdir -p ~/tools/recon/$1
-	touch ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt
+	#touch ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
 	echo -e "\e[32mDoing Assetfinder...\033[0m"
 	assetfinder $1 | grep '\.$1' > ~/tools/recon/$1/1scrap1$1.txt
@@ -103,7 +103,7 @@ subdomains(){
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o ~/tools/recon/$1/1scrap2$1.txt > /dev/null 2>&1
 	#echo -e "\e[32mDoing Amass...\033[0m"
 	#amass enum -active -brute -d $1 -o ~/tools/recon/$1/1scrap3$1.txt > /dev/null 2>&1
-	cat ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt >> ~/tools/recon/$1/1scrap$1.txt
+	#cat ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt >> ~/tools/recon/$1/1scrap$1.txt
 	#rm ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt
 	#sort -u ~/tools/recon/$1/1scrap$1.txt -o ~/tools/recon/$1/1scrap$1.txt
 	#echo -e "\e[32m************** Scrapping done... **************\033[0m"
