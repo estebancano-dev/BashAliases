@@ -1,3 +1,24 @@
+# reloads aliases in current terminal without the need to close and start a new
+reload(){
+	source ~/.bash_aliases
+	echo ".bash_aliases reloaded"
+}
+
+# para descargar la ultima version de .bash_aliases y commonwords
+reinstall(){
+	echo -e "\e[32m"
+	cd ~/
+	mkdir -p ~/tools/{__diccionarios,recon}
+	git clone https://github.com/estebancano-dev/BashAliases.git
+	cp ~/BashAliases/.bash_aliases ~/
+	rm -R ~/BashAliases 
+	git clone https://github.com/estebancano-dev/commonwords.git
+	cp ~/commonwords/*.txt ~/tools/__diccionarios
+	rm -R ~/commonwords 
+	reload
+	echo -e "\033[0m"
+}
+
 # scans for js files with https://github.com/ffuf/ffuf on a list of urls in a file
 # usage: scanjs file.txt
 # output: urls found with 200 http responses
@@ -105,7 +126,7 @@ subdomains(){
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o ~/tools/recon/$1/1scrap2$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	amass enum -brute -min-for-recursive 4 -d $1 -o ~/tools/recon/$1/1scrap3$1.txt > /dev/null 2>&1
+	amass enum -brute -min-for-recursive 2 -d $1 -o ~/tools/recon/$1/1scrap3$1.txt > /dev/null 2>&1
 	cat ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt | grep '\.$1\|^$1' > ~/tools/recon/$1/1scrap$1.txt
 	rm -f ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt
 	sort -u ~/tools/recon/$1/1scrap$1.txt -o ~/tools/recon/$1/1scrap$1.txt
@@ -160,11 +181,6 @@ checkwebalive(){
 	nmap -sn -Pn $1 --script hostmap-crtsh | awk '{ print $2 }' | grep $1 | check $1
 }
 
-# reloads aliases in current terminal without the need to close and start a new
-reload(){
-	source ~/.bash_aliases
-	echo ".bash_aliases reloaded"
-}
 # updates OS?
 update(){
 	sudo apt update && sudo apt dist-upgrade -y
@@ -295,20 +311,7 @@ install(){
 	sudo apt-get autoclean
 }
 
-# para descargar la ultima version de .bash_aliases y commonwords
-reinstall(){
-	echo -e "\e[32m"
-	cd ~/
-	mkdir -p ~/tools/{__diccionarios,recon}
-	git clone https://github.com/estebancano-dev/BashAliases.git
-	cp ~/BashAliases/.bash_aliases ~/
-	rm -R ~/BashAliases 
-	git clone https://github.com/estebancano-dev/commonwords.git
-	cp ~/commonwords/*.txt ~/tools/__diccionarios
-	rm -R ~/commonwords 
-	reload
-	echo -e "\033[0m"
-}
+
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
