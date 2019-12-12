@@ -123,15 +123,18 @@ subdomains(){
 	assetfinder $1 > ~/tools/recon/$1/1scrap1$1.txt
 	
 	echo -e "\e[32mDoing Sublist3r...\033[0m"
-	#python ~/tools/Sublist3r/sublist3r.py -d $1 -o ~/tools/recon/$1/1scrap2$1.txt > /dev/null 2>&1
+	python ~/tools/Sublist3r/sublist3r.py -d $1 -o ~/tools/recon/$1/1scrap2$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	#amass enum -brute -min-for-recursive 2 -d $1 -o ~/tools/recon/$1/1scrap3$1.txt > /dev/null 2>&1
+	amass enum -brute -min-for-recursive 2 -d $1 -o ~/tools/recon/$1/1scrap3$1.txt > /dev/null 2>&1
+	
+	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
+	# los ordeno y quito dominios duplicados
 	cat ~/tools/recon/$1/*.txt | grep "\.$1\|^$1" > ~/tools/recon/$1/1scrap$1.txt
 	rm -f ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt
 	sort -u -o ~/tools/recon/$1/1scrap$1.txt ~/tools/recon/$1/1scrap$1.txt 
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
-	return
+
 	if [[ -f ~/tools/recon/$1/1scrap$1.txt && -s ~/tools/recon/$1/1scrap$1.txt ]]
 	then
 		echo -e "\e[32m*********** No domains scrapped... ************\033[0m"
