@@ -95,6 +95,7 @@ check(){
 # output: list of alive subdomains and open ports
 subdomains(){
 	mkdir -p ~/tools/recon/$1
+	touch ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
 	echo -e "\e[32mDoing Assetfinder...\033[0m"
 	assetfinder $1 > ~/tools/recon/$1/1scrap1$1.txt
