@@ -164,7 +164,7 @@ subdomains(){
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
-	if [[ -f ~/tools/recon/$1/4nmapips$1.txt && ! -s ~/tools/recon/$1/4nmapips$1.txt ]]
+	if [[ -f ~/tools/recon/$1/4nmapips$1.txt && -s ~/tools/recon/$1/4nmapips$1.txt ]]
 	then
 		echo -e "\e[32m\nDoing Nmap to check for top 100 port vulns...\033[0m"
 		nmap -sS -Pn -T5 --top-ports 100 --script "vuln" -iL ~/tools/recon/$1/4nmapips$1.txt > ~/tools/recon/$1/7nmapvuln$1.txt < /dev/null 2>&1
