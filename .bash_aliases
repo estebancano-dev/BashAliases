@@ -107,10 +107,20 @@ subdomains(){
 	rm -f ~/tools/recon/$1/1scrap1$1.txt ~/tools/recon/$1/1scrap2$1.txt ~/tools/recon/$1/1scrap3$1.txt
 	sort -u ~/tools/recon/$1/1scrap$1.txt -o ~/tools/recon/$1/1scrap$1.txt
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
+	if [ -s ~/tools/recon/$1/1scrap$1.txt ] then
+		echo -e "\e[32m*********** No domains scrapped... ************\033[0m"
+		echo -e "\e[32m***********************************************\033[0m"
+		return
+	fi
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/recon/$1/2massdns$1.txt ~/tools/recon/$1/1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
+	if [ -s ~/tools/recon/$1/2massdns$1.txt ] then
+		echo -e "\e[32m*********** No domains resolved... ************\033[0m"
+		echo -e "\e[32m***********************************************\033[0m"
+		return
+	fi
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat ~/tools/recon/$1/1scrap$1.txt | httprobe | tee ~/tools/recon/$1/6httprobe$1.txt
@@ -127,6 +137,8 @@ subdomains(){
 	echo -e "\e[32m***************** Final results ***************\033[0m"
 	cd ~/tools/recon/$1
 	cat ~/tools/recon/$1/5masscan$1.txt
+	cat ~/tools/recon/$1/7nmapvuln$1.txt
+
 	echo -e "\e[32m***********************************************\033[0m"
 }
 
