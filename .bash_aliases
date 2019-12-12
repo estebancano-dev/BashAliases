@@ -113,7 +113,9 @@ subdomains(){
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat ~/tools/recon/$1/1scrap$1.txt | httprobe
+	cat ~/tools/recon/$1/1scrap$1.txt | httprobe | tee ~/tools/recon/$1/6httprobe$1.txt
+	echo -e "\e[32m\nDoing Nmap to check for http vulns...\033[0m"
+	nmap -sS -Pn -T5 -p80,443 -iL ~/tools/recon/$1/6httprobe$1.txt --script "vuln" $1 > ~/tools/recon/$1/7nmapvuln$1.txt
 	echo -e "\e[32m\nDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL ~/tools/recon/$1/1scrap$1.txt > ~/tools/recon/$1/3nmap$1.txt < /dev/null 2>&1
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
