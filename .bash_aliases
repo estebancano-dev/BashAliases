@@ -116,7 +116,7 @@ subdomains(){
 		echo -e "\e[32m***********************************************\033[0m"
 		return
 	fi
-	
+	return
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/recon/$1/2massdns$1.txt ~/tools/recon/$1/1scrap$1.txt
