@@ -157,19 +157,19 @@ subdomains(){
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat ~/tools/recon/$1/1scrap$1.txt | httprobe | tee ~/tools/recon/$1/6httprobe$1.txt
 	touch ~/tools/recon/$1/7nmapvuln$1.txt
-	if [[ -f ~/tools/recon/$1/2massdns$1.txt && ! -s ~/tools/recon/$1/6httprobe$1.txt ]]
-	then
-		echo -e "\e[32m\nDoing Nmap to check for http vulns...\033[0m"
-		nmap -sS -Pn -T5 -p80,443 -iL ~/tools/recon/$1/6httprobe$1.txt --script "vuln" $1 > ~/tools/recon/$1/7nmapvuln$1.txt < /dev/null 2>&1
-	fi
 	
 	echo -e "\e[32m\nDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL ~/tools/recon/$1/1scrap$1.txt > ~/tools/recon/$1/3nmap$1.txt < /dev/null 2>&1
+	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' ~/tools/recon/$1/3nmap$1.txt | sort -u > ~/tools/recon/$1/4nmapips$1.txt
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
+	if [[ -f ~/tools/recon/$1/4nmapips$1.txt && ! -s ~/tools/recon/$1/4nmapips$1.txt ]]
+	then
+		echo -e "\e[32m\nDoing Nmap to check for top 100 port vulns...\033[0m"
+		nmap -sS -Pn -T5 --top-ports 100 --script "vuln" -iL ~/tools/recon/$1/4nmapips$1.txt > ~/tools/recon/$1/7nmapvuln$1.txt < /dev/null 2>&1
+	fi
 	echo -e "\e[32mDoing Masscan...\033[0m"
-	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' ~/tools/recon/$1/3nmap$1.txt | sort -u > ~/tools/recon/$1/4nmapips$1.txt
 	masscan -p1-1000,1022,1024-1033,1035-1041,1044,1048-1050,1053-1054,1056,1058-1059,1064-1066,1069,1071,1074,1080,1110,1234,1433,1494,1521,1720,1723,1755,1761,1801,1900,1935,1998,2000-2003,2005,2049,2103,2105,2107,2121,2161,2301,2383,2401,2601,2717,2869,2967,3000-3001,3128,3268,3306,3389,3689-3690,3703,3986,4000-4001,4045,4899,5000-5001,5003,5009,5050-5051,5060,5101,5120,5190,5357,5432,5555,5631,5666,5800,5900-5901,6000-6002,6004,6112,6646,6666,7000,7070,7937-7938,8000,8002,8008-8010,8031,8080-8081,8443,8888,9000-9001,9090,9100,9102,9999-10001,10010,32768,32771,49152-49157,50000 -iL ~/tools/recon/$1/4nmapips$1.txt -oG ~/tools/recon/$1/5masscan$1.txt > /dev/null 2>&1
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
