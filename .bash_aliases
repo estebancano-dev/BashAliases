@@ -126,7 +126,7 @@ subdomains(){
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o ~/tools/recon/$1/1scrap2$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	amass enum -brute -min-for-recursive 2 -d $1 -o ~/tools/recon/$1/1scrap3$1.txt > /dev/null 2>&1
+	amass enum -d $1 -o ~/tools/recon/$1/1scrap3$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	# los ordeno y quito dominios duplicados
@@ -145,6 +145,7 @@ subdomains(){
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/recon/$1/2massdns$1.txt ~/tools/recon/$1/1scrap$1.txt
+	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/recon/$1/8massdnssimple$1.txt ~/tools/recon/$1/1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	if [[ -f ~/tools/recon/$1/2massdns$1.txt && ! -s ~/tools/recon/$1/2massdns$1.txt ]]
 	then
@@ -166,7 +167,7 @@ subdomains(){
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
 	if [[ -f ~/tools/recon/$1/4nmapips$1.txt && -s ~/tools/recon/$1/4nmapips$1.txt ]]
 	then
-		echo -e "\e[32m\nDoing Nmap to check for top 100 port vulns...\033[0m"
+		echo -e "\e[32mDoing Nmap to check for top 100 port vulns...\033[0m"
 		nmap -sS -Pn -T5 --top-ports 100 --script "vuln" -iL ~/tools/recon/$1/4nmapips$1.txt > ~/tools/recon/$1/7nmapvuln$1.txt < /dev/null 2>&1
 	fi
 	echo -e "\e[32mDoing Masscan...\033[0m"
@@ -175,7 +176,7 @@ subdomains(){
 	
 	echo -e "\e[32m***************** Final results ***************\033[0m"
 	cd ~/tools/recon/$1
-	cat 5masscan$1.txt 7nmapvuln$1.txt
+	cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt
 	echo -e "\e[32m***********************************************\033[0m"
 }
 
