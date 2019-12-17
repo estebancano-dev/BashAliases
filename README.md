@@ -1,2 +1,2 @@
 # BashAliases
- Bash Aliases for Kali Linux
+Check wiki for more info
