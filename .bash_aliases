@@ -116,7 +116,7 @@ check(){
 # output: list of alive subdomains and open ports
 subdomains(){
 	now=$(date +"%Y%m%d%H%M%S")
-	mkdir -p ~/tools/recon/$1/$now
+	mkdir -p ~/tools/recon/$1/$now/
 	dir="~/tools/recon/$1/$now"
 	touch $dir/1scrap1$1.txt $dir/1scrap2$1.txt $dir/1scrap3$1.txt
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
