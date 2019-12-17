@@ -111,7 +111,7 @@ check(){
 }
 
 # Given a domain name, scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
-# Uses: assetfinder, sublist3r, amass, massdns, httprobe, nmap, masscan
+# Uses: assetfinder, subfinder, sublist3r, amass, massdns, httprobe, nmap, masscan
 # usage: subdomains domain.com
 # output: list of alive subdomains and open ports
 subdomains(){
@@ -122,7 +122,10 @@ subdomains(){
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
 	
 	echo -e "\e[32mDoing Assetfinder...\033[0m"
-	assetfinder $1 > $dir/1scrap1$1.txt
+	assetfinder $1 > $dir/1scrap1$1.txt	
+	
+	echo -e "\e[32mDoing Subfinder...\033[0m"
+	subfinder -t 100 -d $1 -silent -o $dir/1scrap1$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Sublist3r...\033[0m"
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o $dir/1scrap2$1.txt > /dev/null 2>&1
@@ -149,6 +152,7 @@ subdomains(){
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w $dir/2massdns$1.txt $dir/1scrap$1.txt
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w $dir/8massdnssimple$1.txt $dir/1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
+	
 	if [[ -f $dir/2massdns$1.txt && ! -s $dir/2massdns$1.txt ]]
 	then
 		echo -e "\e[32m*********** No domains resolved... ************\033[0m"
@@ -329,6 +333,7 @@ install(){
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
+	go get -v github.com/projectdiscovery/subfinder/cmd/subfinder
 	reinstall
 	sudo apt autoremove
 	sudo apt-get clean
