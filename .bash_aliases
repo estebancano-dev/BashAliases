@@ -206,7 +206,7 @@ update(){
 
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("no ext" "no ext dicc" "all ext" "js" "php" "js dicc 1-4" "custom ext" "all ext dicc 1-4" "Quit")
+	options=("no ext" "no ext dicc" "all ext" "js" "php" "js dicc 1-4" "custom ext" "custom ext dicc 1-4" "all ext dicc 1-4" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
@@ -241,6 +241,15 @@ dirsearch(){
 				;;
 			"custom ext")
 				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
+				break
+				;;
+			"custom ext dicc 1-4")
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/1.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/2.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/3.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/4.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/5.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/6.txt
 				break
 				;;
 			"all ext dicc 1-4")
