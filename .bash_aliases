@@ -206,7 +206,7 @@ update(){
 
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("no ext" "no ext dicc" "all ext" "js" "js,_js,js_,js1,js2,~js" "js dicc 1-4" "custom ext" "all ext dicc 1-4" "Quit")
+	options=("no ext" "no ext dicc" "all ext" "js" "php" "js dicc 1-4" "custom ext" "all ext dicc 1-4" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
@@ -219,15 +219,15 @@ dirsearch(){
 				break
 				;;
 			"all ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,php,~php,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,~html,~htm,bck,~bck,tmp,_js,~js,_tmp,~tmp,asp,aspx,inc.php,php,~php,txt,~txt,pl,jsp,~jsp,py,rb,cfg,~cfg,zip,~zip,pdf,gz,~gz,tar,~tar,tar.gz,~tar.gz,tgz,doc,~doc,docx,xls,xlsx,conf,~conf,do,action -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js")
 				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
-			"js,_js,js_,js1,js2,~js")
-				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e js,_js,js_,js1,js2,~js -w ~/tools/__diccionarios/commonwords.txt
+			"php")
+				python3 ~/tools/dirsearch/dirsearch.py -t 20 --random-agents -x 301,302,400 -f -u $1 -e php,inc.php,~php -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js dicc 1-4")
