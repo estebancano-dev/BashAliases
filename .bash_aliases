@@ -13,7 +13,7 @@ reinstall(){
 	cp ~/BashAliases/.bash_aliases ~/
 	rm -R ~/BashAliases 
 	git clone https://github.com/estebancano-dev/commonwords.git
-	cp ~/commonwords/*.txt ~/tools/__diccionarios
+	cp ~/commonwords/*.* ~/tools/__diccionarios
 	rm -R ~/commonwords 
 	reload
 	echo -e "\033[0m"
