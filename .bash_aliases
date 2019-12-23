@@ -219,7 +219,7 @@ dirsearch(){
 				break
 				;;
 			"no ext file")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -L $1 -e , -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -L $1 -e ,
 				break
 				;;
 			"all ext")
