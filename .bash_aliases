@@ -116,11 +116,13 @@ check(){
 # output: list of alive subdomains and open ports
 subdomains(){
 	clear
+	begin=$(date +"%s")
 	now=$(date +"%Y%m%d%H%M")
 	mkdir -p ~/tools/recon/$1/$now/
 	cd ~/tools/recon/$1/$now/
 	touch 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
 
+	echo -e "\e[32mUrl: $1\033[0m"
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
 	echo -e "\e[32mDoing Assetfinder...\033[0m"
 	assetfinder $1 > 1scrap1$1.txt	
@@ -195,6 +197,9 @@ subdomains(){
 	echo -e "\e[32m***************** Final results ***************\033[0m"
 	cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt
 	echo -e "\e[32m***********************************************\033[0m"
+	end=$(date +"%s")
+	diff=$(($end-$begin))
+	echo "$(($diff / 60))m $(($diff % 60))s elapsed."
 }
 
 getips(){
