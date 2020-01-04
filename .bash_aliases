@@ -166,7 +166,7 @@ subdomains(){
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat 1scrap$1.txt | httprobe | tee 6httprobe$1.txt
-	touch 7nmapvuln$1.txt
+	touch 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
 	
 	# existen http o https accesibles, chequeo sqli y redirects
 	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]
