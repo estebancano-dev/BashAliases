@@ -240,9 +240,9 @@ checkheadersforredirect(){
 	fi
 	cat $1 | while read url; do
 		response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L $url)
-		grep -q '<!-- CHECK -->' <<< $var && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
+		grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
 		response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -L $url)
-		grep -q '<!-- CHECK -->' <<< $var && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
+		grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
 	done
 }
 
