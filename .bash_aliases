@@ -163,12 +163,18 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe | tee 6httprobe$1.txt
+	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
 	touch 7nmapvuln$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
+	
+	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
+	count=$(grep -c "Host is up" 3nmap$1.txt)
+	ips=$(wc -l 4nmapips$1.txt)
+	echo -e "\e[32m$count domains pointing to $ips IP addresses\033[0m"
+	
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
 	touch 9httprobeXORsqli$1.txt ahttproberedirect$1.txt
@@ -191,8 +197,8 @@ subdomains(){
 	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt > /dev/null 2>&1
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
-	echo -e "\e[32m***************** Final results ***************\033[0m"
-	cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
+	#echo -e "\e[32m***************** Final results ***************\033[0m"
+	#cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
 	echo -e "\e[32m***********************************************\033[0m"
 	end=$(date +"%s")
 	diff=$(($end-$begin))
