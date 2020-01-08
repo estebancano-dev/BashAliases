@@ -164,22 +164,21 @@ subdomains(){
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat 1scrap$1.txt | httprobe | tee 6httprobe$1.txt
-	touch 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
+	touch 7nmapvuln$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
+	touch 9httprobeXORsqli$1.txt ahttproberedirect$1.txt
 	# existen http o https accesibles, chequeo sqli y redirects
 	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
 		echo -e "\e[32m********** Starting Headers Check... *********\033[0m"
 		echo -e "\e[32mDoing Curl to check headers for sqli...\033[0m"
-		echo "******** Checking headers for sqli... *********" >> 9httprobeXORsqli$1.txt
 		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt
 		echo -e "\e[32mDoing Curl to check headers for redirect...\033[0m"
-		echo "****** Checking headers for redirect... *******" >> 9httprobeXORsqli$1.txt
-		checkheadersforredirect 6httprobe$1.txt 9httprobeXORsqli$1.txt
+		checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt
 		echo -e "\e[32m************ Headers Check done... ***********\033[0m"
 	fi
 	
