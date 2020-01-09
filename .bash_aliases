@@ -181,10 +181,8 @@ subdomains(){
 	# existen http o https accesibles, chequeo sqli y redirects
 	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
 		echo -e "\e[32m********** Starting Headers Check... *********\033[0m"
-		echo -e "\e[32mDoing Curl to check headers for sqli...\033[0m"
-		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt
-		echo -e "\e[32mDoing Curl to check headers for redirect...\033[0m"
-		checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt
+		echo -e "\e[32mDoing Curl to check headers for sqli/redirect...\033[0m"
+		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt & checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt
 		echo -e "\e[32m************ Headers Check done... ***********\033[0m"
 	fi
 	
