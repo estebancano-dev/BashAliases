@@ -172,7 +172,7 @@ subdomains(){
 	
 	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
 	count=$(grep -c "Host is up" 3nmap$1.txt)
-	ips=$(wc -l 4nmapips$1.txt)
+	ips=$(wc -l 4nmapips$1.txt | awk '{ print $1 }')
 	echo -e "\e[32m$count domains pointing to $ips IP addresses\033[0m"
 	
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
