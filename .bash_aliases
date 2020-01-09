@@ -199,7 +199,7 @@ subdomains(){
 	
 	#echo -e "\e[32m***************** Final results ***************\033[0m"
 	#cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
-	echo -e "\e[32m***********************************************\033[0m"
+	echo -e "\e[32m******************** The End *******************\033[0m"
 	end=$(date +"%s")
 	diff=$(($end-$begin))
 	echo "$(($diff / 60))m $(($diff % 60))s elapsed."
