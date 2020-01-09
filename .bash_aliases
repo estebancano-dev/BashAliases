@@ -134,7 +134,7 @@ subdomains(){
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	amass enum -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
+	amass enum `-active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	# los ordeno y quito dominios duplicados
@@ -224,7 +224,7 @@ checkheadersforsqli(){
 			cat ~/tools/__diccionarios/headers.txt | while read head; do
 				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "%{time_starttransfer}" --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
 				time=$(echo "$response" | tail -1 | awk -F  "." '{print $1}')
-				if [[ $time =~ '^[0-9]+$' ]] ; then
+				if [[ $time =~ '^[0-9]+$' ]]; then
 					if (($time >= 6)); then
 						echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
 						echo "$response" >> $2
