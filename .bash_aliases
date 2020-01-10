@@ -134,7 +134,7 @@ subdomains(){
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	amass enum `-active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
+	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	# los ordeno y quito dominios duplicados
