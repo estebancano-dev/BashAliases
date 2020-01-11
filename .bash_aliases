@@ -371,6 +371,8 @@ install(){
 	git clone https://github.com/blechschmidt/massdns.git
 	cd massdns
 	make
+	git clone https://github.com/aboul3la/Sublist3r.git
+	pip3 install -r requirements.txt
 	git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
 	git clone https://github.com/GerbenJavado/LinkFinder.git
 	cd LinkFinder
