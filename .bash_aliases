@@ -286,7 +286,7 @@ dirsearch(){
 				break
 				;;
 			"no ext file")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 --plain-text-report=PLAINTEXTOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 --plain-text-report=SIMPLEOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
 				break
 				;;
 			"all ext")
