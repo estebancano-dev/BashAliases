@@ -138,7 +138,7 @@ subdomains(){
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	# los ordeno y quito dominios duplicados
-	cat *.txt | grep "\.$1\|^$1" > 1scrap$1.txt
+	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1" > 1scrap$1.txt
 	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
 	sort -u -o 1scrap$1.txt 1scrap$1.txt 
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
