@@ -245,10 +245,10 @@ checkheadersforredirect(){
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
-			#response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
-			#if [[ $response == *"<-- CHECK -->"* ]]; then
-			#	echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php" >> $2
-			#fi
+			response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
+			if [[ $response == *"<-- CHECK -->"* ]]; then
+				echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php" >> $2
+			fi
 			response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
 			if [[ $response == *"<-- CHECK -->"* ]]; then
 				echo "\r\n*** URL: $url - Header: X-Forwarded-Host: estebancano.com.ar/abc.php" >> $2
