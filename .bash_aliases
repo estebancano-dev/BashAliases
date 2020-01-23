@@ -257,6 +257,10 @@ checkheadersforredirect(){
 	done
 }
 
+takeover(){
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w takeover$1.txt $1
+}
+
 getips(){
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' $1 | sort -u > $1ips.txt
 }
