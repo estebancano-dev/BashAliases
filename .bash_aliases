@@ -258,7 +258,8 @@ checkheadersforredirect(){
 }
 
 takeover(){
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w takeover$1.txt $1
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeover/$1 $1
+	cd ~/tools/takeover/
 }
 
 getips(){
