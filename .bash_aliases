@@ -258,8 +258,8 @@ checkheadersforredirect(){
 }
 
 takeover(){
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeover/$1 $1
-	cd ~/tools/takeover/
+	now=$(date +"%Y%m%d%H%M")
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w $1 takeover$now.txt
 }
 
 getips(){
