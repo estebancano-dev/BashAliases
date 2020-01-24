@@ -263,6 +263,10 @@ checkheadersforredirect(){
 takeover(){
 	now=$(date +"%Y%m%d%H%M")
 	find ~/tools/recon -type f -name "1scrap*$1*.txt" -exec cat {} + > ~/tools/takeovers/1scrapall$now.txt
+	if [[ -f ~/tools/takeovers/1scrapall$now.txt && ! -s ~/tools/takeovers/1scrapall$now.txt ]]; then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
 }
 
