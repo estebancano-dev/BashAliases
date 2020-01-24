@@ -257,10 +257,13 @@ checkheadersforredirect(){
 	done
 }
 
+# Find all 1scrap*.txt in recon directory, merges them and check for CNAME records
+# usage: takeover
+# output: list of domains with CNAME records, to manually check for subdomains takeover
 takeover(){
 	now=$(date +"%Y%m%d%H%M")
-	find ~/tools/recon -type f -name '1scrap*.txt' -exec cat {} + > 1scrapall$now.txt
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -t CNAME -w takeover$now.txt 1scrapall$now.txt
+	find ~/tools/recon -type f -name '1scrap*.txt' -exec cat {} + > ~/tools/takeovers/1scrapall$now.txt
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -t CNAME -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
 }
 
 getips(){
@@ -373,7 +376,7 @@ netcat(){
 #para instalar todas las aplicaciones que utilizo
 install(){
 	cd ~
-	mkdir -p tools/{__diccionarios,recon}
+	mkdir -p tools/{__diccionarios,recon,takeovers}
 	cd tools
 	sudo apt update && sudo apt dist-upgrade -y
 	sudo apt-get install golang-go
