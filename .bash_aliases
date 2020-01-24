@@ -259,8 +259,8 @@ checkheadersforredirect(){
 
 takeover(){
 	now=$(date +"%Y%m%d%H%M")
-	find ~/tools/recon -type f -name '1scrap*.txt' -exec cat {} + > takeover$now.txt
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -t CNAME -w takeover$now.txt $1
+	find ~/tools/recon -type f -name '1scrap*.txt' -exec cat {} + > 1scrapall$now.txt
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -t CNAME -w takeover$now.txt 1scrapall$now.txt
 }
 
 getips(){
