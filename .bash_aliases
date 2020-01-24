@@ -267,6 +267,7 @@ takeover(){
 		echo -e "\e[32mUrls file is empty!\033[0m"
 		return
 	fi
+	sort -u -o ~/tools/takeovers/1scrapall$now.txt ~/tools/takeovers/1scrapall$now.txt
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
 }
 
