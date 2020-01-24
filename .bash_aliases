@@ -258,11 +258,11 @@ checkheadersforredirect(){
 }
 
 # Find all 1scrap*.txt in recon directory, merges them and check for CNAME records
-# usage: takeover
-# output: list of domains with CNAME records, to manually check for subdomains takeover
+# usage: takeover [word]
+# output: list of domains with CNAME records for 1scrap*word*.txt (eg: 1scrap*starbucks*.txt), to manually check for subdomains takeover
 takeover(){
 	now=$(date +"%Y%m%d%H%M")
-	find ~/tools/recon -type f -name '1scrap*.txt' -exec cat {} + > ~/tools/takeovers/1scrapall$now.txt
+	find ~/tools/recon -type f -name '1scrap*$1*.txt' -exec cat {} + > ~/tools/takeovers/1scrapall$now.txt
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
 }
 
