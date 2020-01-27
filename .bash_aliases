@@ -271,10 +271,6 @@ takeover(){
 	massdns -q -r S ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
 }
 
-ports(){
-	#find ~/tools/recon -type f -name "8massdnssimple$1.txt" -exec cat {} \; -exec egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' {} \; find ~/tools/recon -type f -name "5masscan$1.txt" -exec grep {}
-}
-
 getips(){
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' $1 | sort -u > $1ips.txt
 }
