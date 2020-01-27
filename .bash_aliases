@@ -273,7 +273,6 @@ takeover(){
 
 ports(){
 	#find ~/tools/recon -type f -name "8massdnssimple$1.txt" -exec cat {} \; -exec egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' {} \; find ~/tools/recon -type f -name "5masscan$1.txt" -exec grep {}
-	#
 }
 
 getips(){
