@@ -170,6 +170,9 @@ subdomains(){
 	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
 	
+	# a veces agrega la ip 0.0.0.0 y al escanear puertos (localhost), tarda una baaanda. La vuelo, si existe
+	sed -i '/0.0.0.0/d' 4nmapips$1.txt
+	
 	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
 	count=$(grep -c "Host is up" 3nmap$1.txt)
 	ips=$(wc -l 4nmapips$1.txt | awk '{ print $1 }')
