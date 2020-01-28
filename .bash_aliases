@@ -120,30 +120,30 @@ subdomains(){
 	now=$(date +"%Y%m%d%H%M")
 	mkdir -p ~/tools/recon/$1/$now/
 	cd ~/tools/recon/$1/$now/
-	touch 1scrap1$now.txt 1scrap2$now.txt 1scrap3$now.txt 1scrap4$now.txt
+	touch 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
 
 	echo -e "\e[32mUrl: $1\033[0m"
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
 	echo -e "\e[32mDoing Assetfinder...\033[0m"
-	assetfinder $1 > 1scrap1$now.txt	
+	assetfinder $1 > 1scrap1$1.txt	
 	
 	echo -e "\e[32mDoing Subfinder...\033[0m"
-	subfinder -t 100 -d $1 -silent -o 1scrap2$now.txt > /dev/null 2>&1
+	subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Sublist3r...\033[0m"
-	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$now.txt > /dev/null 2>&1
+	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	amass enum -active -d $1 -o 1scrap4$now.txt > /dev/null 2>&1
+	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	# los ordeno y quito dominios duplicados
-	cat 1scrap1$now.txt 1scrap2$now.txt 1scrap3$now.txt 1scrap4$now.txt | grep "\.$1\|^$1" > 1scrap$now.txt
-	rm -f 1scrap1$now.txt 1scrap2$now.txt 1scrap3$now.txt 1scrap4$now.txt
-	sort -u -o 1scrap$now.txt 1scrap$now.txt 
+	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1" > 1scrap$1.txt
+	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
+	sort -u -o 1scrap$1.txt 1scrap$1.txt 
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
 
-	if [[ -f 1scrap$now.txt && ! -s 1scrap$now.txt ]]; then
+	if [[ -f 1scrap$1.txt && ! -s 1scrap$1.txt ]]; then
 		echo -e "\e[32m*********** No domains scrapped... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
@@ -151,11 +151,11 @@ subdomains(){
 
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns...\033[0m"
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$now.txt 1scrap$now.txt
-	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$now.txt 1scrap$now.txt
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
+	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
-	if [[ -f 2massdns$now.txt && ! -s 2massdns$now.txt ]]; then
+	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
 		echo -e "\e[32m*********** No domains resolved... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
@@ -163,40 +163,40 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$now.txt | httprobe > 6httprobe$now.txt
-	touch 7nmapvuln$now.txt
+	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
+	touch 7nmapvuln$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
-	nmap -sP -Pn -T5 -iL 1scrap$now.txt > 3nmap$now.txt < /dev/null 2>&1
-	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$now.txt | sort -u > 4nmapips$now.txt
+	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
+	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
 	
 	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
-	count=$(grep -c "Host is up" 3nmap$now.txt)
-	ips=$(wc -l 4nmapips$now.txt | awk '{ print $1 }')
+	count=$(grep -c "Host is up" 3nmap$1.txt)
+	ips=$(wc -l 4nmapips$1.txt | awk '{ print $1 }')
 	echo -e "\e[32m$count domains pointing to $ips IP addresses\033[0m"
 	
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
-	touch 9httprobeXORsqli$now.txt ahttproberedirect$now.txt
+	#touch 9httprobeXORsqli$1.txt ahttproberedirect$1.txt
 	# existen http o https accesibles, chequeo sqli y redirects
-	#if [[ -f 6httprobe$now.txt && -s 6httprobe$now.txt ]]; then
+	#if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
 	#	echo -e "\e[32m********** Starting Headers Check... *********\033[0m"
 	#	echo -e "\e[32mDoing Curl to check headers for sqli/redirect...\033[0m"
-	#	checkheadersforsqli 6httprobe$now.txt 9httprobeXORsqli$now.txt & checkheadersforredirect 6httprobe$now.txt ahttproberedirect$now.txt
+	#	checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt & checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt
 	#	echo -e "\e[32m************ Headers Check done... ***********\033[0m"
 	#fi
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
-	if [[ -f 4nmapips$now.txt && -s 4nmapips$now.txt ]]; then
+	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
 		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
-		nmap -sS -Pn --top-ports 2000 --script vuln -iL 4nmapips$now.txt > 7nmapvuln$now.txt < /dev/null 2>&1
+		nmap -sS -Pn --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
 	echo -e "\e[32mDoing Masscan...\033[0m"
-	masscan -p1-65535 -iL 4nmapips$now.txt -oG 5masscan$now.txt > /dev/null 2>&1
+	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt > /dev/null 2>&1
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
 	#echo -e "\e[32m***************** Final results ***************\033[0m"
-	#cat 8massdnssimple$now.txt 5masscan$now.txt 7nmapvuln$now.txt 9httprobeXORsqli$now.txt
+	#cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
 	echo -e "\e[32m******************** The End *******************\033[0m"
 	end=$(date +"%s")
 	diff=$(($end-$begin))
