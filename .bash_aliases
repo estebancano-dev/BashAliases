@@ -270,6 +270,7 @@ takeover(){
 	sort -u -o ~/tools/takeovers/1scrapall$now.txt ~/tools/takeovers/1scrapall$now.txt
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
 	cat ~/tools/takeovers/takeover$now.txt | awk '{ print $3 }' > ~/tools/takeovers/takeover2$now.txt
+	sort -u -o ~/tools/takeovers/takeover2$now.txt ~/tools/takeovers/takeover2$now.txt
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/takeover3$now.txt ~/tools/takeovers/takeover2$now.txt
 }
 
