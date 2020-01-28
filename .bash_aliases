@@ -268,7 +268,7 @@ takeover(){
 		return
 	fi
 	sort -u -o ~/tools/takeovers/1scrapall$now.txt ~/tools/takeovers/1scrapall$now.txt
-	massdns -q S -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
+	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
 }
 
 getips(){
