@@ -129,13 +129,13 @@ subdomains(){
 	assetfinder $1 > 1scrap1$1.txt	
 	
 	echo -e "\e[32mDoing Subfinder...\033[0m"
-	#subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
+	subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Sublist3r...\033[0m"
-	#python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
+	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	#amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
+	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	# los ordeno y quito dominios duplicados
@@ -152,8 +152,8 @@ subdomains(){
 
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns...\033[0m"
-	#massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
-	#massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
+	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
 	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
@@ -164,7 +164,7 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	#cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
+	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
 	touch 7nmapvuln$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
@@ -203,6 +203,7 @@ subdomains(){
 		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
 		nmap -sS -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
+	
 	echo -e "\e[32mDoing Masscan...\033[0m"
 	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
