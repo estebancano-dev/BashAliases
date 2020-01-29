@@ -174,7 +174,7 @@ subdomains(){
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
 		nmap --script targets-asn --script-args targets-asn.asn=$2 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt
-		nmap -sP -Pn -T5 -iL asnip$1.txt >> xxxxnmap$1.txt < /dev/null 2>&1
+		nmap -sP -T5 -iL asnip$1.txt >> xxxxnmap$1.txt < /dev/null 2>&1
 	fi
 	return
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
