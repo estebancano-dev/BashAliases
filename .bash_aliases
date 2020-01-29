@@ -173,10 +173,11 @@ subdomains(){
 	# agrego a la lista de IP los rangos ASN
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
-		nmap --script targets-asn --script-args targets-asn.asn=$2 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt
-		nmap -sP -T5 -iL asnip$1.txt >> xxxxnmap$1.txt < /dev/null 2>&1
+		nmap --script targets-asn --script-args targets-asn.asn=$2 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt < /dev/null 2>&1
+		nmap -sP -T5 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
-	return
+
+	# extract all ips
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
 	
 	# a veces agrega la ip 0.0.0.0 y al escanear puertos (localhost), tarda una baaanda. La vuelo, si existe
@@ -200,7 +201,7 @@ subdomains(){
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
 		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
-		nmap -sS -Pn -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
+		nmap -sS -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
 	echo -e "\e[32mDoing Masscan...\033[0m"
 	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
