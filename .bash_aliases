@@ -110,10 +110,11 @@ check(){
 	assetfinder $1 | grep $1 | httprobe
 }
 
-# Given a domain name, scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
+# Given a domain name, and optionally an ASN number (only 1 number, eg:62566) scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
 # Uses: assetfinder, subfinder, sublist3r, amass, massdns, httprobe, nmap, masscan
-# usage: subdomains domain.com
-# output: list of alive subdomains and open ports
+# usage: subdomains domain.com [ASNNUMBER]
+# output: list of alive subdomains, open ports, vulns
+# TODO: remove private ips from 4nmapips.
 subdomains(){
 	clear
 	begin=$(date +"%s")
@@ -128,13 +129,13 @@ subdomains(){
 	assetfinder $1 > 1scrap1$1.txt	
 	
 	echo -e "\e[32mDoing Subfinder...\033[0m"
-	subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
+	#subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Sublist3r...\033[0m"
-	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
+	#python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
+	#amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	# los ordeno y quito dominios duplicados
@@ -151,8 +152,8 @@ subdomains(){
 
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns...\033[0m"
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
-	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
+	#massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
+	#massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
 	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
@@ -163,11 +164,19 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
+	#cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
 	touch 7nmapvuln$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
+	
+	# agrego a la lista de IP los rangos ASN
+	re='^[0-9]+$'
+	if [[ $2 =~ $re ]]; then
+		nmap --script targets-asn --script-args targets-asn.asn=$2 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt
+		nmap -sP -Pn -T5 -iL asnip$1.txt >> xxxxnmap$1.txt < /dev/null 2>&1
+	fi
+	return
 	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
 	
 	# a veces agrega la ip 0.0.0.0 y al escanear puertos (localhost), tarda una baaanda. La vuelo, si existe
@@ -177,7 +186,6 @@ subdomains(){
 	count=$(grep -c "Host is up" 3nmap$1.txt)
 	ips=$(wc -l 4nmapips$1.txt | awk '{ print $1 }')
 	echo -e "\e[32m$count domains pointing to $ips IP addresses\033[0m"
-	
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
 	#touch 9httprobeXORsqli$1.txt ahttproberedirect$1.txt
@@ -195,7 +203,7 @@ subdomains(){
 		nmap -sS -Pn -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
 	echo -e "\e[32mDoing Masscan...\033[0m"
-	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt > /dev/null 2>&1
+	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
 	#echo -e "\e[32m***************** Final results ***************\033[0m"
