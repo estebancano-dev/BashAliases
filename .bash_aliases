@@ -115,6 +115,7 @@ check(){
 # usage: subdomains domain.com [ASNNUMBER]
 # output: list of alive subdomains, open ports, vulns
 # TODO: remove private ips from 4nmapips.
+#		
 subdomains(){
 	clear
 	begin=$(date +"%s")
@@ -400,25 +401,32 @@ install(){
 	mkdir -p tools/{__diccionarios,recon,takeovers}
 	cd tools
 	sudo apt update && sudo apt dist-upgrade -y
-	sudo apt-get install golang-go
+	sudo apt-get install git -y
+	sudo apt-get install python3-pip -y
+	sudo apt-get install golang-go -y
 	git clone https://github.com/maurosoria/dirsearch.git
 	git clone https://github.com/blechschmidt/massdns.git
 	cd massdns
 	make
+	cd ..
 	git clone https://github.com/aboul3la/Sublist3r.git
+	cd Sublist3r
 	pip3 install -r requirements.txt
+	cd ..
 	git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
 	git clone https://github.com/GerbenJavado/LinkFinder.git
 	cd LinkFinder
 	python setup.py install
+	cd ..
 	git clone https://github.com/robertdavidgraham/masscan
 	cd masscan
 	make
-	pip3 install -r requirements.txt	
 	go get -u github.com/tomnomnom/httprobe
-	go get -u github.com/tomnomnom/assetfinder
+	go get -v -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
-	go get -v github.com/projectdiscovery/subfinder/cmd/subfinder
+	export GO111MODULE=on
+	go get -u github.com/OWASP/Amass/v3/...
+	go get -u github.com/projectdiscovery/subfinder/cmd/subfinder
 	reinstall
 	sudo apt autoremove
 	sudo apt-get clean
@@ -426,6 +434,6 @@ install(){
 }
 
 
-export GOROOT=/usr/local/go
+export GOROOT=~/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
