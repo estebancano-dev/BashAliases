@@ -399,11 +399,15 @@ netcat(){
 install(){
 	cd ~
 	mkdir -p tools/{__diccionarios,recon,takeovers}
-	cd tools
+	cd /usr/local/
+	mkdir go
+	wget https://dl.google.com/go/go1.14.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.14.linux-amd64.tar.gz
+	export PATH=$PATH:/usr/local/go/bin
+	cd ~/tools
 	sudo apt update && sudo apt dist-upgrade -y
 	sudo apt-get install git -y
 	sudo apt-get install python3-pip -y
-	sudo apt-get install golang-go -y
 	git clone https://github.com/maurosoria/dirsearch.git
 	git clone https://github.com/blechschmidt/massdns.git
 	cd massdns
@@ -422,7 +426,7 @@ install(){
 	cd masscan
 	make
 	go get -u github.com/tomnomnom/httprobe
-	go get -v -u github.com/tomnomnom/assetfinder
+	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
 	export GO111MODULE=on
 	go get -u github.com/OWASP/Amass/v3/...
@@ -433,7 +437,4 @@ install(){
 	sudo apt-get autoclean
 }
 
-
-export GOROOT=~/go
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+export PATH=$PATH:/usr/local/go/bin
