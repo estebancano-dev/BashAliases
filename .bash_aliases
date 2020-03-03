@@ -403,15 +403,19 @@ install(){
 	mkdir go
 	wget https://dl.google.com/go/go1.14.linux-amd64.tar.gz
 	tar -C /usr/local -xzf go1.14.linux-amd64.tar.gz
-	export PATH=$PATH:/usr/local/go/bin
+	export GOROOT=$HOME/go
+	export GOPATH=$HOME/work
+	export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 	cd ~/tools
 	sudo apt update && sudo apt dist-upgrade -y
 	sudo apt-get install git -y
+	sudo apt-get install nmap -y
+	sudo apt-get install curl -y
 	sudo apt-get install python3-pip -y
 	git clone https://github.com/maurosoria/dirsearch.git
 	git clone https://github.com/blechschmidt/massdns.git
 	cd massdns
-	make
+	sudo make
 	cd ..
 	git clone https://github.com/aboul3la/Sublist3r.git
 	cd Sublist3r
@@ -431,10 +435,14 @@ install(){
 	export GO111MODULE=on
 	go get -u github.com/OWASP/Amass/v3/...
 	go get -u github.com/projectdiscovery/subfinder/cmd/subfinder
+	sudo apt install xfce4 xfce4-goodies
+	sudo apt install tightvncserver
+	#ejecutar vncserver para configurar password
+	vncserver
+	
 	reinstall
 	sudo apt autoremove
 	sudo apt-get clean
 	sudo apt-get autoclean
 }
 
-export PATH=$PATH:/usr/local/go/bin
