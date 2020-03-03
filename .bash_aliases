@@ -416,6 +416,7 @@ install(){
 	git clone https://github.com/blechschmidt/massdns.git
 	cd massdns
 	sudo make
+	cp bin/massdns /bin/
 	cd ..
 	git clone https://github.com/aboul3la/Sublist3r.git
 	cd Sublist3r
