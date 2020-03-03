@@ -403,9 +403,9 @@ install(){
 	mkdir go
 	wget https://dl.google.com/go/go1.14.linux-amd64.tar.gz
 	tar -C /usr/local -xzf go1.14.linux-amd64.tar.gz
-	export GOROOT=$HOME/go
-	export GOPATH=$HOME/work
-	export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+	export GOROOT=/usr/local/go
+	export GOPATH=$HOME/go
+	export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 	cd ~/tools
 	sudo apt update && sudo apt dist-upgrade -y
 	sudo apt-get install git -y
@@ -446,3 +446,6 @@ install(){
 	sudo apt-get autoclean
 }
 
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
