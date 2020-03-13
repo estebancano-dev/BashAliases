@@ -173,6 +173,7 @@ subdomains(){
 	# agrego a la lista de IP los rangos ASN
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
+		echo -e "\e[32mDoing Nmap to check ASN alive IP...\033[0m"
 		nmap --script targets-asn --script-args targets-asn.asn=$2 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt < /dev/null 2>&1
 		nmap -sP -T5 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
