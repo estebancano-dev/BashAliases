@@ -166,7 +166,6 @@ subdomains(){
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
-	touch 7nmapvuln$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
@@ -200,13 +199,13 @@ subdomains(){
 	#fi
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
+	echo -e "\e[32mDoing Masscan...\033[0m"
+	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
+
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
 		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
 		nmap -sS -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
-	
-	echo -e "\e[32mDoing Masscan...\033[0m"
-	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
 	#echo -e "\e[32m***************** Final results ***************\033[0m"
@@ -427,9 +426,11 @@ install(){
 	cd LinkFinder
 	python setup.py install
 	cd ..
+	sudo apt-get install git gcc make libpcap-dev
 	git clone https://github.com/robertdavidgraham/masscan
 	cd masscan
 	make
+	cp bin/masscan /bin/
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
