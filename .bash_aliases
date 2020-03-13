@@ -124,7 +124,7 @@ subdomains(){
 	cd ~/tools/recon/$1/$now/
 	touch 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
 
-	echo -e "\e[32mUrl: $1\033[0m"
+	echo -e "\e[32mUrl: $1 $2\033[0m"
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
 	echo -e "\e[32mDoing Assetfinder...\033[0m"
 	assetfinder $1 > 1scrap1$1.txt	
