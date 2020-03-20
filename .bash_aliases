@@ -201,11 +201,11 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
 	echo -e "\e[32mDoing Masscan...\033[0m"
-	masscan -p1-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
+	masscan -p0-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
 
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
 		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
-		nmap -sS -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
+		nmap -A -sS -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
 	fi
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
