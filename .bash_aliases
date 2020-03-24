@@ -174,8 +174,8 @@ subdomains(){
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
 		echo -e "\e[32mDoing Nmap to check ASN alive IP...\033[0m"
-		nmap --script targets-asn --script-args targets-asn.asn=$2 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt < /dev/null 2>&1
-		nmap -sP -T5 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
+		nmap --script targets-asn --script-args targets-asn.asn=$2 --min-rate=3000 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt < /dev/null 2>&1
+		nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
 
 	# extract all ips
@@ -204,13 +204,14 @@ subdomains(){
 	masscan -p0-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
 
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
-		echo -e "\e[32mDoing Nmap to check top 2000 port vulns/versions...\033[0m"
-		nmap -A -sS -T4 --top-ports 2000 --script vuln -iL 4nmapips$1.txt > 7nmapvuln$1.txt < /dev/null 2>&1
+		echo -e "\e[32mDoing Nmap to check port service versions...\033[0m"
+		touch 7nmapservices$1.txt
+		cat $1 | while read ipaescanear; do
+			ports=$(nmap -p- --min-rate=3000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+			nmap -sC -sV -p$ports -T4 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
+		done
 	fi
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
-	
-	#echo -e "\e[32m***************** Final results ***************\033[0m"
-	#cat 8massdnssimple$1.txt 5masscan$1.txt 7nmapvuln$1.txt 9httprobeXORsqli$1.txt
 	echo -e "\e[32m******************** The End *******************\033[0m"
 	end=$(date +"%s")
 	diff=$(($end-$begin))
