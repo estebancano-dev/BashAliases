@@ -206,7 +206,7 @@ subdomains(){
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
 		echo -e "\e[32mDoing Nmap to check port service versions...\033[0m"
 		touch 7nmapservices$1.txt
-		cat $1 | while read ipaescanear; do
+		cat 4nmapips$1.txt | while read ipaescanear; do
 			ports=$(nmap -p- --min-rate=3000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
 			nmap -sC -sV -p$ports -T4 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
 		done
