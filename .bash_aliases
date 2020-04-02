@@ -174,12 +174,13 @@ subdomains(){
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
 		echo -e "\e[32mDoing Nmap to check ASN alive IP...\033[0m"
-		nmap --script targets-asn --script-args targets-asn.asn=$2 --min-rate=3000 | egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}+/[0-9]+' > asnip$1.txt < /dev/null 2>&1
+		nmap --script targets-asn --script-args targets-asn.asn=$2 --min-rate=3000 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" > asnip$1.txt < /dev/null 2>&1
 		nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
 
 	# extract all ips
-	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
+	# egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
+	cat 3nmap$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > > 4nmapips$1.txt
 	
 	# a veces agrega la ip 0.0.0.0 y al escanear puertos (localhost), tarda una baaanda. La vuelo, si existe
 	sed -i '/0.0.0.0/d' 4nmapips$1.txt
@@ -212,6 +213,10 @@ subdomains(){
 		done
 	fi
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
+	echo -e "\e[32m***************** Screenshots... **************\033[0m"
+	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m"
+	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness
+	
 	echo -e "\e[32m******************** The End *******************\033[0m"
 	end=$(date +"%s")
 	diff=$(($end-$begin))
@@ -290,21 +295,11 @@ takeover(){
 }
 
 getips(){
-	egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' $1 | sort -u > $1ips.txt
+	cat $1 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > $1ips.txt
 }
 
 checkwebalive(){
 	nmap -sn -Pn $1 --script hostmap-crtsh | awk '{ print $2 }' | grep $1 | check $1
-}
-
-# updates OS?
-update(){
-	sudo apt update && sudo apt dist-upgrade -y
-	#pip install --upgrade pip
-	#pip-review --auto
-	sudo apt autoremove
-	sudo apt-get clean
-	sudo apt-get autoclean
 }
 
 dirsearch(){
@@ -400,6 +395,8 @@ netcat(){
 install(){
 	cd ~
 	mkdir -p tools/{__diccionarios,recon,takeovers}
+
+	# golang
 	cd /usr/local/
 	mkdir go
 	wget https://dl.google.com/go/go1.14.linux-amd64.tar.gz
@@ -407,38 +404,76 @@ install(){
 	export GOROOT=/usr/local/go
 	export GOPATH=$HOME/go
 	export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+	
+	# actualizo el SO
 	cd ~/tools
 	sudo apt update && sudo apt dist-upgrade -y
+	
+	# git, nmap, curl, pip3
 	sudo apt-get install git -y
 	sudo apt-get install nmap -y
 	sudo apt-get install curl -y
 	sudo apt-get install python3-pip -y
+	
+	# dirsearch, EyeWitness
 	git clone https://github.com/maurosoria/dirsearch.git
+	git clone https://github.com/FortyNorthSecurity/EyeWitness.git
+	cd EyeWitness/setup
+	./setup.sh
+	cd ..
+	cd ..
+	
+	# altdns https://github.com/infosec-au/altdns
+	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+	python get-pip.py
+	pip install py-altdns
+	
+	# massdns
 	git clone https://github.com/blechschmidt/massdns.git
 	cd massdns
 	sudo make
 	cp bin/massdns /bin/
 	cd ..
+
+	# Sublist3r
 	git clone https://github.com/aboul3la/Sublist3r.git
 	cd Sublist3r
 	pip3 install -r requirements.txt
 	cd ..
+	
+	# sqlmap
 	git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
-	git clone https://github.com/GerbenJavado/LinkFinder.git
-	cd LinkFinder
-	python setup.py install
-	cd ..
+	
+	
+	#git clone https://github.com/GerbenJavado/LinkFinder.git
+	#cd LinkFinder
+	#python setup.py install
+	#cd ..
+	
+	# masscan
 	sudo apt-get install git gcc make libpcap-dev
 	git clone https://github.com/robertdavidgraham/masscan
 	cd masscan
 	make
 	cp bin/masscan /bin/
+	cd ..
+	
+	# httprobe, assetfinder, fuff, amass, subfinder
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
 	export GO111MODULE=on
 	go get -u github.com/OWASP/Amass/v3/...
 	go get -u github.com/projectdiscovery/subfinder/cmd/subfinder
+	
+	# jtr
+	git clone https://github.com/magnumripper/JohnTheRipper.git
+	apt-get install libssl-dev
+	cd JohnTheRipper
+	./configure && make
+	cd ..
+	
+	# desktop & vncserver
 	sudo apt install xfce4 xfce4-goodies
 	sudo apt install tightvncserver
 	#ejecutar vncserver para configurar password
