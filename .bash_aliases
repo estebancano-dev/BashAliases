@@ -180,7 +180,7 @@ subdomains(){
 
 	# extract all ips
 	# egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
-	cat 3nmap$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > > 4nmapips$1.txt
+	cat 3nmap$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > 4nmapips$1.txt
 	
 	# a veces agrega la ip 0.0.0.0 y al escanear puertos (localhost), tarda una baaanda. La vuelo, si existe
 	sed -i '/0.0.0.0/d' 4nmapips$1.txt
