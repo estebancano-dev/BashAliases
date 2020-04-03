@@ -214,7 +214,7 @@ subdomains(){
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	echo -e "\e[32m***************** Screenshots... **************\033[0m"
 	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m"
-	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness
+	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness > /dev/null 2>&1
 	
 	echo -e "\e[32m******************** The End *******************\033[0m"
 	end=$(date +"%s")
