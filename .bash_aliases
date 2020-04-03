@@ -178,12 +178,11 @@ subdomains(){
 		nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
 
-	# extract all ips
-	# egrep -o -h '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' 3nmap$1.txt | sort -u > 4nmapips$1.txt
+	# extract all ips and order/unique them
 	cat 3nmap$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > 4nmapips$1.txt
 	
-	# a veces agrega la ip 0.0.0.0 y al escanear puertos (localhost), tarda una baaanda. La vuelo, si existe
-	sed -i '/0.0.0.0/d' 4nmapips$1.txt
+	# vuelo ip privadas, 0.0.0.0 (a veces aparece y el scan tarda mucho) y lineas en blanco. https://en.wikipedia.org/wiki/Private_network
+	sed -i -E '/192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|127.0.0.1|0.0.0.0|100\.[6789]|100\.1[01][0-9]\.|100\.12[0-7]\.|^$/d' 4nmapips$1.txt
 	
 	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
 	count=$(grep -c "Host is up" 3nmap$1.txt)
@@ -208,8 +207,8 @@ subdomains(){
 		echo -e "\e[32mDoing Nmap to check port service versions...\033[0m"
 		touch 7nmapservices$1.txt
 		cat 4nmapips$1.txt | while read ipaescanear; do
-			ports=$(nmap -p- --min-rate=3000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
-			nmap -sC -sV -p$ports -T4 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
+			ports=$(nmap -p- --min-rate=30000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+			nmap -sV -p$ports -T5 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
 		done
 	fi
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
