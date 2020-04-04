@@ -143,8 +143,16 @@ subdomains(){
 	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1" > 1scrap$1.txt
 	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
 	sort -u -o 1scrap$1.txt 1scrap$1.txt 
+	
+	echo -e "\e[32mDoing httprobe...\033[0m"
+	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
+	# altdns
+	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
+		cat 6httprobe$1.txt |sed -e 's/https:\/\///g' | sed -e 's/http:\/\///g' | sort -u > altdns$1.txt
+		altdns -i altdns$1.txt -o data_output -w ~/tools/__diccionarios/altdns.txt -s results_output.txt
+	fi
+	
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
-
 	if [[ -f 1scrap$1.txt && ! -s 1scrap$1.txt ]]; then
 		echo -e "\e[32m*********** No domains scrapped... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
@@ -164,9 +172,6 @@ subdomains(){
 	fi
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
-	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
-	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
