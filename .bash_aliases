@@ -184,8 +184,6 @@ subdomains(){
 	fi
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
-	return
-	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt	
