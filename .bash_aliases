@@ -154,7 +154,7 @@ subdomains(){
 		cat 6httprobe$1.txt |sed -e 's/https:\/\///g' | sed -e 's/http:\/\///g' | sort -u > altdns$1.txt
 		altdns -i altdns$1.txt -o altdns.txt -w ~/tools/__diccionarios/altdns.txt
 		cat altdns.txt | sort -u >> 1scrap$1.txt
-		rm altdns.txt
+		rm altdns.txt altdns$1.txt
 	fi
 	
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
