@@ -159,7 +159,7 @@ subdomains(){
 	cat altdns$1.txt | sort -u >> altdns$1.txt
 	# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
 	cat 1scrap$1.txt | while read dom; do
-		sed -i '/$dom/d' altdns$1.txt
+		sed -i "/$dom/d" altdns$1.txt
 	done
 	
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
