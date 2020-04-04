@@ -174,6 +174,7 @@ subdomains(){
 		echo -e "\e[32mDoing Massdns to alternative domains...\033[0m"
 		massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
 	fi
+	rm altdns$1.txt
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	
 	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
@@ -188,10 +189,6 @@ subdomains(){
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt	
-	# paso los dominios alternativos al general para chequear si estan vivos
-	# lo hago despues del httprobe, sino me hace httprobe de todos los alternativos y no me interesa
-	cat altdns$1.txt >> 1scrap$1.txt
-	rm altdns$1.txt
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
@@ -203,8 +200,13 @@ subdomains(){
 		nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
 
-	# extract all ips and order/unique them
-	cat 3nmap$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > 4nmapips$1.txt
+	# extract ip and order/unique them
+	cat 3nmap$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" > 4nmapips$1.txt
+	if [[ -f altdnsresolved$1.txt && -s altdnsresolved$1.txt ]]; then
+		# extract alternative ips
+		cat altdnsresolved$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" >> 4nmapips$1.txt
+	fi
+	cat 4nmapips$1.txt | sort -u > 4nmapips$1.txt
 	
 	# vuelo ip privadas, 0.0.0.0 (a veces aparece y el scan tarda mucho) y lineas en blanco. https://en.wikipedia.org/wiki/Private_network
 	sed -i -E '/192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|127.0.0.1|0.0.0.0|100\.[6789]|100\.1[01][0-9]\.|100\.12[0-7]\.|^$/d' 4nmapips$1.txt
