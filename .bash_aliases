@@ -169,7 +169,7 @@ subdomains(){
 	echo -e "\e[32mDoing Massdns...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
 	# separo los dominios alternativos resueltos (son aquellos no listados/ocultos), hay mas chances de que no estén testeados
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
+	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
 	cat altdnsresolved$1.txt >> 2massdns$1.txt
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
@@ -184,7 +184,7 @@ subdomains(){
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
-	# agrego a la lista de IP los rangos ASN
+	# agrego a la lista de IP los rangos ASN (si se agregó el segundo parámetro)
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
 		echo -e "\e[32mDoing Nmap to check ASN alive IP...\033[0m"
