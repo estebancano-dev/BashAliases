@@ -130,13 +130,13 @@ subdomains(){
 	assetfinder $1 > 1scrap1$1.txt	
 	
 	echo -e "\e[32mDoing Subfinder...\033[0m"
-	#subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
+	subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Sublist3r...\033[0m"
-	#python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
+	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Amass...\033[0m"
-	#amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
+	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1" > 1scrap$1.txt
@@ -154,7 +154,6 @@ subdomains(){
 	fi
 
 	# altdns con los dominios en bruto.
-	#cat 6httprobe$1.txt |sed -e 's/https:\/\///g' | sed -e 's/http:\/\///g' | sort -u > altdns$1.txt
 	echo -e "\e[32mDoing Altdns to generate alternative domains...\033[0m"
 	altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
 	cat altdns$1.txt | sort -u >> altdns$1.txt
