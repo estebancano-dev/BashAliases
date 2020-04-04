@@ -155,20 +155,25 @@ subdomains(){
 
 	# altdns con los dominios en bruto.
 	#cat 6httprobe$1.txt |sed -e 's/https:\/\///g' | sed -e 's/http:\/\///g' | sort -u > altdns$1.txt
+	echo -e "\e[32mDoing Altdns to generate alternative domains...\033[0m"
 	altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
 	cat altdns$1.txt | sort -u >> altdns$1.txt
 	# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
 	cat 1scrap$1.txt | while read dom; do
 		sed -i "/$dom/d" altdns$1.txt
 	done
+	count=$(wc -l altdns$1.txt)
+	echo -e "\e[32mGenerated $count alternative domains...\033[0m"
 	
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns to scrapped domains...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
-	# separo los dominios alternativos resueltos 
-	echo -e "\e[32mDoing Massdns to alternative domains...\033[0m"
-	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
+	# resuelvo los dominios alternativos
+	if [[ -f altdns$1.txt && ! -s altdns$1.txt ]]; then
+		echo -e "\e[32mDoing Massdns to alternative domains...\033[0m"
+		massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
+	fi
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	
 	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
