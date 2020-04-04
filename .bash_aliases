@@ -203,7 +203,7 @@ subdomains(){
 		# extract alternative ips
 		cat altdnsresolved$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" >> 4nmapips$1.txt
 	fi
-	cat 4nmapips$1.txt | sort -u >> 4nmapips$1.txt
+	sort -u -o 4nmapips$1.txt 4nmapips$1.txt
 	
 	# vuelo ip privadas, 0.0.0.0 (a veces aparece y el scan tarda mucho) y lineas en blanco. https://en.wikipedia.org/wiki/Private_network
 	sed -i -E '/192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|127.0.0.1|0.0.0.0|100\.[6789]|100\.1[01][0-9]\.|100\.12[0-7]\.|^$/d' 4nmapips$1.txt
