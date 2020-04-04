@@ -146,25 +146,30 @@ subdomains(){
 	sed -i 's/<BR>/\r\n/g' 1scrap$1.txt
 	# los ordeno y quito dominios duplicados
 	sort -u -o 1scrap$1.txt 1scrap$1.txt 
-	
-	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
-	# altdns
-	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
-		cat 6httprobe$1.txt |sed -e 's/https:\/\///g' | sed -e 's/http:\/\///g' | sort -u > altdns$1.txt
-		altdns -i altdns$1.txt -o altdns.txt -w ~/tools/__diccionarios/altdns.txt
-		cat altdns.txt | sort -u >> altdns$1.txt
-		cat altdns$1.txt >> 1scrap$1.txt
-		rm altdns.txt
-	fi
-	
-	echo -e "\e[32m************** Scrapping done... **************\033[0m"
+
 	if [[ -f 1scrap$1.txt && ! -s 1scrap$1.txt ]]; then
 		echo -e "\e[32m*********** No domains scrapped... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
 	fi
 
+	# altdns con los dominios en bruto.
+	#cat 6httprobe$1.txt |sed -e 's/https:\/\///g' | sed -e 's/http:\/\///g' | sort -u > altdns$1.txt
+	
+	altdns -i 1scrap$1.txt -o altdns.txt -w ~/tools/__diccionarios/altdns.txt
+	cat altdns.txt | sort -u >> altdns$1.txt
+	rm altdns.txt
+	cat 1scrap$1.txt | while read dom; do
+		sed -i '/$dom/d' altdns$1.txt
+	done
+	cat altdns$1.txt >> 1scrap$1.txt
+	
+	echo -e "\e[32mDoing httprobe...\033[0m"
+	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
+	
+	return
+	
+	echo -e "\e[32m************** Scrapping done... **************\033[0m"
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
 	echo -e "\e[32mDoing Massdns...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
@@ -174,7 +179,7 @@ subdomains(){
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
-	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
+	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt && -f 2massdns$1.txt && ! -s 2massdns$1.txt]]; then
 		echo -e "\e[32m*********** No domains resolved... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
