@@ -168,13 +168,13 @@ subdomains(){
 	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
-	nmap -sP -Pn -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
+	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
 	# agrego a la lista de IP los rangos ASN
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
 		echo -e "\e[32mDoing Nmap to check ASN alive IP...\033[0m"
-		nmap --script targets-asn --script-args targets-asn.asn=$2 --min-rate=3000 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" > asnip$1.txt < /dev/null 2>&1
+		nmap -Pn --script targets-asn --script-args targets-asn.asn=$2 --min-rate=3000 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" > asnip$1.txt < /dev/null 2>&1
 		nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
 
@@ -207,8 +207,13 @@ subdomains(){
 		echo -e "\e[32mDoing Nmap to check port service versions...\033[0m"
 		touch 7nmapservices$1.txt
 		cat 4nmapips$1.txt | while read ipaescanear; do
-			ports=$(nmap -p- --min-rate=30000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
-			nmap -sV -p$ports -T5 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
+			ports=$(nmap -Pn -p- --min-rate=30000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+			length=$(echo $ports | sed 's/[^,]//g' | awk '{ print length }')
+			# escaneo hasta 30 puertos, a veces el nmap detecta (de cloudflare x ejemplo) cientos de puertos abiertos, y es mentira
+			if (($length <= 30)); then
+				# -sC es más rapido que -sV. Si necesito más info, escanear a mano con -sV --script=vuln x ejemplo
+				nmap -Pn -sC -p$ports -T5 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
+			fi
 		done
 	fi
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
