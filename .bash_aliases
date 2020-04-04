@@ -139,9 +139,12 @@ subdomains(){
 	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
-	# los ordeno y quito dominios duplicados. Borro <BR> de la salida del Sublist3r, a veces pasa
-	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1" | sed -i 's/<BR>/\r\n/g' > 1scrap$1.txt
+	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1" > 1scrap$1.txt
+	# borro los archivos temporales
 	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
+	# borro <BR> de la salida del Sublist3r, a veces pasa
+	sed -i 's/<BR>/\r\n/g' 1scrap$1.txt
+	# los ordeno y quito dominios duplicados
 	sort -u -o 1scrap$1.txt 1scrap$1.txt 
 	
 	echo -e "\e[32mDoing httprobe...\033[0m"
