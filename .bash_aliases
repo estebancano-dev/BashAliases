@@ -179,7 +179,7 @@ subdomains(){
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
-	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt && -f 2massdns$1.txt && ! -s 2massdns$1.txt]]; then
+	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
 		echo -e "\e[32m*********** No domains resolved... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
