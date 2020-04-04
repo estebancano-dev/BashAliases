@@ -212,10 +212,11 @@ subdomains(){
 			# escaneo hasta 30 puertos, a veces el nmap detecta (de cloudflare x ejemplo) cientos de puertos abiertos, y es mentira
 			if (($length <= 30)); then
 				# -sC es más rapido que -sV. Si necesito más info, escanear a mano con -sV --script=vuln x ejemplo
-				nmap -Pn -sC -p$ports -T5 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
+				nmap -Pn -sC -f -p$ports -T5 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
 			fi
 		done
 	fi
+	
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	echo -e "\e[32m***************** Screenshots... **************\033[0m"
 	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m"
