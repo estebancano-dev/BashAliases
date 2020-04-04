@@ -191,6 +191,7 @@ subdomains(){
 	# paso los dominios alternativos al general para chequear si estan vivos
 	# lo hago despues del httprobe, sino me hace httprobe de todos los alternativos y no me interesa
 	cat altdns$1.txt >> 1scrap$1.txt
+	rm altdns$1.txt
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
