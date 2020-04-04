@@ -155,37 +155,37 @@ subdomains(){
 
 	# altdns con los dominios en bruto.
 	#cat 6httprobe$1.txt |sed -e 's/https:\/\///g' | sed -e 's/http:\/\///g' | sort -u > altdns$1.txt
-	
-	altdns -i 1scrap$1.txt -o altdns.txt -w ~/tools/__diccionarios/altdns.txt
-	cat altdns.txt | sort -u >> altdns$1.txt
-	rm altdns.txt
+	altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
+	cat altdns$1.txt | sort -u >> altdns$1.txt
+	# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
 	cat 1scrap$1.txt | while read dom; do
 		sed -i '/$dom/d' altdns$1.txt
 	done
-	cat altdns$1.txt >> 1scrap$1.txt
-	
-	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt
-	
-	return
 	
 	echo -e "\e[32m************** Scrapping done... **************\033[0m"
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m"
-	echo -e "\e[32mDoing Massdns...\033[0m"
+	echo -e "\e[32mDoing Massdns to scrapped domains...\033[0m"
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
-	# separo los dominios alternativos resueltos (son aquellos no listados/ocultos), hay mas chances de que no estén testeados
+	# separo los dominios alternativos resueltos 
+	echo -e "\e[32mDoing Massdns to alternative domains...\033[0m"
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
-	cat altdnsresolved$1.txt >> 2massdns$1.txt
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
-	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
 	
 	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
 		echo -e "\e[32m*********** No domains resolved... ************\033[0m"
 		echo -e "\e[32m***********************************************\033[0m"
 		return
 	fi
+	echo -e "\e[32m************ DNS Resolving done... ************\033[0m"
+	
+	return
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
+	echo -e "\e[32mDoing httprobe...\033[0m"
+	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt	
+	# paso los dominios alternativos al general para chequear si estan vivos
+	# lo hago despues del httprobe, sino me hace httprobe de todos los alternativos y no me interesa
+	cat altdns$1.txt >> 1scrap$1.txt
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
