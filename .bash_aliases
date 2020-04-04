@@ -172,6 +172,8 @@ subdomains(){
 	if [[ -f altdns$1.txt && -s altdns$1.txt ]]; then
 		echo -e "\e[32mDoing Massdns to alternative domains...\033[0m"
 		massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
+		count=$(cat "altdnsresolved$1.txt" | wc -l)
+		echo -e "\e[32m$count alternative domains resolved...\033[0m"
 	fi
 	rm altdns$1.txt
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
