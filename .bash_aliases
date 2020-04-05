@@ -111,10 +111,9 @@ check(){
 }
 
 # Given a domain name, and optionally an ASN number (only 1 number, eg:62566) scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
-# Uses: assetfinder, subfinder, sublist3r, amass, massdns, httprobe, nmap, masscan
+# Uses: assetfinder, subfinder, sublist3r, amass, altdns, massdns, httprobe, nmap, masscan, eyewitness
 # usage: subdomains domain.com [ASNNUMBER]
 # output: list of alive subdomains, open ports, vulns
-# TODO: remove private ips from 4nmapips.
 #		
 subdomains(){
 	clear
@@ -227,7 +226,7 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
 	echo -e "\e[32mDoing Masscan...\033[0m"
-	masscan -p0-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --max-rate 30000 > /dev/null 2>&1
+	masscan -p0-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --rate 50000 --http-user-agent Mozilla > /dev/null 2>&1
 
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
 		echo -e "\e[32mDoing Nmap to check port service versions...\033[0m"
@@ -247,6 +246,7 @@ subdomains(){
 	echo -e "\e[32m***************** Screenshots... **************\033[0m"
 	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m"
 	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness > /dev/null 2>&1
+	rm geckodriver.log
 	
 	echo -e "\e[32m******************** The End *******************\033[0m"
 	end=$(date +"%s")
