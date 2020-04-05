@@ -234,8 +234,8 @@ subdomains(){
 		cat 4nmapips$1.txt | while read ipaescanear; do
 			ports=$(nmap -Pn -p- --min-rate=30000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
 			length=$(echo $ports | sed 's/[^,]//g' | awk '{ print length }')
-			# escaneo hasta 30 puertos, a veces el nmap detecta (de cloudflare x ejemplo) cientos de puertos abiertos, y es mentira
-			if (($length <= 30)); then
+			# escaneo hasta 40 puertos, a veces el nmap detecta (de cloudflare x ejemplo) cientos de puertos abiertos, y es mentira
+			if (($length <= 40)); then
 				# -sC es más rapido que -sV. Si necesito más info, escanear a mano con -sV --script=vuln x ejemplo
 				nmap -Pn -sC -f -p$ports -T5 $ipaescanear >> 7nmapservices$1.txt < /dev/null 2>&1
 			fi
@@ -381,6 +381,10 @@ dirsearch(){
 			*) echo "invalid option $REPLY";;
 		esac
 	done
+}
+
+sshbrute(){
+	nmap -Pn -p22 --script ssh-brute --script-args userdb=users.lst,passdb=pass.lst $1
 }
 
 nmap2(){
