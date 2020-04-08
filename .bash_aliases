@@ -97,11 +97,6 @@ grepemails(){
 	echo "File created: ${FILENAME%%.*}emails.txt"
 }
 
-linkfinder(){
-	cd ~/tools/LinkFinder
-	python3 linkfinder.py -i $1 -d -o cli
-}
-
 ipinfo(){
 	curl http://ipinfo.io/$1
 }
@@ -126,7 +121,7 @@ subdomains(){
 	echo -e "\e[32mUrl: $1 $2\033[0m"
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m"
 	echo -e "\e[32mDoing Assetfinder...\033[0m"
-	assetfinder $1 > 1scrap1$1.txt	
+	assetfinder $1 > 1scrap1$1.txt < /dev/null 2>&1
 	
 	echo -e "\e[32mDoing Subfinder...\033[0m"
 	subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
@@ -140,7 +135,7 @@ subdomains(){
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1" > 1scrap$1.txt
 	# borro los archivos temporales
-	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt
+	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt 2> /dev/null
 	# borro <BR> de la salida del Sublist3r, a veces pasa
 	sed -i 's/<BR>/\r\n/g' 1scrap$1.txt
 	# los ordeno y quito dominios duplicados
@@ -174,7 +169,7 @@ subdomains(){
 		count=$(cat "altdnsresolved$1.txt" | wc -l)
 		echo -e "\e[32m$count alternative domains resolved...\033[0m"
 	fi
-	rm altdns$1.txt
+	rm altdns$1.txt 2> /dev/null
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
 	
 	if [[ -f 2massdns$1.txt && ! -s 2massdns$1.txt ]]; then
@@ -186,7 +181,7 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt	
+	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt < /dev/null 2>&1
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
@@ -246,7 +241,7 @@ subdomains(){
 	echo -e "\e[32m***************** Screenshots... **************\033[0m"
 	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m"
 	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness > /dev/null 2>&1
-	rm geckodriver.log
+	rm geckodriver.log 2> /dev/null
 	
 	echo -e "\e[32m******************** The End *******************\033[0m"
 	end=$(date +"%s")
