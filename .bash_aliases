@@ -381,9 +381,9 @@ dirsearch(){
 sshbrute(){
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
-		nmap -Pn -p$2 --script ssh-brute --script-args userdb=users.lst,passdb=pass.lst $1
+		nmap -Pn -p$2 --script ssh-brute $1
 	else
-		nmap -Pn -p22 --script ssh-brute --script-args userdb=users.lst,passdb=pass.lst $1
+		nmap -Pn -p22 --script ssh-brute $1
 	fi
 }
 
