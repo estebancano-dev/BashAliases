@@ -238,6 +238,15 @@ subdomains(){
 	fi
 	
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
+	echo $1 | waybackurls | grep -E "\?" | sort -u -o listaurlswayback$1.txt
+	if [[ -f listaurlswayback$1.txt && -s listaurlswayback$1.txt ]]; then
+		echo -e "\e[32m********* Starting wayback & sqlmap... ********\033[0m"
+		for i in `cat listaurlswayback$1.txt`; do 
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --dump ; 
+		done > sqlmap$1.txt
+		echo -e "\e[32m*********** Wayback & sqlmap done... **********\033[0m"
+	fi
+	
 	echo -e "\e[32m***************** Screenshots... **************\033[0m"
 	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m"
 	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness > /dev/null 2>&1
@@ -418,11 +427,16 @@ nmap2(){
 }
 
 batchsqlmap(){
-	now=$(date +"%Y%m%d%H%M")
-	cat $1 | waybackurls | grep -E "\?" | sort -u -o lista$now.txt
-	for i in `cat lista$now.txt`; do 
-		python3 ~/tools/sqlmap-dev/sqlmap.py -u $i --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --dump ; 
-	done > sqlmap$now.txt
+	for dom in `cat $1`; do 
+		now=$(date +"%Y%m%d%H%M")
+		echo $dom | waybackurls | grep -E "\?" | sort -u -o lista$dom$now.txt
+		if [[ -f lista$dom$now.txt && ! -s lista$dom$now.txt ]]; then
+			continue
+		fi
+		for i in `cat lista$now.txt`; do 
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --dump ; 
+		done > sqlmap$dom$now.txt
+	done
 }
 
 sqlmap(){
