@@ -417,9 +417,17 @@ nmap2(){
 	done
 }
 
+batchsqlmap(){
+	now=$(date +"%Y%m%d%H%M")
+	cat $1 | waybackurls | grep -E "\?" | sort -u -o lista$now.txt
+	for i in `cat lista$now.txt`; do 
+		python3 ~/tools/sqlmap-dev/sqlmap.py -u $i --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --dump ; 
+	done > sqlmap$now.txt
+}
+
 sqlmap(){
 	cd ~/tools/sqlmap-dev
-	python3 sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --dump --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
+	python3 ~/tools/sqlmap-dev/sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --dump --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
 }
 
 netcat(){
@@ -497,6 +505,7 @@ install(){
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/ffuf/ffuf
+	go get github.com/tomnomnom/waybackurls
 	export GO111MODULE=on
 	go get -u github.com/OWASP/Amass/v3/...
 	go get -u github.com/projectdiscovery/subfinder/cmd/subfinder
