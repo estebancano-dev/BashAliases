@@ -426,6 +426,7 @@ nmap2(){
 }
 
 batchsqlmap(){
+	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat $1`; do 
 		now=$(date +"%Y%m%d%H%M")
 		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$dom$now.txt
@@ -436,7 +437,6 @@ batchsqlmap(){
 		
 		# limpio las urls (dejo solo 1 url con el mismo path)
 		patha=""
-		regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		touch "lista$dom$now.txt"
 		for i in `cat l$dom$now.txt`; do 
 			if [[ $i =~ $regex ]]
