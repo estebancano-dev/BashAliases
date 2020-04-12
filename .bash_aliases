@@ -332,9 +332,9 @@ takeover(){
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/takeover3$now.txt ~/tools/takeovers/takeover2$now.txt
 }
 
-getips(){
-	cat $1 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > $1ips.txt
-}
+#getips(){
+#	cat $1 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > $1ips.txt
+#}
 
 checkwebalive(){
 	nmap -sn -Pn $1 --script hostmap-crtsh | awk '{ print $2 }' | grep $1 | check $1
