@@ -245,7 +245,7 @@ subdomains(){
 		touch sqlmap$1.txt
 		for i in `cat listaurlswayback$1.txt`; do 
 			echo "\r\n************************* Testing $i "*************************\r\n" >> sqlmap$1.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$1.txt; 
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$1.txt
 		done
 		echo -e "\e[32m*********** Wayback & sqlmap done... **********\033[0m"
 	fi
@@ -331,10 +331,6 @@ takeover(){
 	sort -u -o ~/tools/takeovers/takeover2$now.txt ~/tools/takeovers/takeover2$now.txt
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/takeover3$now.txt ~/tools/takeovers/takeover2$now.txt
 }
-
-#getips(){
-#	cat $1 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | sort -u > $1ips.txt
-#}
 
 checkwebalive(){
 	nmap -sn -Pn $1 --script hostmap-crtsh | awk '{ print $2 }' | grep $1 | check $1
@@ -439,7 +435,7 @@ batchsqlmap(){
 		echo "************************* Testing $dom "*************************" > ~/tools/recon/sqlmap$dom$now.txt
 		for i in `cat lista$dom$now.txt`; do 
 			echo "\r\n************************* Testing $i "*************************\r\n" >> ~/tools/recon/sqlmap$dom$now.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$dom$now.txt; 
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$dom$now.txt 
 		done
 		rm lista$dom$now.txt
 	done
