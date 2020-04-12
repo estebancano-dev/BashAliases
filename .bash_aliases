@@ -244,7 +244,7 @@ subdomains(){
 		echo -e "\e[32m********* Starting wayback & sqlmap... ********\033[0m"
 		touch sqlmap$1.txt
 		for i in `cat listaurlswayback$1.txt`; do 
-			echo "\r\n************************* Testing $i *************************\r\n" >> sqlmap$1.txt
+			echo "************************* Testing $i *************************" >> sqlmap$1.txt
 			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$1.txt
 		done
 		echo -e "\e[32m*********** Wayback & sqlmap done... **********\033[0m"
@@ -428,16 +428,28 @@ nmap2(){
 batchsqlmap(){
 	for dom in `cat $1`; do 
 		now=$(date +"%Y%m%d%H%M")
-		echo $dom | waybackurls | grep -E "\?" | sort -u -o lista$dom$now.txt
-		if [[ -f lista$dom$now.txt && ! -s lista$dom$now.txt ]]; then
+		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$dom$now.txt
+		if [[ -f l$dom$now.txt && ! -s l$dom$now.txt ]]; then
 			continue
 		fi
+		
+		# limpio las urls (dejo solo 1 url con el mismo path)
+		patha=""
+		touch lista$dom$now.txt
+		for i in `cat l$dom$now.txt`; do 
+			pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
+			if [ "$patha" != "$pathb" ]; then
+				echo "$i" >> lista$dom$now.txt
+				patha="$pathb"
+			fi
+		done
+		
 		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$dom$now.txt
 		for i in `cat lista$dom$now.txt`; do 
-			echo "\r\n************************* Testing $i *************************\r\n" >> ~/tools/recon/sqlmap$dom$now.txt
+			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$dom$now.txt
 			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$dom$now.txt 
 		done
-		rm lista$dom$now.txt
+		rm l$dom$now.txt
 	done
 }
 
@@ -520,8 +532,9 @@ install(){
 	# httprobe, assetfinder, fuff, amass, subfinder
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
-	go get -u github.com/ffuf/ffuf
-	go get github.com/tomnomnom/waybackurls
+	go get -u github.com/tomnomnom/unfurl
+	go get -u github.com/tomnomnom/waybackurls
+	go get -u github.com/ffuf/ffuf	
 	export GO111MODULE=on
 	go get -u github.com/OWASP/Amass/v3/...
 	go get -u github.com/projectdiscovery/subfinder/cmd/subfinder
