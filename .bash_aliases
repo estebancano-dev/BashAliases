@@ -436,7 +436,7 @@ batchsqlmap(){
 		fi
 		for i in `cat lista$now.txt`; do 
 			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --dump --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords ; 
-		done > sqlmap$now.txt
+		done > ~/tools/recon/sqlmap$now.txt
 		rm lista$now.txt
 	done
 }
