@@ -430,6 +430,7 @@ batchsqlmap(){
 		now=$(date +"%Y%m%d%H%M")
 		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$dom$now.txt
 		if [[ -f l$dom$now.txt && ! -s l$dom$now.txt ]]; then
+			rm l$dom$now.txt
 			continue
 		fi
 		
@@ -444,6 +445,11 @@ batchsqlmap(){
 			fi
 		done
 		rm l$dom$now.txt
+		
+		if [[ -f lista$dom$now.txt && ! -s lista$dom$now.txt ]]; then
+			rm lista$dom$now.txt
+			continue
+		fi
 		
 		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$dom$now.txt
 		for i in `cat lista$dom$now.txt`; do 
