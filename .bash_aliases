@@ -436,12 +436,16 @@ batchsqlmap(){
 		
 		# limpio las urls (dejo solo 1 url con el mismo path)
 		patha=""
-		touch lista$dom$now.txt
+		regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+		touch "lista$dom$now.txt"
 		for i in `cat l$dom$now.txt`; do 
-			pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
-			if [ "$patha" != "$pathb" ]; then
-				echo "$i" >> lista$dom$now.txt
-				patha="$pathb"
+			if [[ $i =~ $regex ]]
+			then 
+				pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
+				if [ "$patha" != "$pathb" ]; then
+					echo "$i" >> lista$dom$now.txt
+					patha="$pathb"
+				fi
 			fi
 		done
 		rm l$dom$now.txt
