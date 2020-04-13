@@ -182,6 +182,10 @@ subdomains(){
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
 	cat 1scrap$1.txt | httprobe -t 5000 > 6httprobe$1.txt < /dev/null 2>&1
+	
+	# for sqlmap
+	cat 6httprobe$1.txt | unfurl format "%s://%d%:%P" | sort -u > resolved$1.txt
+	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
@@ -239,16 +243,41 @@ subdomains(){
 	
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
-	echo $1 | waybackurls | grep -E "\?" | sort -u -o listaurlswayback$1.txt
-	if [[ -f listaurlswayback$1.txt && -s listaurlswayback$1.txt ]]; then
-		echo -e "\e[32m********* Starting wayback & sqlmap... ********\033[0m"
-		touch sqlmap$1.txt
-		for i in `cat listaurlswayback$1.txt`; do 
-			echo "************************* Testing $i *************************" >> sqlmap$1.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$1.txt
+	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	for dom in `cat resolved$1.txt`; do 
+		now=$(date +"%Y%m%d%H%M")
+		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$dom$now.txt
+		if [[ -f l$dom$now.txt && ! -s l$dom$now.txt ]]; then
+			rm l$dom$now.txt
+			continue
+		fi
+		
+		# limpio las urls (dejo solo 1 url con el mismo path)
+		patha=""
+		touch "lista$dom$now.txt"
+		for i in `cat l$dom$now.txt`; do 
+			if [[ $i =~ $regex ]]
+			then 
+				pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
+				if [ "$patha" != "$pathb" ]; then
+					echo "$i" >> lista$dom$now.txt
+					patha="$pathb"
+				fi
+			fi
 		done
-		echo -e "\e[32m*********** Wayback & sqlmap done... **********\033[0m"
-	fi
+		rm l$dom$now.txt
+		
+		if [[ -f lista$dom$now.txt && ! -s lista$dom$now.txt ]]; then
+			rm lista$dom$now.txt
+			continue
+		fi
+		
+		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$dom$now.txt
+		for i in `cat lista$dom$now.txt`; do 
+			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$dom$now.txt
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$dom$now.txt 
+		done
+	done
 	
 	echo -e "\e[32m***************** Screenshots... **************\033[0m"
 	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m"
