@@ -102,7 +102,7 @@ ipinfo(){
 }
 
 check(){
-	assetfinder $1 | grep $1 | httprobe
+	assetfinder $1 | grep $1 | httprobe -t 5000
 }
 
 # Given a domain name, and optionally an ASN number (only 1 number, eg:62566) scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
@@ -181,7 +181,7 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe > 6httprobe$1.txt < /dev/null 2>&1
+	cat 1scrap$1.txt | httprobe -t 5000 > 6httprobe$1.txt < /dev/null 2>&1
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
@@ -245,7 +245,7 @@ subdomains(){
 		touch sqlmap$1.txt
 		for i in `cat listaurlswayback$1.txt`; do 
 			echo "************************* Testing $i *************************" >> sqlmap$1.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$1.txt
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$1.txt
 		done
 		echo -e "\e[32m*********** Wayback & sqlmap done... **********\033[0m"
 	fi
@@ -458,14 +458,14 @@ batchsqlmap(){
 		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$dom$now.txt
 		for i in `cat lista$dom$now.txt`; do 
 			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$dom$now.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u $i -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$dom$now.txt 
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$dom$now.txt 
 		done
 	done
 }
 
 sqlmap(){
 	cd ~/tools/sqlmap-dev
-	python3 ~/tools/sqlmap-dev/sqlmap.py -u $1 --level=5 --risk=3 --threads=10 --current-user --current-db --hostname --batch --answers="follow=Y" --alert="id" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
+	python3 ~/tools/sqlmap-dev/sqlmap.py -u "$1" --level=5 --risk=3 --threads=10 --current-user --current-db --hostname --batch --answers="follow=Y" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
 }
 
 netcat(){
