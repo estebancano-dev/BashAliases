@@ -246,29 +246,30 @@ subdomains(){
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat resolved$1.txt`; do 
 		now=$(date +"%Y%m%d%H%M")
-		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$dom$now.txt
-		if [[ -f l$dom$now.txt && ! -s l$dom$now.txt ]]; then
-			rm l$dom$now.txt
+		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$now.txt
+		if [[ -f l$now.txt && ! -s l$now.txt ]]; then
+			rm l$now.txt
 			continue
 		fi
 		
 		# limpio las urls (dejo solo 1 url con el mismo path)
 		patha=""
-		touch "lista$dom$now.txt"
-		for i in `cat l$dom$now.txt`; do 
+		nombre=$(echo "$dom" | unfurl format "%d")
+		touch "lista$nombre$now.txt"
+		for i in `cat l$now.txt`; do 
 			if [[ $i =~ $regex ]]
 			then 
 				pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
 				if [ "$patha" != "$pathb" ]; then
-					echo "$i" >> lista$dom$now.txt
+					echo "$i" >> lista$nombre$now.txt
 					patha="$pathb"
 				fi
 			fi
 		done
-		rm l$dom$now.txt
+		rm l$now.txt
 		
-		if [[ -f lista$dom$now.txt && ! -s lista$dom$now.txt ]]; then
-			rm lista$dom$now.txt
+		if [[ -f lista$nombre$now.txt && ! -s lista$nombre$now.txt ]]; then
+			rm lista$nombre$now.txt
 			continue
 		fi
 		
