@@ -102,7 +102,7 @@ ipinfo(){
 }
 
 check(){
-	assetfinder $1 | grep $1 | httprobe -t 5000
+	assetfinder $1 | grep $1 | httprobe
 }
 
 # Given a domain name, and optionally an ASN number (only 1 number, eg:62566) scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
@@ -181,10 +181,10 @@ subdomains(){
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m"
 	echo -e "\e[32mDoing httprobe...\033[0m"
-	cat 1scrap$1.txt | httprobe -t 5000 > 6httprobe$1.txt < /dev/null 2>&1
+	cat 1scrap$1.txt | httprobe -t 5000 > 6httprobe$1.txt
 	
 	# for sqlmap
-	cat 6httprobe$1.txt | unfurl format "%s://%d%:%P" | sort -u > resolved$1.txt
+	cat 6httprobe$1.txt | unfurl -u format "%s://%d%:%P" > resolved$1.txt
 	
 	echo -e "\e[32mDoing Nmap to check if alive...\033[0m"
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
