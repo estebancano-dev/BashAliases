@@ -214,14 +214,16 @@ subdomains(){
 	echo -e "\e[32m$count domains pointing to $ips IP addresses\033[0m"
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m"
 	
-	#touch 9httprobeXORsqli$1.txt ahttproberedirect$1.txt
 	# existen http o https accesibles, chequeo sqli y redirects
-	#if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
-	#	echo -e "\e[32m********** Starting Headers Check... *********\033[0m"
-	#	echo -e "\e[32mDoing Curl to check headers for sqli/redirect...\033[0m"
-	#	checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt & checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt
-	#	echo -e "\e[32m************ Headers Check done... ***********\033[0m"
-	#fi
+	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
+		touch check_xor$1.txt check_redirect$1.txt
+		echo -e "\e[32m********** Starting Headers Check... *********\033[0m"
+		echo -e "\e[32mDoing Curl to check headers for SQLi ...\033[0m"
+		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt
+		echo -e "\e[32mDoing Curl to check headers for redirect ...\033[0m"
+		checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt
+		echo -e "\e[32m************ Headers Check done... ***********\033[0m"
+	fi
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m"
 	echo -e "\e[32mDoing Masscan...\033[0m"
@@ -243,26 +245,32 @@ subdomains(){
 	
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m"
 	
+	echo -e "\e[32m************ Vulnerabilities test... **********\033[0m"
+	echo -e "\e[32m************ Getting Wayback urls... **********\033[0m"
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat resolved$1.txt`; do 
 		now=$(date +"%Y%m%d%H%M")
-		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$now.txt
+		echo $dom | waybackurls | sort -u -o l$now.txt
+		#| grep -E "\?" 
 		if [[ -f l$now.txt && ! -s l$now.txt ]]; then
 			rm l$now.txt
 			continue
 		fi
 		
-		# limpio las urls (dejo solo 1 url con el mismo path)
-		patha=""
+		# limpio las urls (dejo solo 1 url con el mismo path y distintos parametros)
+		urla=""
+		querya=""
 		nombre=$(echo "$dom" | unfurl format "%d")
 		touch "lista$nombre$now.txt"
 		for i in `cat l$now.txt`; do 
 			if [[ $i =~ $regex ]]
-			then 
-				pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
-				if [ "$patha" != "$pathb" ]; then
+			then
+				urlb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
+				queryb=$(echo "$i" | unfurl format "%q")
+				if [ "$urla" != "$urlb" ] && [ "$querya" != "" ] && [ "$querya" != "$queryb" ]; then
 					echo "$i" >> lista$nombre$now.txt
-					patha="$pathb"
+					urla="$urlb"
+					querya="$queryb"
 				fi
 			fi
 		done
@@ -273,11 +281,20 @@ subdomains(){
 			continue
 		fi
 		
-		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$nombre$now.txt
+		echo -e "\e[32m********** Starting Sqli Check... *********\033[0m"
+		touch ~/tools/recon/sqlmap$nombre$now.txt
 		for i in `cat lista$nombre$now.txt`; do 
 			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$nombre$now.txt
 			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$nombre$now.txt 
-		done
+		done		
+		echo -e "\e[32m************ Sqli Check done... ***********\033[0m"
+
+		echo -e "\e[32m********** Starting Headers Check... *********\033[0m"
+		echo -e "\e[32mDoing Curl to check headers for SQLi ...\033[0m"
+		checkheadersforsqli lista$nombre$now.txt 9httprobeXORsqli$1.txt
+		echo -e "\e[32mDoing Curl to check headers for redirect...\033[0m"
+		checkheadersforredirect lista$nombre$now.txt ahttproberedirect$1.txt
+		echo -e "\e[32m************ Headers Check done... ***********\033[0m"
 	done
 	
 	echo -e "\e[32m***************** Screenshots... **************\033[0m"
@@ -303,7 +320,6 @@ checkheadersforsqli(){
 		echo -e "\e[32mNo headers file found!\033[0m"
 		return
 	fi
-	touch $2
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
@@ -329,7 +345,6 @@ checkheadersforredirect(){
 		echo -e "\e[32mUrls file is empty!\033[0m"
 		return
 	fi
-	touch $2
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
@@ -555,11 +570,11 @@ install(){
 	# sqlmap
 	git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
 	
-	
-	#git clone https://github.com/GerbenJavado/LinkFinder.git
-	#cd LinkFinder
-	#python setup.py install
-	#cd ..
+	# paramspider
+	git clone https://github.com/devanshbatham/ParamSpider
+	cd ParamSpider
+	pip3 install -r requirements.txt
+	cd ..
 	
 	# masscan
 	sudo apt-get install git gcc make libpcap-dev
