@@ -120,16 +120,16 @@ subdomains(){
 
 	echo -e "\e[32mUrl: $1 $2\033[0m" | tee -a salida.txt
 	echo -e "\e[32m************ Starting Scrapping... ************\033[0m" | tee -a salida.txt
-	echo -e "\e[32mDoing Assetfinder...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Assetfinder...\033[0m" | tee -a salida.txt
 	assetfinder $1 > 1scrap1$1.txt < /dev/null 2>&1
 	
-	echo -e "\e[32mDoing Subfinder...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Subfinder...\033[0m" | tee -a salida.txt
 	subfinder -t 100 -d $1 -silent -o 1scrap2$1.txt > /dev/null 2>&1
 	
-	echo -e "\e[32mDoing Sublist3r...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Sublist3r...\033[0m" | tee -a salida.txt
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
-	echo -e "\e[32mDoing Amass...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Amass...\033[0m" | tee -a salida.txt
 	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
@@ -148,7 +148,7 @@ subdomains(){
 	fi
 
 	# altdns con los dominios en bruto.
-	echo -e "\e[32mDoing Altdns to generate alternative domains...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Altdns to generate alternative domains...\033[0m" | tee -a salida.txt
 	altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
 	cat altdns$1.txt | sort -u >> altdns$1.txt
 	# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
@@ -156,18 +156,18 @@ subdomains(){
 		sed -i "/^$dom/d" altdns$1.txt
 	done
 	count=$(cat "altdns$1.txt" | wc -l)
-	echo -e "\e[32mGenerated $count alternative domains...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tGenerated $count alternative domains...\033[0m" | tee -a salida.txt
 	
 	echo -e "\e[32m************** Scrapping done... **************\033[0m" | tee -a salida.txt
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m" | tee -a salida.txt
-	echo -e "\e[32mDoing Massdns to scrapped domains...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Massdns to scrapped domains...\033[0m" | tee -a salida.txt
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w 2massdns$1.txt 1scrap$1.txt
 	# resuelvo los dominios alternativos
 	if [[ -f altdns$1.txt && -s altdns$1.txt ]]; then
-		echo -e "\e[32mDoing Massdns to alternative domains...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tDoing Massdns to alternative domains...\033[0m" | tee -a salida.txt
 		massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w altdnsresolved$1.txt altdns$1.txt
 		count=$(cat "altdnsresolved$1.txt" | wc -l)
-		echo -e "\e[32m$count alternative domains resolved...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\t$count alternative domains resolved...\033[0m" | tee -a salida.txt
 	fi
 	rm altdns$1.txt 2> /dev/null
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -w 8massdnssimple$1.txt 1scrap$1.txt
@@ -180,19 +180,19 @@ subdomains(){
 	echo -e "\e[32m************ DNS Resolving done... ************\033[0m" | tee -a salida.txt
 	
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m" | tee -a salida.txt
-	echo -e "\e[32mDoing httprobe...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing httprobe...\033[0m" | tee -a salida.txt
 	cat 1scrap$1.txt | httprobe -t 5000 > 6httprobe$1.txt
 	
 	# for sqlmap
 	cat 6httprobe$1.txt | unfurl -u format "%s://%d%:%P" > resolved$1.txt
 	
-	echo -e "\e[32mDoing Nmap to check if alive...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Nmap to check if alive...\033[0m" | tee -a salida.txt
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
 	# agrego a la lista de IP los rangos ASN (si se agregó el segundo parámetro)
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
-		echo -e "\e[32mDoing Nmap to check ASN alive IP...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tDoing Nmap to check ASN alive IP...\033[0m" | tee -a salida.txt
 		nmap -Pn --script targets-asn --script-args targets-asn.asn=$2 --min-rate=3000 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" > asnip$1.txt < /dev/null 2>&1
 		nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
 	fi
@@ -211,26 +211,26 @@ subdomains(){
 	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
 	count=$(grep -c "Host is up" 3nmap$1.txt)
 	ips=$(wc -l 4nmapips$1.txt | awk '{ print $1 }')
-	echo -e "\e[32m$count domains pointing to $ips IP addresses\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\t$count domains pointing to $ips IP addresses\033[0m" | tee -a salida.txt
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m" | tee -a salida.txt
 	
 	# existen http o https accesibles, chequeo sqli y redirects
 	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
 		touch check_xor$1.txt check_redirect$1.txt
 		echo -e "\e[32m********** Starting Headers Check... *********\033[0m" | tee -a salida.txt
-		echo -e "\e[32mDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
-		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt
-		echo -e "\e[32mDoing Curl to check headers for redirect ...\033[0m" | tee -a salida.txt
-		checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt
+		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
+		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt | tee -a salida.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect ...\033[0m" | tee -a salida.txt
+		checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt | tee -a salida.txt
 		echo -e "\e[32m************ Headers Check done... ***********\033[0m" | tee -a salida.txt
 	fi
 	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m" | tee -a salida.txt
-	echo -e "\e[32mDoing Masscan...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing Masscan...\033[0m" | tee -a salida.txt
 	masscan -p0-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --rate 50000 --http-user-agent Mozilla > /dev/null 2>&1
 
 	if [[ -f 4nmapips$1.txt && -s 4nmapips$1.txt ]]; then
-		echo -e "\e[32mDoing Nmap to check port service versions...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tDoing Nmap to check port service versions...\033[0m" | tee -a salida.txt
 		touch 7nmapservices$1.txt
 		cat 4nmapips$1.txt | while read ipaescanear; do
 			ports=$(nmap -Pn -p- --min-rate=30000 -T4 $ipaescanear | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
@@ -246,7 +246,7 @@ subdomains(){
 	
 	echo -e "\e[32m************ Vulnerabilities test... **********\033[0m" | tee -a salida.txt
 	count=$(cat "resolved$1.txt" | wc -l)
-	echo -e "\e[32mGetting Wayback urls for $count urls... \033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tGetting Wayback urls for $count urls... \033[0m" | tee -a salida.txt
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat resolved$1.txt`; do 
 		now=$(date +"%Y%m%d%H%M%S")
@@ -280,25 +280,25 @@ subdomains(){
 			continue
 		fi
 		
-		echo -e "\e[32mStarting Sqli Check...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tStarting Sqli Check...\033[0m" | tee -a salida.txt
 		touch ~/tools/recon/sqlmap$nombre$now.txt
 		for i in `cat lista$nombre$now.txt`; do 
 			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$nombre$now.txt
 			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$nombre$now.txt 
 		done		
-		echo -e "\e[32mSqli Check done...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tSqli Check done...\033[0m" | tee -a salida.txt
 
-		echo -e "\e[32mStarting Headers Check...\033[0m" | tee -a salida.txt
-		echo -e "\e[32mDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
-		checkheadersforsqli lista$nombre$now.txt 9httprobeXORsqli$1.txt
-		echo -e "\e[32mDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
-		checkheadersforredirect lista$nombre$now.txt ahttproberedirect$1.txt
-		echo -e "\e[32mHeaders Check done... \033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tStarting Headers Check...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
+		checkheadersforsqli lista$nombre$now.txt 9httprobeXORsqli$1.txt | tee -a salida.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
+		checkheadersforredirect lista$nombre$now.txt ahttproberedirect$1.txt | tee -a salida.txt
+		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a salida.txt
 	done
 	echo -e "\e[32m********* Vulnerabilities test done ... *******\033[0m" | tee -a salida.txt
 	
 	echo -e "\e[32m***************** Screenshots... **************\033[0m" | tee -a salida.txt
-	echo -e "\e[32mDoing EyeWitness to httprobe results...\033[0m" | tee -a salida.txt
+	echo -e "\e[32m\tDoing EyeWitness to httprobe results...\033[0m" | tee -a salida.txt
 	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness > /dev/null 2>&1
 	rm geckodriver.log 2> /dev/null
 	
@@ -313,13 +313,14 @@ subdomains(){
 # output: list of urls and headers with potential sqli
 checkheadersforsqli(){
 	if [[ -f $1 && ! -s $1 ]]; then
-		echo -e "\e[32mUrls file is empty!\033[0m"
+		echo -e "\e[32m\tUrls file is empty!\033[0m"
 		return
 	fi
 	if [[ -f ~/tools/__diccionarios/headers.txt && ! -s ~/tools/__diccionarios/headers.txt ]]; then
-		echo -e "\e[32mNo headers file found!\033[0m"
+		echo -e "\e[32m\tNo headers file found!\033[0m"
 		return
 	fi
+	i=0
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
@@ -330,11 +331,13 @@ checkheadersforsqli(){
 					if (($time >= 6)); then
 						echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
 						echo "$response" >> $2
+						((i++))
 					fi
 				fi
 			done
 		fi
 	done
+	echo -e "\e[32m\tFound $i headers with potential sqli... \033[0m"
 }
 
 # Gets an url with curl and adds every header to check for sqli injections (if response time > 6 seconds)
@@ -345,35 +348,38 @@ checkheadersforredirect(){
 		echo -e "\e[32mUrls file is empty!\033[0m"
 		return
 	fi
+	i=0
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
 			response=$(curl -X GET -H "X-Forwarded-For: estebancano.com.ar/abc.php" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
-			if [[ $response == *"<-- CHECK -->"* ]]; then
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php" >> $2
+				((i++))
 			fi
 			response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
-			if [[ $response == *"<-- CHECK -->"* ]]; then
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** URL: $url - Header: X-Forwarded-Host: estebancano.com.ar/abc.php" >> $2
+				((i++))
 			fi
 		fi
 	done
+	echo -e "\e[32m\tFound $i headers with potential redirect... \033[0m"
 }
 
-# Find all 1scrap*.txt in recon directory, merges them and check for CNAME records
+# Find all resolved*.txt in recon directory, merges them and check for CNAME records
 # usage: takeover [word]
-# output: list of domains with CNAME records for 1scrap*word*.txt (eg: 1scrap*starbucks*.txt), to manually check for subdomains takeover
+# output: list of domains with CNAME records for resolvedword*.txt (eg: resolvedstarbucks*.txt), to manually check for subdomains takeover
 takeover(){
 	now=$(date +"%Y%m%d%H%M%S")
-	find ~/tools/recon -type f -name "1scrap*$1*.txt" -exec cat {} + > ~/tools/takeovers/1scrapall$now.txt
-	if [[ -f ~/tools/takeovers/1scrapall$now.txt && ! -s ~/tools/takeovers/1scrapall$now.txt ]]; then
+	cat $(find ~/tools/recon -type f -name "resolved$1*.txt") | unfurl domains -u > ~/tools/takeovers/resolved$now.txt
+	if [[ -f ~/tools/takeovers/resolved$now.txt && ! -s ~/tools/takeovers/resolved$now.txt ]]; then
 		echo -e "\e[32mUrls file is empty!\033[0m"
 		return
 	fi
-	sort -u -o ~/tools/takeovers/1scrapall$now.txt ~/tools/takeovers/1scrapall$now.txt
-	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/1scrapall$now.txt
-	cat ~/tools/takeovers/takeover$now.txt | awk '{ print $3 }' > ~/tools/takeovers/takeover2$now.txt
-	sort -u -o ~/tools/takeovers/takeover2$now.txt ~/tools/takeovers/takeover2$now.txt
+	sort -u -o ~/tools/takeovers/resolved$now.txt ~/tools/takeovers/resolved$now.txt
+	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/resolved$now.txt
+	cat ~/tools/takeovers/takeover$now.txt | awk '{ print $3 }' | sort -u > ~/tools/takeovers/takeover2$now.txt
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/takeover3$now.txt ~/tools/takeovers/takeover2$now.txt
 }
 
