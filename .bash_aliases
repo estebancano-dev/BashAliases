@@ -520,7 +520,7 @@ netcat(){
 #para instalar todas las aplicaciones que utilizo
 install(){
 	cd ~
-	mkdir -p tools/{__diccionarios,recon,takeovers}
+	mkdir -p tools/{__diccionarios,recon,takeovers,crons,apks}
 
 	# golang
 	cd /usr/local/
@@ -582,6 +582,12 @@ install(){
 	cd masscan
 	make
 	cp bin/masscan /bin/
+	cd ..
+	
+	# XSStrike
+	git clone https://github.com/s0md3v/XSStrike.git
+	cd XSStrike
+	pip3 install -r requirements.txt
 	cd ..
 	
 	# httprobe, assetfinder, fuff, amass, subfinder
