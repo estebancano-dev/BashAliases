@@ -245,11 +245,12 @@ subdomains(){
 	echo -e "\e[32m************* Port scanning done... ***********\033[0m" | tee -a salida.txt
 	
 	echo -e "\e[32m************ Vulnerabilities test... **********\033[0m" | tee -a salida.txt
-	echo -e "\e[32mGetting Wayback urls... \033[0m" | tee -a salida.txt
+	count=$(cat "resolved$1.txt" | wc -l)
+	echo -e "\e[32mGetting Wayback urls for $count urls... \033[0m" | tee -a salida.txt
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat resolved$1.txt`; do 
 		now=$(date +"%Y%m%d%H%M")
-		echo $dom | waybackurls | sort -u -o l$now.txt
+		echo "$dom" | waybackurls | sort -u -o l$now.txt
 		#| grep -E "\?" 
 		if [[ -f l$now.txt && ! -s l$now.txt ]]; then
 			rm l$now.txt
@@ -262,8 +263,7 @@ subdomains(){
 		nombre=$(echo "$dom" | unfurl format "%d")
 		touch "lista$nombre$now.txt"
 		for i in `cat l$now.txt`; do 
-			if [[ $i =~ $regex ]]
-			then
+			if [[ $i =~ $regex ]]; then
 				urlb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
 				queryb=$(echo "$i" | unfurl format "%q")
 				if [ "$urla" != "$urlb" ] && [ "$querya" != "" ] && [ "$querya" != "$queryb" ]; then
