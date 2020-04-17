@@ -216,12 +216,12 @@ subdomains(){
 	
 	# existen http o https accesibles, chequeo sqli y redirects
 	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
-		touch check_xor$1.txt check_redirect$1.txt
+		touch checkheader_sqli$1.txt checkheader_redirect$1.txt
 		echo -e "\e[32m********** Starting Headers Check... *********\033[0m" | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
-		checkheadersforsqli 6httprobe$1.txt 9httprobeXORsqli$1.txt | tee -a salida.txt
+		checkheadersforsqli 6httprobe$1.txt checkheader_sqli$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect ...\033[0m" | tee -a salida.txt
-		checkheadersforredirect 6httprobe$1.txt ahttproberedirect$1.txt | tee -a salida.txt
+		checkheadersforredirect 6httprobe$1.txt checkheader_redirect$1.txt | tee -a salida.txt
 		echo -e "\e[32m************ Headers Check done... ***********\033[0m" | tee -a salida.txt
 	fi
 	
@@ -290,9 +290,9 @@ subdomains(){
 
 		echo -e "\e[32m\tStarting Headers Check...\033[0m" | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
-		checkheadersforsqli lista$nombre$now.txt 9httprobeXORsqli$1.txt | tee -a salida.txt
+		checkheadersforsqli lista$nombre$now.txt checkheader_sqli$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
-		checkheadersforredirect lista$nombre$now.txt ahttproberedirect$1.txt | tee -a salida.txt
+		checkheadersforredirect lista$nombre$now.txt checkheader_redirect$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a salida.txt
 	done
 	echo -e "\e[32m********* Vulnerabilities test done ... *******\033[0m" | tee -a salida.txt
@@ -380,7 +380,7 @@ takeover(){
 	sort -u -o ~/tools/takeovers/resolved$now.txt ~/tools/takeovers/resolved$now.txt
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/resolved$now.txt
 	cat ~/tools/takeovers/takeover$now.txt | awk '{ print $3 }' | sort -u > ~/tools/takeovers/takeover2$now.txt
-	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/takeover3$now.txt ~/tools/takeovers/takeover2$now.txt
+	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/final$now.txt ~/tools/takeovers/takeover2$now.txt
 }
 
 checkwebalive(){
