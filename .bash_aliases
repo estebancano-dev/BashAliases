@@ -113,7 +113,7 @@ check(){
 subdomains(){
 	clear
 	begin=$(date +"%s")
-	now=$(date +"%Y%m%d%H%M")
+	now=$(date +"%Y%m%d%H%M%S")
 	mkdir -p ~/tools/recon/$1/$now/
 	cd ~/tools/recon/$1/$now/
 	touch 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt salida.txt
@@ -249,7 +249,7 @@ subdomains(){
 	echo -e "\e[32mGetting Wayback urls for $count urls... \033[0m" | tee -a salida.txt
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat resolved$1.txt`; do 
-		now=$(date +"%Y%m%d%H%M")
+		now=$(date +"%Y%m%d%H%M%S")
 		echo "$dom" | waybackurls | sort -u -o l$now.txt
 		#| grep -E "\?" 
 		if [[ -f l$now.txt && ! -s l$now.txt ]]; then
@@ -364,7 +364,7 @@ checkheadersforredirect(){
 # usage: takeover [word]
 # output: list of domains with CNAME records for 1scrap*word*.txt (eg: 1scrap*starbucks*.txt), to manually check for subdomains takeover
 takeover(){
-	now=$(date +"%Y%m%d%H%M")
+	now=$(date +"%Y%m%d%H%M%S")
 	find ~/tools/recon -type f -name "1scrap*$1*.txt" -exec cat {} + > ~/tools/takeovers/1scrapall$now.txt
 	if [[ -f ~/tools/takeovers/1scrapall$now.txt && ! -s ~/tools/takeovers/1scrapall$now.txt ]]; then
 		echo -e "\e[32mUrls file is empty!\033[0m"
@@ -473,7 +473,7 @@ nmap2(){
 batchsqlmap(){
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat $1`; do 
-		now=$(date +"%Y%m%d%H%M")
+		now=$(date +"%Y%m%d%H%M%S")
 		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$dom$now.txt
 		if [[ -f l$dom$now.txt && ! -s l$dom$now.txt ]]; then
 			rm l$dom$now.txt
