@@ -373,23 +373,28 @@ checkheadersforinjection(){
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
 			response=$(curl -LiH "User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
-			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** Header User-agent injected: User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 				((i++))
 			fi
 			response=$(curl -H "User-agent:" -LiH "X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
-			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** Header X-forwarded-for injected: X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 				((i++))
 			fi
 			response=$(curl -H "User-agent:" -LiH "Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
-			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** Header Referer injected: Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 				((i++))
 			fi
 			response=$(curl -LiH "User-agent:" $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
-			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** Url query injected: $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a in $url" >> $2
+				((i++))
+			fi
+			response=$(curl -LiH "User-agent:" estebancano.com.ar/abc.php?aaaborrar)
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** asdasdasdction%0a in $url" >> $2
 				((i++))
 			fi
 		fi
