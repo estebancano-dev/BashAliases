@@ -387,7 +387,7 @@ checkheadersforinjection(){
 				echo "\r\n*** Header Referer injected: Cookie:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 				((i++))
 			fi
-			response=$(curl -vLiH "User-agent:" $url%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
+			response=$(curl -vLiH "User-agent:" $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
 			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** Url query injected: Cookie:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 				((i++))
