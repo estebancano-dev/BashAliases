@@ -284,7 +284,7 @@ subdomains(){
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
 		checkheadersforredirect lista$nombre$now.txt checkheader_redirect$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
-		#checkheadersforinjection lista$nombre$now.txt checkheader_inject$1.txt | tee -a salida.txt
+		checkheadersforinjection lista$nombre$now.txt checkheader_inject$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a salida.txt
 		
 	done
@@ -425,7 +425,7 @@ checkheaders(){
 	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 	checkheadersforredirect ~/tools/checkheaders/urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	#checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 	rm ~/tools/checkheaders/urls$now.txt
 }
