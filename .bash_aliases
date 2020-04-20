@@ -151,7 +151,7 @@ subdomains(){
 	# altdns con los dominios en bruto.
 	echo -e "\e[32m\tDoing Altdns to generate alternative domains...\033[0m" | tee -a salida.txt
 	altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
-	cat altdns$1.txt | sort -u >> altdns$1.txt
+	cat altdns$1.txt | grep "\.$1\|^$1" | sort -u >> altdns$1.txt
 	# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
 	cat 1scrap$1.txt | while read dom; do
 		sed -i "/^$dom/d" altdns$1.txt
