@@ -400,6 +400,7 @@ takeover(){
 
 checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
+	echo -e "\e[32m\tWaybacking urls...\033[0m"
 	echo "$1" | waybackurls | sort -u -o ~/tools/checkheaders/urls$now.txt
 	if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
 		echo -e "\e[32mUrls file is empty!\033[0m"
