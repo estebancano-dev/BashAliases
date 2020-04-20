@@ -390,11 +390,6 @@ checkheadersforinjection(){
 			echo "\r\n*** Url query injected: $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a in $url" >> $2
 			((i++))
 		fi
-		response=$(curl -LiH "User-agent:" estebancano.com.ar/abc.php?aaaborrar)
-		if [[ $response == *"<!-- CH3CK -->"* ]]; then
-			echo "\r\n*** asdasdasdction%0a in $url" >> $2
-			((i++))
-		fi
 	done
 	echo -e "\e[32m\tFound $i headers injected... \033[0m"
 }
