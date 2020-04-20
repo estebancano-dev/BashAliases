@@ -106,6 +106,7 @@ check(){
 }
 
 # Given a domain name, and optionally an ASN number (only 1 number, eg:62566) scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
+# Also check for header sqli, header redirect, sqlmap of wayback urls, makes screenshots
 # Uses: assetfinder, subfinder, sublist3r, amass, altdns, massdns, httprobe, nmap, masscan, header sqli, header redirect, sqlmap, eyewitness
 # usage: subdomains domain.com [ASNNUMBER]
 # output: list of alive subdomains, open ports, vulns
@@ -214,17 +215,6 @@ subdomains(){
 	echo -e "\e[32m\t$count domains pointing to $ips IP addresses\033[0m" | tee -a salida.txt
 	echo -e "\e[32m************ Alive Checking done... ***********\033[0m" | tee -a salida.txt
 	
-	# existen http o https accesibles, chequeo sqli y redirects
-	if [[ -f 6httprobe$1.txt && -s 6httprobe$1.txt ]]; then
-		touch checkheader_sqli$1.txt checkheader_redirect$1.txt
-		echo -e "\e[32m********** Starting Headers Check... *********\033[0m" | tee -a salida.txt
-		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
-		checkheadersforsqli 6httprobe$1.txt checkheader_sqli$1.txt | tee -a salida.txt
-		echo -e "\e[32m\tDoing Curl to check headers for redirect ...\033[0m" | tee -a salida.txt
-		checkheadersforredirect 6httprobe$1.txt checkheader_redirect$1.txt | tee -a salida.txt
-		echo -e "\e[32m************ Headers Check done... ***********\033[0m" | tee -a salida.txt
-	fi
-	
 	echo -e "\e[32m********** Starting Port scanning... **********\033[0m" | tee -a salida.txt
 	echo -e "\e[32m\tDoing Masscan...\033[0m" | tee -a salida.txt
 	masscan -p0-65535 -iL 4nmapips$1.txt -oG 5masscan$1.txt --rate 50000 --http-user-agent Mozilla > /dev/null 2>&1
@@ -293,7 +283,10 @@ subdomains(){
 		checkheadersforsqli lista$nombre$now.txt checkheader_sqli$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
 		checkheadersforredirect lista$nombre$now.txt checkheader_redirect$1.txt | tee -a salida.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
+		checkheadersforinjection lista$nombre$now.txt checkheader_inject$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a salida.txt
+		
 	done
 	echo -e "\e[32m********* Vulnerabilities test done ... *******\033[0m" | tee -a salida.txt
 	
@@ -360,6 +353,28 @@ checkheadersforredirect(){
 			response=$(curl -X GET -H "X-Forwarded-Host: estebancano.com.ar/abc.php" -s -L --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
 			if [[ $response == *"<!-- CH3CK -->"* ]]; then
 				echo "\r\n*** URL: $url - Header: X-Forwarded-Host: estebancano.com.ar/abc.php" >> $2
+				((i++))
+			fi
+		fi
+	done
+	echo -e "\e[32m\tFound $i headers with potential redirect... \033[0m"
+}
+
+# Gets an url with curl and adds every header to check for sqli injections (if response time > 6 seconds)
+# usage: checkheadersforredirect urllist.txt outputurlswithredirection.txt
+# output: list of urls and headers with redirection
+checkheadersforinjection(){
+	if [[ -f $1 && ! -s $1 ]]; then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
+	i=0
+	cat $1 | while read url; do
+		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+		if [[ $url =~ $regex ]]; then 
+			response=$(curl -iH "X-Forwarded-For: estebancano.com.ar/abc.php" $url)
+			if [[ $response == *"X-Forwarded-For: estebancano.com.ar/abc.php"* ]]; then
+				echo "\r\n*** URL: $url - Header: X-Forwarded-For: estebancano.com.ar/abc.php" >> $2
 				((i++))
 			fi
 		fi
