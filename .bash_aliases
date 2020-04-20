@@ -398,6 +398,20 @@ takeover(){
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/final$now.txt ~/tools/takeovers/takeover2$now.txt
 }
 
+checkheaders(){
+	now=$(date +"%Y%m%d%H%M%S")
+	echo "$1" | waybackurls | sort -u -o urls$now.txt
+	echo -e "\e[32m\tStarting Headers Check...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+	echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+	checkheadersforsqli urls$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+	checkheadersforredirect urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+	checkheadersforinjection urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+	rm urls$now.txt
+}
+
 checkwebalive(){
 	nmap -sn -Pn $1 --script hostmap-crtsh | awk '{ print $2 }' | grep $1 | check $1
 }
