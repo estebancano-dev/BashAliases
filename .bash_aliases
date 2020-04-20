@@ -209,7 +209,7 @@ subdomains(){
 	# vuelo ip privadas, 0.0.0.0 (a veces aparece y el scan tarda mucho) y lineas en blanco. https://en.wikipedia.org/wiki/Private_network
 	sed -i -E '/192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|127.0.0.1|0.0.0.0|100\.[6789]|100\.1[01][0-9]\.|100\.12[0-7]\.|^$/d' 4nmapips$1.txt
 	
-	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
+	# cuento la fidad de alive hosts y la cantidad de IP únicas encontradas
 	count=$(grep -c "Host is up" 3nmap$1.txt)
 	ips=$(wc -l 4nmapips$1.txt | awk '{ print $1 }')
 	echo -e "\e[32m\t$count domains pointing to $ips IP addresses\033[0m" | tee -a salida.txt
@@ -400,16 +400,21 @@ takeover(){
 
 checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
-	echo "$1" | waybackurls | sort -u -o urls$now.txt
-	echo -e "\e[32m\tStarting Headers Check...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+	echo "$1" | waybackurls | sort -u -o ~/tools/checkheaders/urls$now.txt
+	if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
+	count=$(cat ~/tools/checkheaders/urls$now.txt | wc -l)
+	echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	checkheadersforsqli urls$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	checkheadersforsqli ~/tools/checkheaders/urls$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	checkheadersforredirect urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	checkheadersforredirect ~/tools/checkheaders/urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	checkheadersforinjection urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+	checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 	echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	rm urls$now.txt
+	rm ~/tools/checkheaders/urls$now.txt
 }
 
 checkwebalive(){
