@@ -413,21 +413,24 @@ takeover(){
 checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
-	echo "$1" | waybackurls | sort -u -o ~/tools/checkheaders/urls$now.txt
-	if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
-		echo -e "\e[32mUrls file is empty!\033[0m"
-		return
-	fi
-	count=$(cat ~/tools/checkheaders/urls$now.txt | wc -l)
-	echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	checkheadersforsqli ~/tools/checkheaders/urls$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	checkheadersforredirect ~/tools/checkheaders/urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-	echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-	echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-	rm ~/tools/checkheaders/urls$now.txt
+	while read line
+	do
+		echo $line | waybackurls | sort -u -o ~/tools/checkheaders/urls$now.txt
+		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
+			echo -e "\e[32mUrls file is empty!\033[0m"
+			return
+		fi
+		count=$(cat ~/tools/checkheaders/urls$now.txt | wc -l)
+		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		checkheadersforsqli ~/tools/checkheaders/urls$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		checkheadersforredirect ~/tools/checkheaders/urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		rm ~/tools/checkheaders/urls$now.txt
+	done < "${1:-/dev/stdin}"
 }
 
 checkwebalive(){
