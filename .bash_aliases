@@ -14,7 +14,7 @@ reinstall(){
 	rm -R ~/BashAliases 
 	git clone https://github.com/estebancano-dev/commonwords.git
 	cp ~/commonwords/*.* ~/tools/__diccionarios
-	gunzip ~/tools/__diccionarios/1-5.txt.gz
+	gunzip -f ~/tools/__diccionarios/1-5.txt.gz
 	rm -R ~/commonwords 
 	reload
 	echo -e "\033[0m"
