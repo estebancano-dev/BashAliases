@@ -249,21 +249,7 @@ subdomains(){
 		fi
 		
 		# limpio las urls (dejo solo 1 url con el mismo path y distintos parametros)
-		urla=""
-		querya=""
-		nombre=$(echo "$dom" | unfurl format "%d")
-		touch "lista$nombre$now.txt"
-		for i in `cat l$now.txt`; do 
-			if [[ $i =~ $regex ]]; then
-				urlb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
-				queryb=$(echo "$i" | unfurl format "%q")
-				if [[ "$urla" != "urlb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
-					echo "$i" >> lista$nombre$now.txt
-					urla="$urlb"
-					querya="$queryb"
-				fi
-			fi
-		done
+		uniqueurls l$now.txt lista$nombre$now.txt
 		rm l$now.txt
 		
 		if [[ -f lista$nombre$now.txt && ! -s lista$nombre$now.txt ]]; then
@@ -401,7 +387,7 @@ checkheaders(){
 	for i in `cat $1 | sort -u`; do 
 		echo $i | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
 		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
-			rm -f ~/tools/checkheaders/urls$now.txt
+			rm ~/tools/checkheaders/urls$now.txt
 			continue
 		fi
 		
@@ -410,7 +396,7 @@ checkheaders(){
 		rm ~/tools/checkheaders/urls$now.txt
 		
 		if [[ -f ~/tools/checkheaders/lista$nombre$now.txt && ! -s ~/tools/checkheaders/lista$nombre$now.txt ]]; then
-			rm -f ~/tools/checkheaders/lista$nombre$now.txt
+			rm ~/tools/checkheaders/lista$nombre$now.txt
 			continue
 		fi
 		
@@ -427,7 +413,7 @@ checkheaders(){
 	done
 }
 
-# Gets a file with lots of urls (with params) and tries to uniques them
+# Gets a file with lots of urls (with params) and tries to uniques them. Avoid images, fonts and css
 # usage: checkheadersforredirect urllist.txt output.txt
 # output: list of distinct urls. If same path, then different numbers of params
 uniqueurls(){
@@ -437,16 +423,18 @@ uniqueurls(){
 	touch $2
 	sort -u -o $1 $1
 	for i in `cat $1`; do 
-		urlb="$i"
+		file=$(basename $(echo "$i" | unfurl format %p | tr '[:upper:]' '[:lower:]'))
 		queryb=$(echo "$i" | unfurl format "%q")
-		pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
-		paramsa=$(echo "$urla" | unfurl keys | wc -l)
-		paramsb=$(echo "$urlb" | unfurl keys | wc -l)
-		if [[ ("$patha" != "$pathb" && (( $paramsb>0 ))) || ("$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" && (( $paramsb>0 && $paramsa != $paramsb ))) ]]; then
-			echo "$i" >> $2
-			querya="$queryb"
-			patha="$pathb"
-			urla="$urlb"
+		if [[ ! "$file" =~ .jpg|.gif|.png|.css|.woff|.woff2|.eot|.svg|.ttf && ! "$queryb" =~ utm_campaign|utm_source|utm_medium ]]; then 
+			pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
+			paramsb=$(echo "$i" | unfurl keys | wc -l)
+			paramsa=$(echo "$urla" | unfurl keys | wc -l)
+			if [[ ("$patha" != "$pathb" && (( $paramsb>0 ))) || ("$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" && (( $paramsb>0 && $paramsa != $paramsb ))) ]; then
+				echo "$i" >> $2
+				querya="$queryb"
+				patha="$pathb"
+				urla="$i"
+			fi
 		fi
 	done
 }
