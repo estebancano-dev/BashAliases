@@ -415,7 +415,7 @@ checkheaders(){
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
 	while read line
 	do
-		echo $line | waybackurls | sort -u -o ~/tools/checkheaders/urls$now.txt
+		echo $line | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
 		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
 			echo -e "\e[32mUrls file is empty!\033[0m"
 			return
