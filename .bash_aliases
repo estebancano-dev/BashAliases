@@ -429,7 +429,7 @@ uniqueurls(){
 			pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
 			paramsb=$(echo "$i" | unfurl keys | wc -l)
 			paramsa=$(echo "$urla" | unfurl keys | wc -l)
-			if [[ ("$patha" != "$pathb" && (( $paramsb>0 ))) || ("$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" && (( $paramsb>0 && $paramsa != $paramsb ))) ]; then
+			if [[ ("$patha" != "$pathb" && (( $paramsb>0 ))) || ("$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" && (( $paramsb>0 && $paramsa != $paramsb ))) ]]; then
 				echo "$i" >> $2
 				querya="$queryb"
 				patha="$pathb"
