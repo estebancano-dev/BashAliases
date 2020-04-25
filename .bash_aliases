@@ -385,14 +385,14 @@ checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
 	for i in `cat $1`; do 
-		echo "$i" | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
-		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
+		echo "$i" | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$i$now.txt
+		if [[ -f ~/tools/checkheaders/urls$i$now.txt && ! -s ~/tools/checkheaders/urls$i$now.txt ]]; then
 			continue
 		fi
 		
 		nombre=$(echo "$i" | unfurl format "%d")
-		uniqueurls ~/tools/checkheaders/urls$now.txt ~/tools/checkheaders/lista$1$nombre$now.txt
-		rm ~/tools/checkheaders/urls$now.txt
+		uniqueurls ~/tools/checkheaders/urls$i$now.txt ~/tools/checkheaders/lista$1$nombre$now.txt
+		rm ~/tools/checkheaders/urls$i$now.txt
 		
 		if [[ -f ~/tools/checkheaders/lista$1$nombre$now.txt && ! -s ~/tools/checkheaders/lista$1$nombre$now.txt ]]; then
 			continue
