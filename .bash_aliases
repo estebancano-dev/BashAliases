@@ -385,7 +385,7 @@ checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
 	for i in `cat $1`; do 
-		echo $i | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
+		echo "$i" | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
 		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
 			continue
 		fi
