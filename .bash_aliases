@@ -320,7 +320,7 @@ checkheadersforsqli(){
 	echo -e "\e[32m\tFound $i headers with potential sqli... \033[0m"
 }
 
-# Gets an url with curl and adds every header to check for sqli injections (if response time > 6 seconds)
+# Gets an url with curl and adds every header to check for redirect
 # usage: checkheadersforredirect urllist.txt outputurlswithredirection.txt
 # output: list of urls and headers with redirection
 checkheadersforredirect(){
@@ -347,8 +347,8 @@ checkheadersforredirect(){
 	echo -e "\e[32m\tFound $i headers with potential redirect... \033[0m"
 }
 
-# Gets an url with curl and adds every header to check for sqli injections (if response time > 6 seconds)
-# usage: checkheadersforredirect urllist.txt outputurlswithredirection.txt
+# Gets an url with curl and adds every header to check for sqli injections
+# usage: checkheadersforinjection urllist.txt outputurlswithinjection.txt
 # output: list of urls and headers with redirection
 checkheadersforinjection(){
 	if [[ -f $1 && ! -s $1 ]]; then
