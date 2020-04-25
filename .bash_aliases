@@ -270,7 +270,7 @@ subdomains(){
 		checkheadersforsqli lista$nombre$now.txt checkheader_sqli$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
 		checkheadersforredirect lista$nombre$now.txt checkheader_redirect$1.txt | tee -a salida.txt
-		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a salida.txt
+		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a salida.txt
 		checkheadersforinjection lista$nombre$now.txt checkheader_inject$1.txt | tee -a salida.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a salida.txt
 		
@@ -384,7 +384,7 @@ checkheadersforinjection(){
 checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
-	for i in `cat $1 | sort -u`; do 
+	for i in `cat $1`; do 
 		echo $i | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
 		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
 			rm ~/tools/checkheaders/urls$now.txt
