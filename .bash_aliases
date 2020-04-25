@@ -434,20 +434,22 @@ uniqueurls(){
 		urlb="$i"
 		queryb=$(echo "$i" | unfurl format "%q")
 		pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
-		if [[ "$patha" != "$pathb" ]]; then
-			echo "$i" >> $2
-			querya="$queryb"
-			patha="$pathb"
-			urla="$urlb"
-		elif [[ "$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
-			paramsa=$(echo "$urla" | unfurl keys | wc -l)
-			paramsb=$(echo "$urlb" | unfurl keys | wc -l)
-			if (( $paramsb>0 && $paramsa != $paramsb )); then
+		paramsa=$(echo "$urla" | unfurl keys | wc -l)
+		paramsb=$(echo "$urlb" | unfurl keys | wc -l)
+		if [[ ("$patha" != "$pathb" && (( $paramsb>0 ))) || ("$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" && (( $paramsb>0 && $paramsa != $paramsb ))) ]]; then
+			#if (( $paramsb>0 )); then
 				echo "$i" >> $2
 				querya="$queryb"
 				patha="$pathb"
 				urla="$urlb"
-			fi
+			#fi
+		#elif [[ "$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
+			#if (( $paramsb>0 && $paramsa != $paramsb )); then
+			#	echo "$i" >> $2
+			#	querya="$queryb"
+			#	patha="$pathb"
+			#	urla="$urlb"
+			#fi
 		fi
 	done
 }
