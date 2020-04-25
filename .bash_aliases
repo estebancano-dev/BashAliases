@@ -401,14 +401,14 @@ checkheaders(){
 		fi
 		
 		count=$(cat ~/tools/checkheaders/lista$nombre$now.txt | wc -l)
-		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		checkheadersforsqli ~/tools/checkheaders/lista$nombre$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		checkheadersforredirect ~/tools/checkheaders/lista$nombre$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		checkheadersforinjection ~/tools/checkheaders/lista$nombre$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforsqli ~/tools/checkheaders/lista$nombre$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforredirect ~/tools/checkheaders/lista$nombre$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforinjection ~/tools/checkheaders/lista$nombre$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
 		#rm ~/tools/checkheaders/lista$nombre$now.txt
 	done
 }
