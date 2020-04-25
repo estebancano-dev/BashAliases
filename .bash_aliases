@@ -399,15 +399,14 @@ checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
 	for i in `cat $1 | sort -u`; do 
-		echo cat $1 | sort -u
-		echo $1 | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
+		echo $i | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
 		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
 			continue
 		fi
 		
 		nombre=$(echo "$dom" | unfurl format "%d")
 		uniqueurls ~/tools/checkheaders/urls$now.txt ~/tools/checkheaders/lista$nombre$now.txt
-		#rm ~/tools/checkheaders/urls$now.txt
+		rm ~/tools/checkheaders/urls$now.txt
 		
 		if [[ -f ~/tools/checkheaders/lista$nombre$now.txt && ! -s ~/tools/checkheaders/lista$nombre$now.txt ]]; then
 			continue
