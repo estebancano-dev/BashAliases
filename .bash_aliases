@@ -387,7 +387,6 @@ checkheaders(){
 	for i in `cat $1`; do 
 		echo $i | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
 		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
-			rm ~/tools/checkheaders/urls$now.txt
 			continue
 		fi
 		
@@ -396,7 +395,6 @@ checkheaders(){
 		rm ~/tools/checkheaders/urls$now.txt
 		
 		if [[ -f ~/tools/checkheaders/lista$nombre$now.txt && ! -s ~/tools/checkheaders/lista$nombre$now.txt ]]; then
-			rm ~/tools/checkheaders/lista$nombre$now.txt
 			continue
 		fi
 		
