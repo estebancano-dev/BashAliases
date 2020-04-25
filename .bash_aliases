@@ -391,7 +391,7 @@ checkheaders(){
 			continue
 		fi
 		
-		nombre=$(echo "$dom" | unfurl format "%d")
+		nombre=$(echo "$i" | unfurl format "%d")
 		uniqueurls ~/tools/checkheaders/urls$now.txt ~/tools/checkheaders/lista$nombre$now.txt
 		rm ~/tools/checkheaders/urls$now.txt
 		
