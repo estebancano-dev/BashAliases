@@ -438,10 +438,11 @@ uniqueurls(){
 			echo "$i" >> $2
 			querya="$queryb"
 			patha="$pathb"
+			urla="$urlb"
 		elif [[ "$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
 			paramsa=$(echo "$urla" | unfurl keys | wc -l)
 			paramsb=$(echo "$urlb" | unfurl keys | wc -l)
-			if (( $paramsa>0 && $paramsa != $paramsb )); then
+			if (( $paramsb>0 && $paramsa != $paramsb )); then
 				echo "$i" >> $2
 				querya="$queryb"
 				patha="$pathb"
