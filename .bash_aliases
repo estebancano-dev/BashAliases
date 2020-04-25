@@ -409,7 +409,7 @@ checkheaders(){
 		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
 		checkheadersforinjection ~/tools/checkheaders/lista$nombre$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
-		#rm ~/tools/checkheaders/lista$nombre$now.txt
+		rm ~/tools/checkheaders/lista$nombre$now.txt
 	done
 }
 
@@ -549,46 +549,34 @@ nmap2(){
 }
 
 batchsqlmap(){
-	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat $1`; do 
 		now=$(date +"%Y%m%d%H%M%S")
-		echo $dom | waybackurls | grep "\?" | sort -u -o l$dom$now.txt
-		if [[ -f l$dom$now.txt && ! -s l$dom$now.txt ]]; then
-			rm l$dom$now.txt
+		nombre=$(echo "$dom" | unfurl format "%d")
+		echo $dom | waybackurls | grep "\?" | sort -u -o l$nombre$now.txt
+		if [[ -f l$nombre$now.txt && ! -s l$nombre$now.txt ]]; then
+			rm l$nombre$now.txt
 			continue
 		fi
 		
-		# limpio las urls (dejo solo 1 url con el mismo path)
-		patha=""
-		touch "lista$dom$now.txt"
-		for i in `cat l$dom$now.txt`; do 
-			if [[ $i =~ $regex ]]
-			then 
-				pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
-				if [ "$patha" != "$pathb" ]; then
-					echo "$i" >> lista$dom$now.txt
-					patha="$pathb"
-				fi
-			fi
-		done
-		rm l$dom$now.txt
+		# limpio las urls (dejo solo 1 url con el mismo path y distintos parametros)
+		uniqueurls l$nombre$now.txt lista$nombre$now.txt
+		rm l$nombre$now.txt
 		
-		if [[ -f lista$dom$now.txt && ! -s lista$dom$now.txt ]]; then
-			rm lista$dom$now.txt
+		if [[ -f lista$nombre$now.txt && ! -s lista$nombre$now.txt ]]; then
+			rm lista$nombre$now.txt
 			continue
 		fi
 		
-		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$dom$now.txt
-		for i in `cat lista$dom$now.txt`; do 
-			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$dom$now.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$dom$now.txt 
+		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$nombre$now.txt
+		for i in `cat lista$nombre$now.txt`; do 
+			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$nombre$now.txt
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$nombre$now.txt 
 		done
 	done
 }
 
 sqlmap(){
-	cd ~/tools/sqlmap-dev
-	python3 ~/tools/sqlmap-dev/sqlmap.py -u "$1" --level=5 --risk=3 --threads=10 --current-user --current-db --hostname --batch --answers="follow=Y" --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
+	python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
 }
 
 netcat(){
