@@ -430,7 +430,7 @@ uniqueurls(){
 	patha=""
 	urla=""
 	touch $2
-	for i in `cat $1 | sort -u`; do 
+	for i in `cat $1`; do 
 		urlb="$i"
 		queryb=$(echo "$i" | unfurl format "%q")
 		pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
