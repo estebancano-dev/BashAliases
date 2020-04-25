@@ -371,22 +371,22 @@ checkheadersforinjection(){
 	fi
 	i=0
 	cat $1 | while read url; do
-		response=$(curl -LiH "User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+		response=$(curl -sLiH "User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
 		if [[ $response == *"<!-- CH3CK -->"* ]]; then
 			echo "\r\n*** Header User-agent injected: User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 			((i++))
 		fi
-		response=$(curl -H "User-agent:" -LiH "X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+		response=$(curl -H "User-agent:" -sLiH "X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
 		if [[ $response == *"<!-- CH3CK -->"* ]]; then
 			echo "\r\n*** Header X-forwarded-for injected: X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 			((i++))
 		fi
-		response=$(curl -H "User-agent:" -LiH "Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+		response=$(curl -H "User-agent:" -sLiH "Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
 		if [[ $response == *"<!-- CH3CK -->"* ]]; then
 			echo "\r\n*** Header Referer injected: Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
 			((i++))
 		fi
-		response=$(curl -LiH "User-agent:" $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
+		response=$(curl -sLiH "User-agent:" $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
 		if [[ $response == *"<!-- CH3CK -->"* ]]; then
 			echo "\r\n*** Url query injected: $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a in $url" >> $2
 			((i++))
@@ -427,7 +427,7 @@ checkheaders(){
 		checkheadersforsqli ~/tools/checkheaders/urls$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 		checkheadersforredirect ~/tools/checkheaders/urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 		checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
 		rm ~/tools/checkheaders/urls$now.txt
