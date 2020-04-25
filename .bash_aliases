@@ -401,6 +401,7 @@ checkheaders(){
 	for i in `cat $1 | sort -u`; do 
 		echo $i | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
 		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
+			rm -f ~/tools/checkheaders/urls$now.txt
 			continue
 		fi
 		
@@ -409,6 +410,7 @@ checkheaders(){
 		rm ~/tools/checkheaders/urls$now.txt
 		
 		if [[ -f ~/tools/checkheaders/lista$nombre$now.txt && ! -s ~/tools/checkheaders/lista$nombre$now.txt ]]; then
+			rm -f ~/tools/checkheaders/lista$nombre$now.txt
 			continue
 		fi
 		
@@ -425,11 +427,15 @@ checkheaders(){
 	done
 }
 
+# Gets a file with lots of urls (with params) and tries to uniques them
+# usage: checkheadersforredirect urllist.txt output.txt
+# output: list of distinct urls. If same path, then different numbers of params
 uniqueurls(){
 	querya=""
 	patha=""
 	urla=""
 	touch $2
+	sort -u -o $1 $1
 	for i in `cat $1`; do 
 		urlb="$i"
 		queryb=$(echo "$i" | unfurl format "%q")
@@ -437,19 +443,10 @@ uniqueurls(){
 		paramsa=$(echo "$urla" | unfurl keys | wc -l)
 		paramsb=$(echo "$urlb" | unfurl keys | wc -l)
 		if [[ ("$patha" != "$pathb" && (( $paramsb>0 ))) || ("$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" && (( $paramsb>0 && $paramsa != $paramsb ))) ]]; then
-			#if (( $paramsb>0 )); then
-				echo "$i" >> $2
-				querya="$queryb"
-				patha="$pathb"
-				urla="$urlb"
-			#fi
-		#elif [[ "$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
-			#if (( $paramsb>0 && $paramsa != $paramsb )); then
-			#	echo "$i" >> $2
-			#	querya="$queryb"
-			#	patha="$pathb"
-			#	urla="$urlb"
-			#fi
+			echo "$i" >> $2
+			querya="$queryb"
+			patha="$pathb"
+			urla="$urlb"
 		fi
 	done
 }
