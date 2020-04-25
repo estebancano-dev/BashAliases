@@ -428,8 +428,10 @@ checkheaders(){
 uniqueurls(){
 	querya=""
 	patha=""
+	urla=""
 	touch $2
 	for i in `cat $1 | sort -u`; do 
+		urlb="$i"
 		queryb=$(echo "$i" | unfurl format "%q")
 		pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
 		if [[ "$patha" != "$pathb" ]]; then
@@ -437,12 +439,13 @@ uniqueurls(){
 			querya="$queryb"
 			patha="$pathb"
 		elif [[ "$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
-			paramsa=$(echo "$querya" | tr -cd '&' | wc -c)
-			paramsb=$(echo "$queryb" | tr -cd '&' | wc -c)
+			paramsa=$(echo "$urla" | unfurl keys | wc -l)
+			paramsb=$(echo "$urlb" | unfurl keys | wc -l)
 			if (( $paramsa != $paramsb )); then
 				echo "$i" >> $2
 				querya="$queryb"
 				patha="$pathb"
+				urla="$urlb"
 			fi
 		fi
 	done
