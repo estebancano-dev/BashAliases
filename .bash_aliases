@@ -257,7 +257,7 @@ subdomains(){
 			if [[ $i =~ $regex ]]; then
 				urlb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
 				queryb=$(echo "$i" | unfurl format "%q")
-				if [ "$urla" != "$urlb" ] && [ "$querya" != "" ] && [ "$querya" != "$queryb" ]; then
+				if [[ "$urla" != "urlb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
 					echo "$i" >> lista$nombre$now.txt
 					urla="$urlb"
 					querya="$queryb"
@@ -395,6 +395,59 @@ checkheadersforinjection(){
 	echo -e "\e[32m\tFound $i headers injected... \033[0m"
 }
 
+checkheaders(){
+	now=$(date +"%Y%m%d%H%M%S")
+	echo -e "\e[32m\tWaybacking urls...\033[0m"
+	for i in `cat $1 | sort -u`; do 
+		echo $1 | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
+		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
+			continue
+		fi
+		
+		nombre=$(echo "$dom" | unfurl format "%d")
+		uniqueurls ~/tools/checkheaders/urls$now.txt ~/tools/checkheaders/lista$nombre$now.txt
+		rm ~/tools/checkheaders/urls$now.txt
+		
+		if [[ -f ~/tools/checkheaders/lista$nombre$now.txt && ! -s ~/tools/checkheaders/lista$nombre$now.txt ]]; then
+			continue
+		fi
+		
+		count=$(cat ~/tools/checkheaders/lista$nombre$now.txt | wc -l)
+		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		checkheadersforsqli ~/tools/checkheaders/lista$nombre$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		checkheadersforredirect ~/tools/checkheaders/lista$nombre$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		checkheadersforinjection ~/tools/checkheaders/lista$nombre$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
+		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
+		#rm ~/tools/checkheaders/lista$nombre$now.txt
+	done
+}
+
+uniqueurls(){
+	querya=""
+	patha=""
+	touch $2
+	for i in `cat $1 | sort -u`; do 
+		queryb=$(echo "$i" | unfurl format "%q")
+		pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
+		if [[ "$patha" != "$pathb" ]]; then
+			echo "$i" >> $2
+			querya="$queryb"
+			patha="$pathb"
+		elif [[ "$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" ]]; then
+			paramsa=$(echo "$querya" | tr -cd '&' | wc -c)
+			paramsb=$(echo "$queryb" | tr -cd '&' | wc -c)
+			if (( $paramsa != $paramsb )); then
+				echo "$i" >> $2
+				querya="$queryb"
+				patha="$pathb"
+			fi
+		fi
+	done
+}
+
 # Find all resolved*.txt in recon directory, merges them and check for CNAME records
 # usage: takeover [word]
 # output: list of domains with CNAME records for resolvedword*.txt (eg: resolvedstarbucks*.txt), to manually check for subdomains takeover
@@ -409,29 +462,6 @@ takeover(){
 	massdns -q -o S -r ~/tools/massdns/lists/resolvers.txt -t CNAME --verify-ip -w ~/tools/takeovers/takeover$now.txt ~/tools/takeovers/resolved$now.txt
 	cat ~/tools/takeovers/takeover$now.txt | awk '{ print $3 }' | sort -u > ~/tools/takeovers/takeover2$now.txt
 	massdns -q -r ~/tools/massdns/lists/resolvers.txt -w ~/tools/takeovers/final$now.txt ~/tools/takeovers/takeover2$now.txt
-}
-
-checkheaders(){
-	now=$(date +"%Y%m%d%H%M%S")
-	echo -e "\e[32m\tWaybacking urls...\033[0m"
-	while read line
-	do
-		echo $line | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$now.txt
-		if [[ -f ~/tools/checkheaders/urls$now.txt && ! -s ~/tools/checkheaders/urls$now.txt ]]; then
-			echo -e "\e[32mUrls file is empty!\033[0m"
-			return
-		fi
-		count=$(cat ~/tools/checkheaders/urls$now.txt | wc -l)
-		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		checkheadersforsqli ~/tools/checkheaders/urls$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		checkheadersforredirect ~/tools/checkheaders/urls$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		checkheadersforinjection ~/tools/checkheaders/urls$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$now.txt
-		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$now.txt
-		rm ~/tools/checkheaders/urls$now.txt
-	done < "${1:-/dev/stdin}"
 }
 
 checkwebalive(){
@@ -531,7 +561,7 @@ batchsqlmap(){
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat $1`; do 
 		now=$(date +"%Y%m%d%H%M%S")
-		echo $dom | waybackurls | grep -E "\?" | sort -u -o l$dom$now.txt
+		echo $dom | waybackurls | grep "\?" | sort -u -o l$dom$now.txt
 		if [[ -f l$dom$now.txt && ! -s l$dom$now.txt ]]; then
 			rm l$dom$now.txt
 			continue
