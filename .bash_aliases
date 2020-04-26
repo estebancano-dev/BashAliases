@@ -401,11 +401,11 @@ checkheaders(){
 		count=$(cat ~/tools/checkheaders/lista$nombre$now.txt | wc -l)
 		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
 		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
-		checkheadersforsqli ~/tools/checkheaders/lista$nombre$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforsqli ~/tools/checkheaders/lista$nombre$now.txt ~/tools/checkheaders/checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
 		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
-		checkheadersforredirect ~/tools/checkheaders/lista$nombre$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforredirect ~/tools/checkheaders/lista$nombre$now.txt ~/tools/checkheaders/checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
 		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
-		checkheadersforinjection ~/tools/checkheaders/lista$nombre$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforinjection ~/tools/checkheaders/lista$nombre$now.txt ~/tools/checkheaders/checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
 		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
 		rm ~/tools/checkheaders/lista$nombre$now.txt
 	done
@@ -550,7 +550,7 @@ batchsqlmap(){
 	for dom in `cat $1`; do 
 		now=$(date +"%Y%m%d%H%M%S")
 		nombre=$(echo "$dom" | unfurl format "%d")
-		echo $dom | waybackurls | grep "\?" | sort -u -o l$nombre$now.txt
+		echo $dom | waybackurls | grep "\?" > l$nombre$now.txt
 		if [[ -f l$nombre$now.txt && ! -s l$nombre$now.txt ]]; then
 			rm l$nombre$now.txt
 			continue
@@ -565,11 +565,12 @@ batchsqlmap(){
 			continue
 		fi
 		
-		echo "************************* Testing $dom *************************" > ~/tools/recon/sqlmap$nombre$now.txt
+		echo "************************* Testing $dom *************************" > ~/tools/results/sqlmap$nombre$now.txt
 		for i in `cat lista$nombre$now.txt`; do 
-			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$nombre$now.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$nombre$now.txt 
+			echo "************************* Testing $i *************************" >> ~/tools/results/sqlmap$nombre$now.txt
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/results/sqlmap$nombre$now.txt 
 		done
+		rm lista$nombre$now.txt
 	done
 }
 
