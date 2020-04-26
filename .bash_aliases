@@ -385,29 +385,29 @@ checkheaders(){
 	now=$(date +"%Y%m%d%H%M%S")
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
 	for i in `cat $1`; do 
-		echo "$i" | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$i$now.txt
-		if [[ -f ~/tools/checkheaders/urls$i$now.txt && ! -s ~/tools/checkheaders/urls$i$now.txt ]]; then
-			continue
-		fi
-		
 		nombre=$(echo "$i" | unfurl format "%d")
-		uniqueurls ~/tools/checkheaders/urls$i$now.txt ~/tools/checkheaders/lista$1$nombre$now.txt
-		rm ~/tools/checkheaders/urls$i$now.txt
-		
-		if [[ -f ~/tools/checkheaders/lista$1$nombre$now.txt && ! -s ~/tools/checkheaders/lista$1$nombre$now.txt ]]; then
+		echo "$i" | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$nombre$now.txt
+		if [[ -f ~/tools/checkheaders/urls$nombre$now.txt && ! -s ~/tools/checkheaders/urls$nombre$now.txt ]]; then
 			continue
 		fi
 		
-		count=$(cat ~/tools/checkheaders/lista$1$nombre$now.txt | wc -l)
-		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		checkheadersforsqli ~/tools/checkheaders/lista$1$nombre$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		checkheadersforredirect ~/tools/checkheaders/lista$1$nombre$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		checkheadersforinjection ~/tools/checkheaders/lista$1$nombre$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$1$nombre$now.txt
-		rm ~/tools/checkheaders/lista$1$nombre$now.txt
+		uniqueurls ~/tools/checkheaders/urls$nombre$now.txt ~/tools/checkheaders/lista$nombre$now.txt
+		rm ~/tools/checkheaders/urls$nombre$now.txt
+		
+		if [[ -f ~/tools/checkheaders/lista$nombre$now.txt && ! -s ~/tools/checkheaders/lista$nombre$now.txt ]]; then
+			continue
+		fi
+		
+		count=$(cat ~/tools/checkheaders/lista$nombre$now.txt | wc -l)
+		echo -e "\e[32m\tStarting Headers Check for $count urls...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforsqli ~/tools/checkheaders/lista$nombre$now.txt checkheader_sqli$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for redirect...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforredirect ~/tools/checkheaders/lista$nombre$now.txt checkheader_redirect$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tDoing Curl to check headers for injection...\033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		checkheadersforinjection ~/tools/checkheaders/lista$nombre$now.txt checkheader_inject$1.txt | tee -a ~/tools/checkheaders/$nombre$now.txt
+		echo -e "\e[32m\tHeaders Check done... \033[0m" | tee -a ~/tools/checkheaders/$nombre$now.txt
+		rm ~/tools/checkheaders/lista$nombre$now.txt
 	done
 }
 
