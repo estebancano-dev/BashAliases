@@ -437,6 +437,13 @@ uniqueurls(){
 	done
 }
 
+popandpull(){
+	primera=$(head -1 $1)
+	tail -n +2 $1 > urls.tmp && mv urls.tmp $1
+	echo "$primera" >> urls.txt
+	echo "$primera" | tr -d '\r\n'
+}
+
 # Find all resolved*.txt in recon directory, merges them and check for CNAME records
 # usage: takeover [word]
 # output: list of domains with CNAME records for resolvedword*.txt (eg: resolvedstarbucks*.txt), to manually check for subdomains takeover
