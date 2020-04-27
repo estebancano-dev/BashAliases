@@ -15,7 +15,8 @@ reinstall(){
 	mv ~/commonwords/*.* ~/tools/__diccionarios
 	gunzip -f ~/tools/__diccionarios/1-5.txt.gz
 	git clone https://github.com/estebancano-dev/crons.git
-	mv ~/crons/* ~/tools/crons
+	mv ~/crons/ ~/tools/crons/
+	sudo chmod +x ~/tools/crons/*.sh
 	reload
 	echo -e "\033[0m"
 }
