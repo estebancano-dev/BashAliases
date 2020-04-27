@@ -13,12 +13,12 @@ reinstall(){
 	cp ~/BashAliases/.bash_aliases ~/
 	rm -r ~/BashAliases
 	git clone https://github.com/estebancano-dev/commonwords.git
-	cp -r ~/commonwords/ ~/tools/__diccionarios
-	rm -r ~/commonwords/
+	mv ~/commonwords/* ~/tools/__diccionarios
+	rm -r ~/commonwords
 	gunzip -f ~/tools/__diccionarios/1-5.txt.gz
 	git clone https://github.com/estebancano-dev/crons.git
-	cp -r ~/crons/ ~/tools/crons/
-	rm -r ~/crons/
+	mv ~/crons/* ~/tools/crons/
+	rm -r ~/crons
 	sudo chmod +x ~/tools/crons/*.sh
 	reload
 	echo -e "\033[0m"
