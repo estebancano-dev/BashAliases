@@ -8,7 +8,7 @@ reload(){
 reinstall(){
 	echo -e "\e[32m"
 	cd ~/
-	mkdir -p ~/tools/{__diccionarios,recon,results,cron}
+	mkdir -p ~/tools/{__diccionarios,recon,results,crons}
 	git clone https://github.com/estebancano-dev/BashAliases.git
 	cp ~/BashAliases/.bash_aliases ~/
 	rm -r ~/BashAliases
@@ -17,7 +17,7 @@ reinstall(){
 	rm -r ~/commonwords/
 	gunzip -f ~/tools/__diccionarios/1-5.txt.gz
 	git clone https://github.com/estebancano-dev/crons.git
-	cp ~/crons/ ~/tools/
+	cp ~/crons/* ~/tools/crons/
 	rm -r ~/crons/
 	sudo chmod +x ~/tools/crons/*.sh
 	reload
