@@ -158,9 +158,15 @@ subdomains(){
 	altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
 	cat altdns$1.txt | grep "\.$1\|^$1" | sort -u >> altdns$1.txt
 	# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
+	touch altdns2$1.txt
 	cat 1scrap$1.txt | while read dom; do
-		sed -i "/^$dom/d" altdns$1.txt
+		#sed -i "/^$dom/d" altdns$1.txt# saque esto porq si el altdns es grande, para cada ciclo crea un temporal y va reemplazando
+		esta=$(cat altdns$1.txt | grep -ix "$dom")
+		if [ -z "$esta" ]; then
+			echo "$dom" >> altdns2$1.txt
+		fi
 	done
+	mv altdns2$1.txt altdns$1.txt
 	count=$(cat "altdns$1.txt" | wc -l)
 	echo -e "\e[32m\tGenerated $count alternative domains...\033[0m" | tee -a salida.txt
 	
@@ -589,6 +595,19 @@ batchsqlmap(){
 		python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --mobile --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/results/sqlmap$nombre$now.txt 
 	done
 	rm listalimpia$now.txt
+}
+
+geturls(){
+	if [[ -f $1 && ! -s $1 ]]; then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
+	now=$(date +"%Y%m%d%H%M%S")
+	touch urls$1$now.txt
+	cat $1 | while read dom; do
+		echo "$dom" | waybackurls >> urls$1$now.txt
+	done
+	sort -u -o urls$1$now.txt urls$1$now.txt
 }
 
 sqlmap(){
