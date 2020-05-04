@@ -435,7 +435,7 @@ uniqueurls(){
 	for i in `cat $1`; do 
 		file=$(basename $(echo "$i" | unfurl format %p | tr '[:upper:]' '[:lower:]') > /dev/null 2>&1)
 		queryb=$(echo "$i" | unfurl format "%q")
-		if [[ ! "$file" =~ .jpg|.gif|.png|.css|.woff|.woff2|.eot|.svg|.ttf|.js && ! "$queryb" =~ utm_campaign|utm_source|utm_medium ]]; then 
+		if [[ ! "$file" =~ \.jpg|\.gif|\.png|\.css|\.woff|\.woff2|\.eot|\.svg|\.ttf|\.js && ! "$queryb" =~ utm_campaign|utm_source|utm_medium ]]; then 
 			pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
 			paramsb=$(echo "$i" | unfurl keys | wc -l)
 			paramsa=$(echo "$urla" | unfurl keys | wc -l)
