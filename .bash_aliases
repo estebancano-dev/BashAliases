@@ -608,6 +608,12 @@ geturls(){
 		echo "$dom" | waybackurls >> urls$1$now.txt
 	done
 	sort -u -o urls$1$now.txt urls$1$now.txt
+	return "urls$1$now.txt"
+}
+
+sqlmapdominios(){
+	archivo=$(geturls $1)
+	batchsqlmap $archivo
 }
 
 sqlmap(){
