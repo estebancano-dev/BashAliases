@@ -603,12 +603,11 @@ geturls(){
 		return
 	fi
 	now=$(date +"%Y%m%d%H%M%S")
-	touch urls$1$now.txt
+	touch $1urls$now.txt
 	cat $1 | while read dom; do
-		echo "$dom" | waybackurls >> urls$1$now.txt
+		echo "$dom" | waybackurls >> $1urls$now.txt
 	done
-	sort -u -o urls$1$now.txt urls$1$now.txt
-	return "urls$1$now.txt"
+	sort -u -o $1urls$now.txt $1urls$now.txt
 }
 
 sqlmapdominios(){
@@ -640,13 +639,11 @@ install(){
 	
 	# actualizo el SO
 	cd ~/tools
-	sudo apt update && sudo apt dist-upgrade -y
+	sudo apt update 
+	sudo apt dist-upgrade -y
 	
-	# git, nmap, curl, pip3
-	sudo apt-get install git -y
-	sudo apt-get install nmap -y
-	sudo apt-get install curl -y
-	sudo apt-get install python3-pip -y
+	# git, nmap, curl, pip3, gcc, make, libpcap-dev
+	sudo apt-get install git nmap curl python3-pip gcc make libpcap-dev libssl-dev -y
 	
 	# dirsearch, EyeWitness
 	git clone https://github.com/maurosoria/dirsearch.git
@@ -684,7 +681,6 @@ install(){
 	cd ..
 	
 	# masscan
-	sudo apt-get install git gcc make libpcap-dev
 	git clone https://github.com/robertdavidgraham/masscan
 	cd masscan
 	make
@@ -709,7 +705,6 @@ install(){
 	
 	# jtr
 	git clone https://github.com/magnumripper/JohnTheRipper.git
-	apt-get install libssl-dev
 	cd JohnTheRipper
 	./configure && make
 	cd ..
