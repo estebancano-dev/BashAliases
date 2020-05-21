@@ -251,7 +251,7 @@ subdomains(){
 	for dom in `cat resolved$1.txt`; do 
 		now=$(date +"%Y%m%d%H%M%S")
 		echo "$dom" | waybackurls > l$now.txt
-		echo "$dom" | gau >> l$now.txt
+		echo "$dom" | gau -subs >> l$now.txt
 		sort -u -o l$now.txt l$now.txt
 		if [[ -f l$now.txt && ! -s l$now.txt ]]; then
 			rm l$now.txt
@@ -400,7 +400,7 @@ checkheaders(){
 	for i in `cat $1`; do 
 		nombre=$(echo "$i" | unfurl format "%d")
 		echo "$i" | waybackurls | grep "\?" > ~/tools/checkheaders/urls$nombre$now.txt
-		echo "$i" | gau | grep "\?" >> ~/tools/checkheaders/urls$nombre$now.txt
+		echo "$i" | gau -subs | grep "\?" >> ~/tools/checkheaders/urls$nombre$now.txt
 		sort -u -o ~/tools/checkheaders/urls$nombre$now.txt ~/tools/checkheaders/urls$nombre$now.txt
 		if [[ -f ~/tools/checkheaders/urls$nombre$now.txt && ! -s ~/tools/checkheaders/urls$nombre$now.txt ]]; then
 			continue
@@ -609,7 +609,7 @@ geturls(){
 	touch $1urls$now.txt
 	cat $1 | while read dom; do
 		echo "$dom" | waybackurls >> $1urls$now.txt
-		echo "$dom" | gau >> $1urls$now.txt
+		echo "$dom" | gau -subs >> $1urls$now.txt
 	done
 	sort -u -o $1urls$now.txt $1urls$now.txt
 }
