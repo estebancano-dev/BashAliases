@@ -250,8 +250,9 @@ subdomains(){
 	echo -e "\e[32m\tGetting Wayback urls for $count urls... \033[0m" | tee -a salida.txt
 	for dom in `cat resolved$1.txt`; do 
 		now=$(date +"%Y%m%d%H%M%S")
-		echo "$dom" | waybackurls | sort -u -o l$now.txt
-		#| grep -E "\?" 
+		echo "$dom" | waybackurls > l$now.txt
+		echo "$dom" | gau >> l$now.txt
+		sort -u -o l$now.txt l$now.txt
 		if [[ -f l$now.txt && ! -s l$now.txt ]]; then
 			rm l$now.txt
 			continue
@@ -398,7 +399,9 @@ checkheaders(){
 	echo -e "\e[32m\tWaybacking urls...\033[0m"
 	for i in `cat $1`; do 
 		nombre=$(echo "$i" | unfurl format "%d")
-		echo "$i" | waybackurls | grep "\?" | sort -u -o ~/tools/checkheaders/urls$nombre$now.txt
+		echo "$i" | waybackurls | grep "\?" > ~/tools/checkheaders/urls$nombre$now.txt
+		echo "$i" | gau | grep "\?" >> ~/tools/checkheaders/urls$nombre$now.txt
+		sort -u -o ~/tools/checkheaders/urls$nombre$now.txt ~/tools/checkheaders/urls$nombre$now.txt
 		if [[ -f ~/tools/checkheaders/urls$nombre$now.txt && ! -s ~/tools/checkheaders/urls$nombre$now.txt ]]; then
 			continue
 		fi
@@ -606,6 +609,7 @@ geturls(){
 	touch $1urls$now.txt
 	cat $1 | while read dom; do
 		echo "$dom" | waybackurls >> $1urls$now.txt
+		echo "$dom" | gau >> $1urls$now.txt
 	done
 	sort -u -o $1urls$now.txt $1urls$now.txt
 }
@@ -698,6 +702,7 @@ install(){
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/tomnomnom/unfurl
 	go get -u github.com/tomnomnom/waybackurls
+	go get -u github.com/lc/gau
 	go get -u github.com/ffuf/ffuf	
 	export GO111MODULE=on
 	go get -u github.com/OWASP/Amass/v3/...
