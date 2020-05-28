@@ -271,7 +271,7 @@ subdomains(){
 		touch ~/tools/recon/sqlmap$nombre$now.txt
 		for i in `cat lista$nombre$now.txt`; do 
 			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$nombre$now.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$nombre$now.txt 
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$nombre$now.txt 
 		done		
 		echo -e "\e[32m\tSqli Check done...\033[0m" | tee -a salida.txt
 
@@ -486,39 +486,39 @@ dirsearch(){
 	do
 		case $opt in
 			"no ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e ,
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e ,
 				break
 				;;
 			"no ext dicc")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e , -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"no ext file")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 --plain-text-report=SIMPLEOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents --plain-text-report=SIMPLEOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
 				break
 				;;
 			"all ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e js,js~ -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e js,js~ -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"php")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"js dicc 1-4")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e js -w ~/tools/__diccionarios/1-4.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e js -w ~/tools/__diccionarios/1-4.txt
 				break
 				;;
 			"custom ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e $2 -w ~/tools/__diccionarios/commonwords.txt
 				break
 				;;
 			"custom ext dicc 1-5")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -x 301,302,400 -f -u $1 -e $2 -w ~/tools/__diccionarios/1-5.txt
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -u $1 -e $2 -w ~/tools/__diccionarios/1-5.txt
 				break
 				;;
 			"Quit")
@@ -595,7 +595,7 @@ batchsqlmap(){
 	echo "************************* Testing $dom *************************" > ~/tools/results/sqlmap$nombre$now.txt
 	for i in `cat listalimpia$now.txt`; do 
 		echo "************************* Testing $i *************************" >> ~/tools/results/sqlmap$nombre$now.txt
-		python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/results/sqlmap$nombre$now.txt 
+		python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/results/sqlmap$nombre$now.txt 
 	done
 	rm listalimpia$now.txt
 }
@@ -620,7 +620,7 @@ sqlmapdominios(){
 }
 
 sqlmap(){
-	python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
+	python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
 }
 
 netcat(){
