@@ -153,22 +153,24 @@ subdomains(){
 		return
 	fi
 
-	# altdns con los dominios en bruto.
-	echo -e "\e[32m\tDoing Altdns to generate alternative domains...\033[0m" | tee -a salida.txt
-	altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
-	cat altdns$1.txt | grep "\.$1\|^$1" | sort -u >> altdns$1.txt
-	# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
-	touch altdns2$1.txt
-	cat 1scrap$1.txt | while read dom; do
-		#sed -i "/^$dom/d" altdns$1.txt# saque esto porq si el altdns es grande, para cada ciclo crea un temporal y va reemplazando
-		esta=$(cat altdns$1.txt | grep -ix "$dom")
-		if [ -z "$esta" ]; then
-			echo "$dom" >> altdns2$1.txt
-		fi
-	done
-	mv altdns2$1.txt altdns$1.txt
-	count=$(cat "altdns$1.txt" | wc -l)
-	echo -e "\e[32m\tGenerated $count alternative domains...\033[0m" | tee -a salida.txt
+	# altdns con los dominios en bruto (solo para menos de 3000 dominios, sino el archivo generado es gigantrópico)
+	if [[ $(wc -l <file.txt) -le 3000 ]]; then
+		echo -e "\e[32m\tDoing Altdns to generate alternative domains...\033[0m" | tee -a salida.txt
+		altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
+		cat altdns$1.txt | grep "\.$1\|^$1" | sort -u >> altdns$1.txt
+		# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
+		touch altdns2$1.txt
+		cat 1scrap$1.txt | while read dom; do
+			#sed -i "/^$dom/d" altdns$1.txt# saque esto porq si el altdns es grande, para cada ciclo crea un temporal y va reemplazando
+			esta=$(cat altdns$1.txt | grep -ix "$dom")
+			if [ -z "$esta" ]; then
+				echo "$dom" >> altdns2$1.txt
+			fi
+		done
+		mv altdns2$1.txt altdns$1.txt
+		count=$(cat "altdns$1.txt" | wc -l)
+		echo -e "\e[32m\tGenerated $count alternative domains...\033[0m" | tee -a salida.txt
+	fi
 	
 	echo -e "\e[32m************** Scrapping done... **************\033[0m" | tee -a salida.txt
 	echo -e "\e[32m********** Starting DNS Resolving... **********\033[0m" | tee -a salida.txt
