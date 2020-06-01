@@ -270,10 +270,11 @@ subdomains(){
 		fi
 		
 		echo -e "\e[32m\tStarting Sqli Check...\033[0m" | tee -a salida.txt
-		touch ~/tools/recon/sqlmap$nombre$now.txt
+		touch sqlmap$nombre$now.txt xss$nombre$now.txt
 		for i in `cat lista$nombre$now.txt`; do 
-			echo "************************* Testing $i *************************" >> ~/tools/recon/sqlmap$nombre$now.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/recon/sqlmap$nombre$now.txt 
+			python3 ~/tools/XSStrike/xsstrike.py -t 10 --crawl -l 3 --file-log-level INFO -u "$i" >> xss$nombre$now.txt &
+			echo "************************* Testing $i *************************" >> sqlmap$nombre$now.txt
+			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$nombre$now.txt 
 		done		
 		echo -e "\e[32m\tSqli Check done...\033[0m" | tee -a salida.txt
 
