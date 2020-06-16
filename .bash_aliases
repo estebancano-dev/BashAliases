@@ -154,7 +154,7 @@ subdomains(){
 	fi
 
 	# altdns con los dominios en bruto (solo para menos de 3000 dominios, sino el archivo generado es gigantrópico)
-	if [[ $(wc -l <file.txt) -le 3000 ]]; then
+	if [[ $(wc -l <1scrap$1.txt) -le 3000 ]]; then
 		echo -e "\e[32m\tDoing Altdns to generate alternative domains...\033[0m" | tee -a salida.txt
 		altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
 		cat altdns$1.txt | grep "\.$1\|^$1" | sort -u >> altdns$1.txt
