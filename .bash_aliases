@@ -642,8 +642,8 @@ install(){
 	# golang
 	cd /usr/local/
 	mkdir go
-	wget https://dl.google.com/go/go1.14.linux-amd64.tar.gz
-	tar -C /usr/local -xzf go1.14.linux-amd64.tar.gz
+	wget https://golang.org/dl/go1.14.4.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz
 	export GOROOT=/usr/local/go
 	export GOPATH=$HOME/go
 	export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
