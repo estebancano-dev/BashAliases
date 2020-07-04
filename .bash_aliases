@@ -617,6 +617,10 @@ geturls(){
 	sort -u -o $1urls$now.txt $1urls$now.txt
 }
 
+decode(){
+	python3 ~/tools/basecrack/basecrack.py -m -b $1
+}
+
 sqlmapdominios(){
 	archivo=$(geturls $1)
 	batchsqlmap $archivo
