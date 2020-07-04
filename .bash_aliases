@@ -703,6 +703,12 @@ install(){
 	cd XSStrike
 	pip3 install -r requirements.txt
 	cd ..
+
+	# basecrack
+	git clone https://github.com/mufeedvh/basecrack.git
+	cd basecrack
+	pip install -r requirements.txt
+	cd ..
 	
 	# httprobe, assetfinder, fuff, amass, subfinder
 	go get -u github.com/tomnomnom/httprobe
@@ -712,7 +718,7 @@ install(){
 	go get -u github.com/lc/gau
 	go get -u github.com/ffuf/ffuf	
 	export GO111MODULE=on
-	go get -u github.com/OWASP/Amass/v3/...
+	go get -v github.com/OWASP/Amass/v3/...
 	go get -u github.com/projectdiscovery/subfinder/cmd/subfinder
 	
 	# jtr
