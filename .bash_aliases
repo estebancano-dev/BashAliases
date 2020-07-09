@@ -278,6 +278,12 @@ subdomains(){
 		done		
 		echo -e "\e[32m\tSqli Check done...\033[0m" | tee -a salida.txt
 
+		echo -e "\e[32m\tDetecting parameters...\033[0m" | tee -a salida.txt
+		python3 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --get -t 30 -o arjunget$nombre$now.txt < /dev/null 2>&1 &
+		python3 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --post -t 30 -o arjunpost$nombre$now.txt < /dev/null 2>&1 &
+		python3 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --json -t 30 -o arjunjson$nombre$now.txt < /dev/null 2>&1 &
+		echo -e "\e[32m\tParameter Detecting done...\033[0m" | tee -a salida.txt
+
 		echo -e "\e[32m\tStarting Headers Check...\033[0m" | tee -a salida.txt
 		echo -e "\e[32m\tDoing Curl to check headers for SQLi ...\033[0m" | tee -a salida.txt
 		checkheadersforsqli lista$nombre$now.txt checkheader_sqli$1.txt | tee -a salida.txt
@@ -703,6 +709,9 @@ install(){
 	cd XSStrike
 	pip3 install -r requirements.txt
 	cd ..
+
+	# arjun
+	git clone https://github.com/s0md3v/Arjun.git
 
 	# basecrack
 	git clone https://github.com/mufeedvh/basecrack.git
