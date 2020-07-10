@@ -547,6 +547,15 @@ sshbrute(){
 	fi
 }
 
+getparams(){
+	a=$(python3 ~/tools/Arjun/arjun.py -u $1 --get -t 30 | grep "Valid parameter")
+	b=$(python3 ~/tools/Arjun/arjun.py -u $1 --post -t 30 | grep "Valid parameter")
+	c=$(python3 ~/tools/Arjun/arjun.py -u $1 --json -t 30 | grep "Valid parameter")
+	echo -e "\e[32mGET: $a\033[0m"
+	echo -e "\e[32mPOST: $b\033[0m"
+	echo -e "\e[32mJSON: $c\033[0m"
+}
+
 nmap2(){
 	PS3='Please enter your choice: '
 	options=("alive" "fast" "web vulns" "all ports" "Quit")
