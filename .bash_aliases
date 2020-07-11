@@ -548,12 +548,21 @@ sshbrute(){
 }
 
 getparams(){
-	a=$(python3 ~/tools/Arjun/arjun.py -u $1 --get -t 30 | grep "Valid parameter")
-	b=$(python3 ~/tools/Arjun/arjun.py -u $1 --post -t 30 | grep "Valid parameter")
-	c=$(python3 ~/tools/Arjun/arjun.py -u $1 --json -t 30 | grep "Valid parameter")
+	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	if [[ ! $url =~ $regex ]]; then 
+		echo -e "\e[32mURL not valid!\033[0m"
+		return
+	fi
+	cwd=$(pwd)
+	cd ~/tools/Arjun/
+	a=$(python3 arjun.py -u $1 --get -t 30 | grep "Valid parameter")
+	b=$(python3 arjun.py -u $1 --post -t 30 | grep "Valid parameter")
+	c=$(python3 arjun.py -u $1 --json -t 30 | grep "Valid parameter")
+
 	echo -e "\e[32mGET: $a\033[0m"
 	echo -e "\e[32mPOST: $b\033[0m"
 	echo -e "\e[32mJSON: $c\033[0m"
+	cd $cwd
 }
 
 nmap2(){
