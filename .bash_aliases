@@ -556,9 +556,9 @@ getparams(){
 	
 	cwd=$(pwd)
 	cd ~/tools/Arjun/
-	a=$(python3 arjun.py -u $1 --get -t 30 | grep "Valid parameter")
-	b=$(python3 arjun.py -u $1 --post -t 30 | grep "Valid parameter")
-	c=$(python3 arjun.py -u $1 --json -t 30 | grep "Valid parameter")
+	a=$(python3 arjun.py -u $1 --get -t 5 | grep "Valid parameter")
+	b=$(python3 arjun.py -u $1 --post -t 5 | grep "Valid parameter")
+	c=$(python3 arjun.py -u $1 --json -t 5 | grep "Valid parameter")
 
 	echo -e "\e[32mGET: $a\033[0m"
 	echo -e "\e[32mPOST: $b\033[0m"
