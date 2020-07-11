@@ -548,11 +548,12 @@ sshbrute(){
 }
 
 getparams(){
-	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+.&@#/%=~_|]'
-	if [[ ! $url =~ $regex ]]; then 
+	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	if [[ ! $1 =~ $regex ]]; then 
 		echo -e "\e[32mURL not valid!\033[0m"
 		return
 	fi
+	
 	cwd=$(pwd)
 	cd ~/tools/Arjun/
 	a=$(python3 arjun.py -u $1 --get -t 30 | grep "Valid parameter")
