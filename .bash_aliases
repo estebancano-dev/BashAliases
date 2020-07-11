@@ -548,7 +548,7 @@ sshbrute(){
 }
 
 getparams(){
-	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+.&@#/%=~_|]'
 	if [[ ! $url =~ $regex ]]; then 
 		echo -e "\e[32mURL not valid!\033[0m"
 		return
