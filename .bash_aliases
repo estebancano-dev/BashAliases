@@ -738,6 +738,9 @@ install(){
 	pip install -r requirements.txt
 	cd ..
 	
+	# ciphey https://github.com/Ciphey/Ciphey (for CTF)
+	python3 -m pip install ciphey --upgrade
+	
 	# httprobe, assetfinder, fuff, amass, subfinder
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
@@ -763,8 +766,8 @@ install(){
 	
 	reinstall
 	sudo apt autoremove
-	sudo apt-get clean
-	sudo apt-get autoclean
+	sudo apt clean
+	sudo apt autoclean
 }
 
 export GOROOT=/usr/local/go
