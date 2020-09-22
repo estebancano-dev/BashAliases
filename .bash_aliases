@@ -495,7 +495,7 @@ dirsearch(){
 	do
 		case $opt in
 			"no ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -e , -u $1
+				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agents -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
 				break
 				;;
 			"no ext dicc")
@@ -667,8 +667,8 @@ install(){
 	# golang
 	cd /usr/local/
 	mkdir go
-	wget https://golang.org/dl/go1.14.4.linux-amd64.tar.gz
-	tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz
+	wget https://golang.org/dl/go1.15.2.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.15.2.linux-amd64.tar.gz
 	export GOROOT=/usr/local/go
 	export GOPATH=$HOME/go
 	export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
@@ -750,7 +750,7 @@ install(){
 	go get -u github.com/ffuf/ffuf	
 	export GO111MODULE=on
 	go get -v github.com/OWASP/Amass/v3/...
-	go get -u github.com/projectdiscovery/subfinder/cmd/subfinder
+	GO111MODULE=auto go get -u -v github.com/projectdiscovery/subfinder/cmd/subfinder
 	
 	# jtr
 	git clone https://github.com/magnumripper/JohnTheRipper.git
