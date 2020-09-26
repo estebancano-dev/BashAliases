@@ -659,6 +659,10 @@ netcat(){
 	nc -lvnp 3333
 }
 
+telegram(){
+    curl --silent --output /dev/null -F chat_id="$chat" -F text="$1" "https://api.telegram.org/bot$token/sendMessage" -X POST
+}
+
 #para instalar todas las aplicaciones que utilizo
 install(){
 	cd ~
