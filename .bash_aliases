@@ -304,7 +304,7 @@ subdomains(){
 	echo -e "\e[32m******************** The End *******************\033[0m" | tee -a salida.txt
 	end=$(date +"%s")
 	diff=$(($end-$begin))
-	echo "$(($diff / 60))m $(($diff % 60))s elapsed." | tee -a salida.txt
+	echo "subdomains($1) finished in $(($diff / 60))m $(($diff % 60))s." | tee -a salida.txt
 }
 
 # Gets an url with curl and adds every header to check for potential sqli injections (if response time > 8 seconds)
