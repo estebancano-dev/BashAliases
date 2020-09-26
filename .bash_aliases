@@ -660,7 +660,7 @@ netcat(){
 }
 
 telegram(){
-    curl --silent "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat&text=$1"
+    curl --silent --output /dev/null "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat&text=$1"
 }
 
 #para instalar todas las aplicaciones que utilizo
