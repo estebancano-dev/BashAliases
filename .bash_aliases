@@ -774,6 +774,33 @@ install(){
 	sudo apt autoremove
 	sudo apt clean
 	sudo apt autoclean
+	telegram "Bashaliases installed!"
+}
+
+update(){
+	cd ~/tools/dirsearch && git pull
+	cd ~/tools/EyeWitness && git pull
+	cd ~/tools/massdns && git pull
+	cd ~/tools/Sublist3r && git pull
+	cd ~/tools/ParamScanner && git pull
+	cd ~/tools/masscan && git pull
+	cd ~/tools/XSStrike && git pull
+	cd ~/tools/Arjun && git pull
+	cd ~/tools/Basecrack && git pull
+	cd ~/tools/pacu && git pull
+	cd ~/tools/sqlmap-dev && git pull
+	cd ~/tools/JohnTheRipper && git pull
+	cd ~/tools/ && python3 -m pip install ciphey --upgrade
+	go get -u github.com/tomnomnom/httprobe
+	go get -u github.com/tomnomnom/assetfinder
+	go get -u github.com/tomnomnom/unfurl
+	go get -u github.com/tomnomnom/waybackurls
+	go get -u github.com/lc/gau
+	go get -u github.com/ffuf/ffuf	
+	export GO111MODULE=on
+	go get -v github.com/OWASP/Amass/v3/...
+	GO111MODULE=auto go get -u -v github.com/projectdiscovery/subfinder/cmd/subfinder
+	telegram "Bashaliases updated!"
 }
 
 export GOROOT=/usr/local/go
