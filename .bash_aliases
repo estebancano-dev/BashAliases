@@ -756,7 +756,7 @@ install(){
 	go get -u github.com/ffuf/ffuf	
 	export GO111MODULE=on
 	go get -v github.com/OWASP/Amass/v3/...
-	GO111MODULE=auto go get -u -v github.com/projectdiscovery/subfinder/cmd/subfinder
+	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
 	
 	# jtr
 	git clone https://github.com/magnumripper/JohnTheRipper.git
@@ -799,7 +799,7 @@ update(){
 	go get -u github.com/ffuf/ffuf	
 	export GO111MODULE=on
 	go get -v github.com/OWASP/Amass/v3/...
-	GO111MODULE=auto go get -u -v github.com/projectdiscovery/subfinder/cmd/subfinder
+	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
 	telegram "Bashaliases updated!"
 }
 
