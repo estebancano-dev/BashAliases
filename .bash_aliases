@@ -782,11 +782,11 @@ update(){
 	cd ~/tools/EyeWitness && git pull
 	cd ~/tools/massdns && git pull
 	cd ~/tools/Sublist3r && git pull
-	cd ~/tools/ParamScanner && git pull
+	cd ~/tools/ParamSpider && git pull
 	cd ~/tools/masscan && git pull
 	cd ~/tools/XSStrike && git pull
 	cd ~/tools/Arjun && git pull
-	cd ~/tools/Basecrack && git pull
+	cd ~/tools/basecrack && git pull
 	cd ~/tools/pacu && git pull
 	cd ~/tools/sqlmap-dev && git pull
 	cd ~/tools/JohnTheRipper && git pull
