@@ -272,16 +272,16 @@ subdomains(){
 		echo -e "\e[32m\tStarting Sqli Check...\033[0m" | tee -a salida.txt
 		touch sqlmap$nombre$now.txt xss$nombre$now.txt
 		for i in `cat lista$nombre$now.txt`; do 
-			python3 ~/tools/XSStrike/xsstrike.py -t 10 --crawl -l 3 --file-log-level WARNING --fuzzer -d 3 -u "$i" >> xss$nombre$now.txt < /dev/null 2>&1 &
+			python3.9 ~/tools/XSStrike/xsstrike.py -t 10 --crawl -l 3 --file-log-level WARNING --fuzzer -d 3 -u "$i" >> xss$nombre$now.txt < /dev/null 2>&1 &
 			echo "************************* Testing $i *************************" >> sqlmap$nombre$now.txt
-			python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$nombre$now.txt 
+			python3.9 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$nombre$now.txt 
 		done		
 		echo -e "\e[32m\tSqli Check done...\033[0m" | tee -a salida.txt
 
 		echo -e "\e[32m\tDetecting parameters...\033[0m" | tee -a salida.txt
-		python3 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --get -t 30 -o arjunget$nombre$now.txt < /dev/null 2>&1 &
-		python3 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --post -t 30 -o arjunpost$nombre$now.txt < /dev/null 2>&1 &
-		python3 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --json -t 30 -o arjunjson$nombre$now.txt < /dev/null 2>&1 &
+		python3.9 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --get -t 30 -o arjunget$nombre$now.txt < /dev/null 2>&1 &
+		python3.9 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --post -t 30 -o arjunpost$nombre$now.txt < /dev/null 2>&1 &
+		python3.9 ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --json -t 30 -o arjunjson$nombre$now.txt < /dev/null 2>&1 &
 		echo -e "\e[32m\tParameter Detecting done...\033[0m" | tee -a salida.txt
 
 		echo -e "\e[32m\tStarting Headers Check...\033[0m" | tee -a salida.txt
@@ -298,7 +298,7 @@ subdomains(){
 	
 	echo -e "\e[32m***************** Screenshots... **************\033[0m" | tee -a salida.txt
 	echo -e "\e[32m\tDoing EyeWitness to httprobe results...\033[0m" | tee -a salida.txt
-	python3 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness > /dev/null 2>&1
+	python3.9 ~/tools/EyeWitness/EyeWitness.py -f 6httprobe$1.txt -d ./EyeWitness > /dev/null 2>&1
 	rm geckodriver.log 2> /dev/null
 	
 	echo -e "\e[32m******************** The End *******************\033[0m" | tee -a salida.txt
@@ -497,39 +497,39 @@ dirsearch(){
 	do
 		case $opt in
 			"no ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
 				break
 				;;
 			"no ext dicc")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 
 				break
 				;;
 			"no ext file")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent --plain-text-report=SIMPLEOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent --plain-text-report=SIMPLEOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
 				break
 				;;
 			"all ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1
 				break
 				;;
 			"js")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e js,js~ -w ~/tools/__diccionarios/commonwords.txt -u $1
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e js,js~ -w ~/tools/__diccionarios/commonwords.txt -u $1
 				break
 				;;
 			"php")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt -u $1 
 				break
 				;;
 			"js dicc 1-4")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e js -w ~/tools/__diccionarios/1-4.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e js -w ~/tools/__diccionarios/1-4.txt -u $1 
 				break
 				;;
 			"custom ext")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 
 				break
 				;;
 			"custom ext dicc 1-5")
-				python3 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 
 				break
 				;;
 			"Quit")
@@ -558,9 +558,9 @@ getparams(){
 	
 	cwd=$(pwd)
 	cd ~/tools/Arjun/
-	a=$(python3 arjun.py -u $1 --get -t 5 | grep "Valid parameter")
-	b=$(python3 arjun.py -u $1 --post -t 5 | grep "Valid parameter")
-	c=$(python3 arjun.py -u $1 --json -t 5 | grep "Valid parameter")
+	a=$(python3.9 arjun.py -u $1 --get -t 5 | grep "Valid parameter")
+	b=$(python3.9 arjun.py -u $1 --post -t 5 | grep "Valid parameter")
+	c=$(python3.9 arjun.py -u $1 --json -t 5 | grep "Valid parameter")
 
 	echo -e "\e[32mGET: $a\033[0m"
 	echo -e "\e[32mPOST: $b\033[0m"
@@ -625,7 +625,7 @@ batchsqlmap(){
 	echo "************************* Testing $dom *************************" > ~/tools/results/sqlmap$nombre$now.txt
 	for i in `cat listalimpia$now.txt`; do 
 		echo "************************* Testing $i *************************" >> ~/tools/results/sqlmap$nombre$now.txt
-		python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/results/sqlmap$nombre$now.txt 
+		python3.9 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> ~/tools/results/sqlmap$nombre$now.txt 
 	done
 	rm listalimpia$now.txt
 }
@@ -645,7 +645,7 @@ geturls(){
 }
 
 decode(){
-	python3 ~/tools/basecrack/basecrack.py -m -b $1
+	python3.9 ~/tools/basecrack/basecrack.py -m -b $1
 }
 
 sqlmapdominios(){
@@ -654,7 +654,7 @@ sqlmapdominios(){
 }
 
 sqlmap(){
-	python3 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
+	python3.9 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords
 }
 
 netcat(){
@@ -685,7 +685,7 @@ install(){
 	sudo apt dist-upgrade -y
 	
 	# git, nmap, curl, pip3, gcc, make, libpcap-dev
-	sudo apt-get install git nmap curl python3-pip gcc make libpcap-dev libssl-dev -y
+	sudo apt-get install git nmap curl python3.9-pip gcc make libpcap-dev libssl-dev -y
 	
 	# dirsearch, EyeWitness
 	git clone https://github.com/maurosoria/dirsearch.git
@@ -745,7 +745,7 @@ install(){
 	cd ..
 	
 	# ciphey https://github.com/Ciphey/Ciphey (for CTF)
-	python3 -m pip install ciphey --upgrade
+	python3.9 -m pip install ciphey --upgrade
 	
 	# httprobe, assetfinder, fuff, amass, subfinder
 	go get -u github.com/tomnomnom/httprobe
@@ -790,7 +790,7 @@ update(){
 	cd ~/tools/pacu && git pull
 	cd ~/tools/sqlmap-dev && git pull
 	cd ~/tools/JohnTheRipper && git pull
-	cd ~/tools/ && python3 -m pip install ciphey --upgrade
+	cd ~/tools/ && python3.9 -m pip install ciphey --upgrade
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/tomnomnom/unfurl
