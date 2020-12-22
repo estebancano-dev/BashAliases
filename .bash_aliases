@@ -497,39 +497,39 @@ dirsearch(){
 	do
 		case $opt in
 			"no ext")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
 				break
 				;;
 			"no ext dicc")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 
 				break
 				;;
 			"no ext file")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent --plain-text-report=SIMPLEOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent --plain-text-report=SIMPLEOUTPUTFILE -f -L $1 -e , > $1dirsearch.txt
 				break
 				;;
 			"all ext")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1
 				break
 				;;
 			"js")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e js,js~ -w ~/tools/__diccionarios/commonwords.txt -u $1
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e js,js~ -w ~/tools/__diccionarios/commonwords.txt -u $1
 				break
 				;;
 			"php")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt -u $1 
 				break
 				;;
 			"js dicc 1-4")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e js -w ~/tools/__diccionarios/1-4.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e js -w ~/tools/__diccionarios/1-4.txt -u $1 
 				break
 				;;
 			"custom ext")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 
 				break
 				;;
 			"custom ext dicc 1-5")
-				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 
+				python3.9 ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 
 				break
 				;;
 			"Quit")
