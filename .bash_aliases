@@ -800,6 +800,8 @@ update(){
 	export GO111MODULE=on
 	go get -v github.com/OWASP/Amass/v3/...
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+	sudo rm -r ~/tools/__diccionarios/assetnote-wordlists/
+	aws s3 sync s3://assetnote-wordlists/data/ ~/tools/__diccionarios/assetnote-wordlists --no-sign-request
 	telegram "Bashaliases updated!"
 }
 
