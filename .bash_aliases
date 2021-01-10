@@ -796,7 +796,7 @@ update(){
 	cd ~/tools/pacu && git pull
 	cd ~/tools/sqlmap-dev && git pull
 	cd ~/tools/JohnTheRipper && git pull
-	cd ~/tools/ && python3.9 -m pip install ciphey --upgrade
+	cd ~/tools/ && python3.9 -m pip install ciphey --upgrade < /dev/null 2>&1
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/tomnomnom/unfurl
