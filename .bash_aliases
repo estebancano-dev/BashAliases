@@ -110,10 +110,10 @@ check(){
 	assetfinder $1 | grep $1 | httprobe
 }
 
-# Given a domain name, and optionally an ASN number (only 1 number, eg:62566) scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
+# Given a domain name and optionally an ASN number (comma separated numbers, eg:62566,17012) scans for subdomains, tries to resolve them, shows web services, check for alive ones and makes portscan
 # Also check for header sqli, header redirect, sqlmap of wayback urls, makes screenshots
 # Uses: assetfinder, subfinder, sublist3r, amass, altdns, massdns, httprobe, nmap, masscan, header sqli, header redirect, sqlmap, eyewitness
-# usage: subdomains domain.com [ASNNUMBER]
+# usage: subdomains domain.com [ASNNUMBERS]
 # output: list of alive subdomains, open ports, vulns
 #		
 subdomains(){
@@ -204,11 +204,17 @@ subdomains(){
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
 	# agrego a la lista de IP los rangos ASN (si se agregó el segundo parámetro)
-	re='^[0-9]+$'
+	re='^[0-9](,[0-9])*$'
 	if [[ $2 =~ $re ]]; then
+		touch asnip$1.txt
 		echo -e "\e[32m\tDoing Nmap to check ASN alive IP...\033[0m" | tee -a salida.txt
-		nmap -Pn --script targets-asn --script-args targets-asn.asn=$2 --min-rate=3000 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" > asnip$1.txt < /dev/null 2>&1
-		nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
+		for i in $(echo $2 | tr "," "\n"); do
+			nmap -Pn --script targets-asn --script-args targets-asn.asn=$i --min-rate=3000 | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" >> asnip$1.txt < /dev/null 2>&1
+		done
+		if [[ -f asnip$1.txt && -s asnip$1.txt ]]; then
+			nmap -sP -T5 --min-rate=3000 -iL asnip$1.txt >> 3nmap$1.txt < /dev/null 2>&1
+		fi
+		echo -e "\e[32m\tDoing Nmap to check ASN alive IP done ...\033[0m" | tee -a salida.txt
 	fi
 
 	# extract ip and order/unique them
