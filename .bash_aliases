@@ -278,7 +278,7 @@ subdomains(){
 		echo -e "\e[32m\tStarting Sqli Check...\033[0m" | tee -a salida.txt
 		touch sqlmap$nombre$now.txt xss$nombre$now.txt
 		for i in `cat lista$nombre$now.txt`; do 
-			python3.9 ~/tools/XSStrike/xsstrike.py -t 10 --crawl -l 3 --file-log-level WARNING --fuzzer -d 3 -u "$i" >> xss$nombre$now.txt < /dev/null 2>&1 &
+			#python3.9 ~/tools/XSStrike/xsstrike.py -t 10 --crawl -l 3 --file-log-level WARNING --fuzzer -d 3 -u "$i" >> xss$nombre$now.txt < /dev/null 2>&1 &
 			echo "************************* Testing $i *************************" >> sqlmap$nombre$now.txt
 			python3.9 ~/tools/sqlmap-dev/sqlmap.py -u "$i" -v 0 --level=5 --risk=3 --threads=10 --answers="follow=Y" --batch --current-user --current-db --dbs --hostname --tor --tamper=apostrophemask,apostrophenullencode,appendnullbyte,base64encode,between,bluecoat,chardoubleencode,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,percentage,randomcase,randomcomments,space2comment,space2dash,space2hash,space2morehash,space2mssqlblank,space2mssqlhash,space2mysqlblank,space2mysqldash,space2plus,space2randomblank,sp_password,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords >> sqlmap$nombre$now.txt 
 		done		
@@ -781,6 +781,15 @@ install(){
 	sudo apt clean
 	sudo apt autoclean
 	telegram "Bashaliases installed!"
+}
+
+crackzip(){
+	if [[ -f $1 && ! -s $1 ]]; then
+		echo -e "\e[32mZip file not found!\033[0m"
+		return
+	fi
+	~/tools/JohnTheRipper/run/zip2john $1 > $1.hashes
+	~/tools/JohnTheRipper/run/john $1.hashes
 }
 
 update(){
