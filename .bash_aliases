@@ -667,6 +667,9 @@ netcat(){
 	nc -lvnp 3333
 }
 
+# Set $token and $chat on .bashrc for example:
+# 	chat=113371337
+#	token=13371331337:NNToP1MO9ayMMGqLVw5qsG9sgqhizy8XNZW
 telegram(){
     curl --silent --output /dev/null "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat&text=$1"
 }
