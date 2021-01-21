@@ -795,6 +795,15 @@ crackzip(){
 	~/tools/JohnTheRipper/run/john $1.hashes
 }
 
+crackrar(){
+	if [[ -f $1 ]]; then
+		echo -e "\e[32mRar file not found!\033[0m"
+		return
+	fi
+	~/tools/JohnTheRipper/run/rar2john $1 > $1.hashes
+	~/tools/JohnTheRipper/run/john $1.hashes
+}
+
 update(){
 	cd ~/tools/dirsearch && git pull
 	cd ~/tools/EyeWitness && git pull
