@@ -787,7 +787,7 @@ install(){
 }
 
 crackzip(){
-	if [[ -f $1 && ! -s $1 ]]; then
+	if [[ -f $1 ]]; then
 		echo -e "\e[32mZip file not found!\033[0m"
 		return
 	fi
