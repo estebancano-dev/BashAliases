@@ -682,8 +682,8 @@ install(){
 	# golang
 	cd /usr/local/
 	mkdir go
-	wget https://golang.org/dl/go1.15.2.linux-amd64.tar.gz
-	tar -C /usr/local -xzf go1.15.2.linux-amd64.tar.gz
+	wget https://golang.org/dl/go1.16.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.16.linux-amd64.tar.gz
 	export GOROOT=/usr/local/go
 	export GOPATH=$HOME/go
 	export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
@@ -805,6 +805,7 @@ crackrar(){
 }
 
 update(){
+	/usr/bin/python -m pip install --upgrade pip
 	cd ~/tools/dirsearch && git pull
 	cd ~/tools/EyeWitness && git pull
 	cd ~/tools/massdns && git pull
