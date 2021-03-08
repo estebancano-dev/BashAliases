@@ -539,7 +539,7 @@ dirsearch(){
 				break
 				;;
 			"custom ext custom dir")
-				if [[ -f ~/tools/__diccionarios/$3 || ! -s ~/tools/__diccionarios/$3 ]]; then
+				if [[ -f ~/tools/__diccionarios/$3 && ! -s ~/tools/__diccionarios/$3 ]]; then
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
 				fi
