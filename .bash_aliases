@@ -498,7 +498,7 @@ checkwebalive(){
 
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("no ext" "no ext dicc" "no ext file" "all ext" "js" "php" "js dicc 1-4" "custom ext" "custom ext dicc 1-5" "Quit")
+	options=("no ext" "no ext dicc" "no ext file" "all ext" "js" "php" "js dicc 1-4" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
@@ -536,6 +536,14 @@ dirsearch(){
 				;;
 			"custom ext dicc 1-5")
 				python ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 
+				break
+				;;
+			"custom ext custom dir")
+				if [[ -f ~/tools/__diccionarios/$3 || ! -s ~/tools/__diccionarios/$3 ]]; then
+					echo -e "\e[32mDict file is empty!\033[0m"
+					return
+				fi
+				python ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 
 				break
 				;;
 			"Quit")
