@@ -503,7 +503,7 @@ dirsearch(){
 	do
 		case $opt in
 			"no ext")
-				python ~/tools/dirsearch/dirsearch.py -t 50 --random-agent -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
+				python ~/tools/dirsearch/dirsearch.py -t 50 --random-user-agent -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
 				break
 				;;
 			"no ext dicc")
