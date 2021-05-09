@@ -653,9 +653,19 @@ geturls(){
 	touch $1urls$now.txt
 	cat $1 | while read dom; do
 		echo "$dom" | waybackurls >> $1urls$now.txt
-		echo "$dom" | gau -subs >> $1urls$now.txt
+		echo "$dom" | gau -b ttf,woff,svg,png,jpg,ico,woff2,jpeg >> $1urls$now.txt
 	done
 	sort -u -o $1urls$now.txt $1urls$now.txt
+}
+
+customdict(){
+	if [[ -f $1 && ! -s $1 ]]; then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
+
+	now=$(date +"%Y%m%d%H%M%S")
+	cat $1 | httprobe | gau -subs -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | waybackurls | wordlistgen > dictionary$now.txt
 }
 
 decode(){
@@ -690,8 +700,8 @@ install(){
 	# golang
 	cd /usr/local/
 	mkdir go
-	wget https://golang.org/dl/go1.16.linux-amd64.tar.gz
-	tar -C /usr/local -xzf go1.16.linux-amd64.tar.gz
+	wget https://golang.org/dl/go1.16.4.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.16.4.linux-amd64.tar.gz
 	export GOROOT=/usr/local/go
 	export GOPATH=$HOME/go
 	export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
@@ -764,7 +774,8 @@ install(){
 	# ciphey https://github.com/Ciphey/Ciphey (for CTF)
 	python -m pip install ciphey --upgrade
 	
-	# httprobe, assetfinder, fuff, amass, subfinder
+	# wordlistgen, httprobe, assetfinder, fuff, amass, subfinder
+	go get -u github.com/ameenmaali/wordlistgen
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/tomnomnom/unfurl
