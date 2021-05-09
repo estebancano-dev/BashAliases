@@ -827,6 +827,7 @@ update(){
 	cd ~/tools/sqlmap-dev && git pull
 	cd ~/tools/JohnTheRipper && git pull
 	cd ~/tools/ && python -m pip install ciphey --upgrade < /dev/null 2>&1
+	go get -u github.com/ameenmaali/wordlistgen
 	go get -u github.com/tomnomnom/httprobe
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/tomnomnom/unfurl
