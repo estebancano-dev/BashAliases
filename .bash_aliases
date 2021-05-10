@@ -285,9 +285,9 @@ subdomains(){
 		echo -e "\e[32m\tSqli Check done...\033[0m" | tee -a salida.txt
 
 		# echo -e "\e[32m\tDetecting parameters...\033[0m" | tee -a salida.txt
-		# python ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --get -t 30 -o arjunget$nombre$now.txt < /dev/null 2>&1 &
-		# python ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --post -t 30 -o arjunpost$nombre$now.txt < /dev/null 2>&1 &
-		# python ~/tools/Arjun/arjun.py --urls lista$nombre$now.txt --json -t 30 -o arjunjson$nombre$now.txt < /dev/null 2>&1 &
+		# arjun --urls lista$nombre$now.txt --get -t 30 -o arjunget$nombre$now.txt < /dev/null 2>&1 &
+		# arjun --urls lista$nombre$now.txt --post -t 30 -o arjunpost$nombre$now.txt < /dev/null 2>&1 &
+		# arjun --urls lista$nombre$now.txt --json -t 30 -o arjunjson$nombre$now.txt < /dev/null 2>&1 &
 		# echo -e "\e[32m\tParameter Detecting done...\033[0m" | tee -a salida.txt
 
 		echo -e "\e[32m\tStarting Headers Check...\033[0m" | tee -a salida.txt
@@ -571,14 +571,11 @@ getparams(){
 	fi
 	
 	cwd=$(pwd)
-	cd ~/tools/Arjun/
-	a=$(python arjun.py -u $1 --get -t 5 | grep "Valid parameter")
-	b=$(python arjun.py -u $1 --post -t 5 | grep "Valid parameter")
-	c=$(python arjun.py -u $1 --json -t 5 | grep "Valid parameter")
+	a=$(arjun -u $1 -m GET -t 5 | grep "Valid parameter")
+	b=$(arjun -u $1 -m POST -t 5 | grep "Valid parameter")
 
 	echo -e "\e[32mGET: $a\033[0m"
 	echo -e "\e[32mPOST: $b\033[0m"
-	echo -e "\e[32mJSON: $c\033[0m"
 	cd $cwd
 }
 
@@ -763,7 +760,11 @@ install(){
 	cd ..
 
 	# arjun
+	mkdir Arjun
+	cd Arjun
 	git clone https://github.com/s0md3v/Arjun.git
+	python3 setup.py install
+	cd ..
 
 	# basecrack
 	git clone https://github.com/mufeedvh/basecrack.git
