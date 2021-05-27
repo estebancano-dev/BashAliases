@@ -503,11 +503,11 @@ dirsearch(){
 	do
 		case $opt in
 			"no ext")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1 $2
 				break
 				;;
 			"no ext dicc")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"no ext file")
@@ -515,27 +515,27 @@ dirsearch(){
 				break
 				;;
 			"all ext")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"js")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e js,js~ -w ~/tools/__diccionarios/commonwords.txt -u $1
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e js,js~ -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"php")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"js dicc 1-4")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e js -w ~/tools/__diccionarios/1-4.txt -u $1 
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e js -w ~/tools/__diccionarios/1-4.txt -u $1 $2
 				break
 				;;
 			"custom ext")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 $3
 				break
 				;;
 			"custom ext dicc 1-5")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 $3
 				break
 				;;
 			"custom ext custom dir")
@@ -543,7 +543,7 @@ dirsearch(){
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
 				fi
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 $4
 				break
 				;;
 			"Quit")
