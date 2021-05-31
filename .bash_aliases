@@ -695,16 +695,16 @@ testapk(){
 	rm *.xapk > /dev/null
 	for f in *.apk; do 
 		folder=$(date +"%Y%m%d%H%M%S")
-		echo -ne "\r\033[KDecompiling $f..."
+		echo -ne "\r\033[K\e[32mDecompiling $f..."
 		START=$(date +%s)
 		apktool -o ~/tools/apks/$folder d "$f" > /dev/null
 		END=$(date +%s)
 		DIFF=$((END-START))
-		echo " done in $DIFF seconds."
-		echo "Checking for secrets..."
+		echo "\e[32m done in $DIFF seconds."
+		echo "\e[32mChecking for secrets..."
 		echo ~/tools/apks/$folder | nuclei -silent -t ~/tools/apks/mobile-nuclei-templates/Keys
 		rm -rf ~/tools/apks/$folder
-		echo "Done."
+		echo "\e[32mDone."
 	done
 }
 
