@@ -695,10 +695,10 @@ testapk(){
 		folder=$(date +"%Y%m%d%H%M%S")
 		echo -ne "\r\033[KDecompiling $f..."
 		START=$(date +%s)
-		apktool -o ~/tools/apks/$folder d "$f" < /dev/null 2>&1
+		apktool -o ~/tools/apks/$folder d "$f" > /dev/null
 		END=$(date +%s)
 		DIFF=$((END-START))
-		echo " done in $DIFF."
+		echo " done in $DIFF seconds."
 		echo "Checking for secrets..."
 		echo ~/tools/apks/$folder | nuclei -silent -t ~/tools/apks/mobile-nuclei-templates/Keys
 		rm -rf ~/tools/apks/$folder
