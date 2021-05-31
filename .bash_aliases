@@ -699,7 +699,7 @@ testapk(){
 		folder=$(date +"%Y%m%d%H%M%S")
 		echo -ne "\r\033[K\e[32mDecompiling $f..."
 		START=$(date +%s)
-		apktool -o ~/tools/apks/$folder d "$f" > /dev/null
+		apktool -o ~/tools/apks/$folder d "$f" 1> /dev/null 2>&1
 		END=$(date +%s)
 		DIFF=$((END-START))
 		echo "\e[32m done in $DIFF seconds."
