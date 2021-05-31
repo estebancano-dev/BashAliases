@@ -694,8 +694,8 @@ testapk(){
 	for f in *.apk; do 
 		folder=$(date +"%Y%m%d%H%M%S")
 		echo -ne "\r\033[KDecompiling $f..."
-		START=$(date +%s.%N)
-		END=$(date +%s.%N)
+		START=$(date +%s)
+		END=$(date +%s)
 		DIFF=$((END-START))
 		echo " done in $DIFF."
 		echo "Checking for secrets..."
