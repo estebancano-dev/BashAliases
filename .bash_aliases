@@ -689,6 +689,16 @@ telegram(){
     curl --silent --output /dev/null "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat&text=$1"
 }
 
+testapk(){
+	if [[ -f $1 ]]; then
+		echo -e "\e[32mFile not found!\033[0m"
+		return
+	fi
+	apktool -o ~/tools/apks/tmpfolder d $1 
+	echo ~/tools/apks/tmpfolder | nuclei -t ~/tools/apks/mobile-nuclei-templates/Keys
+	rm -rf ~/tools/apks/tmpfolder
+}
+
 #para instalar todas las aplicaciones que utilizo
 install(){
 	cd ~
@@ -786,6 +796,10 @@ install(){
 	export GO111MODULE=on
 	go get -v github.com/OWASP/Amass/v3/...
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+	GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+	nuclei -update-templates
+	cd apks
+	git clone https://github.com/optiv/mobile-nuclei-templates.git
 	
 	# jtr
 	git clone https://github.com/magnumripper/JohnTheRipper.git
@@ -849,6 +863,8 @@ update(){
 	export GO111MODULE=on
 	go get -v github.com/OWASP/Amass/v3/...
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+	GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+	nuclei -update-templates
 	aws s3 sync s3://assetnote-wordlists/data/ ~/tools/__diccionarios/assetnote-wordlists --no-sign-request
 	telegram "Bashaliases updated!"
 }
