@@ -691,6 +691,8 @@ telegram(){
 
 testapk(){
 	cd ~/tools/apks/
+	7z e *.xapk *.apk
+	rm *.xapk
 	for f in *.apk; do 
 		folder=$(date +"%Y%m%d%H%M%S")
 		echo -ne "\r\033[KDecompiling $f..."
