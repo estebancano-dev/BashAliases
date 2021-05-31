@@ -695,6 +695,7 @@ testapk(){
 		folder=$(date +"%Y%m%d%H%M%S")
 		echo -ne "\r\033[KDecompiling $f..."
 		START=$(date +%s)
+		apktool -o ~/tools/apks/$folder d "$f" < /dev/null 2>&1
 		END=$(date +%s)
 		DIFF=$((END-START))
 		echo " done in $DIFF."
