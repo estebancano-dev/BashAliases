@@ -694,9 +694,10 @@ testapk(){
 		echo -e "\e[32mFile not found!\033[0m"
 		return
 	fi
-	apktool -o ~/tools/apks/tmpfolder d "$1" 
-	echo ~/tools/apks/tmpfolder | nuclei -t ~/tools/apks/mobile-nuclei-templates/Keys
-	rm -rf ~/tools/apks/tmpfolder
+	folder=$(date +"%Y%m%d%H%M%S")
+	apktool -o ~/tools/apks/$folder d "$1" 
+	echo ~/tools/apks/$folder | nuclei -t ~/tools/apks/mobile-nuclei-templates/Keys
+	rm -rf ~/tools/apks/$folder
 }
 
 #para instalar todas las aplicaciones que utilizo
