@@ -696,8 +696,8 @@ testapk(){
 		echo -ne "\r\033[KDecompiling $f..."
 		START=$(date +%s.%N)
 		END=$(date +%s.%N)
-		DIFF=$(echo "$END - $START" | bc)
-		echo -ne " done in $DIFF"
+		DIFF=$((END-START))
+		echo " done in $DIFF."
 		echo "Checking for secrets..."
 		echo ~/tools/apks/$folder | nuclei -silent -t ~/tools/apks/mobile-nuclei-templates/Keys
 		rm -rf ~/tools/apks/$folder
