@@ -694,7 +694,7 @@ testapk(){
 		echo -e "\e[32mFile not found!\033[0m"
 		return
 	fi
-	apktool -o ~/tools/apks/tmpfolder d $1 
+	apktool -o ~/tools/apks/tmpfolder d "$1" 
 	echo ~/tools/apks/tmpfolder | nuclei -t ~/tools/apks/mobile-nuclei-templates/Keys
 	rm -rf ~/tools/apks/tmpfolder
 }
