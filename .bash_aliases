@@ -690,7 +690,7 @@ telegram(){
 }
 
 testapk(){
-	if [[ -f $1 ]]; then
+	if [[ ! -f "$1" ]]; then
 		echo -e "\e[32mFile not found!\033[0m"
 		return
 	fi
