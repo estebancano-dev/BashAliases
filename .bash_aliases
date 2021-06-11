@@ -706,6 +706,8 @@ testapk(){
 		echo "\e[32mChecking for secrets..."
 		echo ~/tools/apks/$folder | nuclei -silent -t ~/tools/apks/mobile-nuclei-templates/Keys
 		rm -rf ~/tools/apks/$folder
+		echo "\e[32mChecking for leaks..."
+		apkleaks -f "$f"
 		echo "\e[32mDone."
 	done
 }
@@ -811,6 +813,12 @@ install(){
 	nuclei -update-templates
 	cd apks
 	git clone https://github.com/optiv/mobile-nuclei-templates.git
+	# https://github.com/dwisiswant0/apkleaks
+	git clone https://github.com/dwisiswant0/apkleaks
+	cd apkleaks/
+	pip3 install -r requirements.txt
+	cd ..
+	
 	
 	# jtr
 	git clone https://github.com/magnumripper/JohnTheRipper.git
@@ -863,6 +871,7 @@ update(){
 	cd ~/tools/pacu && git pull
 	cd ~/tools/sqlmap-dev && git pull
 	cd ~/tools/JohnTheRipper && git pull
+	cd ~/tools/apks/apkleaks/ && git pull
 	cd ~/tools/ && python -m pip install ciphey --upgrade < /dev/null 2>&1
 	go get -u github.com/ameenmaali/wordlistgen
 	go get -u github.com/tomnomnom/httprobe
@@ -871,12 +880,10 @@ update(){
 	go get -u github.com/tomnomnom/waybackurls
 	go get -u github.com/lc/gau
 	go get -u github.com/ffuf/ffuf	
-	export GO111MODULE=on
-	go get -v github.com/OWASP/Amass/v3/...
+	GO111MODULE=on go get -v github.com/OWASP/Amass/v3/...
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
 	nuclei -update-templates
-	aws s3 sync s3://assetnote-wordlists/data/ ~/tools/__diccionarios/assetnote-wordlists --no-sign-request
 	telegram "Bashaliases updated!"
 }
 
