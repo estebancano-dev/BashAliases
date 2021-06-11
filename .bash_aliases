@@ -707,7 +707,7 @@ testapk(){
 		echo ~/tools/apks/$folder | nuclei -silent -t ~/tools/apks/mobile-nuclei-templates/Keys
 		rm -rf ~/tools/apks/$folder
 		echo "\e[32mChecking for leaks..."
-		apkleaks -f "$f"
+		python3 ~/tools/apks/apkleaks/apkleaks.py -f "$f"
 		echo "\e[32mDone."
 	done
 }
@@ -729,7 +729,7 @@ install(){
 	# actualizo el SO
 	cd ~/tools
 	sudo apt update 
-	sudo apt dist-upgrade -y
+	sudo apt upgrade -y
 	
 	# git, nmap, curl, pip3, gcc, make, libpcap-dev
 	sudo apt-get install git nmap curl python-pip gcc make libpcap-dev libssl-dev -y
