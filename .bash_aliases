@@ -139,7 +139,7 @@ subdomains(){
 	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
-	cat 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt | grep "\.$1\|^$1$" > 1scrap$1.txt
+	grep "\.$1\|^$1$" 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt > 1scrap$1.txt
 	# borro los archivos temporales
 	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt 2> /dev/null
 	# borro <BR> de la salida del Sublist3r, a veces pasa
@@ -157,12 +157,12 @@ subdomains(){
 	if [[ $(wc -l <1scrap$1.txt) -le 3000 ]]; then
 		echo -e "\e[32m\tDoing Altdns to generate alternative domains...\033[0m" | tee -a salida.txt
 		altdns -i 1scrap$1.txt -o altdns$1.txt -w ~/tools/__diccionarios/altdns.txt
-		cat altdns$1.txt | grep "\.$1\|^$1$" | sort -u >> altdns$1.txt
+		grep "\.$1\|^$1$" altdns$1.txt | sort -u >> altdns$1.txt
 		# de la lista de alternativos (son aquellos no listados/ocultos, hay mas chances de que no estén testeados), quito los originales
 		touch altdns2$1.txt
 		cat 1scrap$1.txt | while read dom; do
 			#sed -i "/^$dom/d" altdns$1.txt# saque esto porq si el altdns es grande, para cada ciclo crea un temporal y va reemplazando
-			esta=$(cat altdns$1.txt | grep -ix "$dom")
+			esta=$(grep -ix "$dom" altdns$1.txt)
 			if [ -z "$esta" ]; then
 				echo "$dom" >> altdns2$1.txt
 			fi
@@ -221,7 +221,7 @@ subdomains(){
 	cat 3nmap$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" > 4nmapips$1.txt
 	if [[ -f altdnsresolved$1.txt && -s altdnsresolved$1.txt ]]; then
 		# extract alternative ips
-		cat altdnsresolved$1.txt | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" >> 4nmapips$1.txt
+		grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" altdnsresolved$1.txt >> 4nmapips$1.txt
 	fi
 	sort -u -o 4nmapips$1.txt 4nmapips$1.txt
 	
@@ -615,7 +615,7 @@ batchsqlmap(){
 		return
 	fi
 	now=$(date +"%Y%m%d%H%M%S")
-	cat $1 | grep "\?" > lista$now.txt
+	grep "\?" $1 > lista$now.txt
 	if [[ -f lista$now.txt && ! -s lista$now.txt ]]; then
 		rm lista$now.txt
 		echo -e "\e[32mUrls file is empty!\033[0m"
