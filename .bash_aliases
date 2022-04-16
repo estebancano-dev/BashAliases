@@ -139,7 +139,7 @@ subdomains(){
 	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
-	grep "\.$1\|^$1$" 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt > 1scrap$1.txt
+	grep --no-filename "\.$1\|^$1$" 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt > 1scrap$1.txt
 	# borro los archivos temporales
 	rm -f 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt 2> /dev/null
 	# borro <BR> de la salida del Sublist3r, a veces pasa
