@@ -682,11 +682,16 @@ netcat(){
 	nc -lvnp 3333
 }
 
+# Sends a file or text message through telegram bot
 # Set $token and $chat on .bashrc for example:
 # 	chat=113371337
 #	token=13371331337:NNToP1MO9ayMMGqLVw5qsG9sgqhizy8XNZW
-telegram(){
-    curl --silent --output /dev/null "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat&text=$1"
+send(){
+	if [ -f "$1" ]; then
+        curl "https://api.telegram.org/bot$token/sendDocument" -F "chat_id=$chat" -F document=@$1
+    else
+        curl --silent --output /dev/null "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat&text=$1"
+    fi  
 }
 
 testapk(){
