@@ -312,7 +312,7 @@ subdomains(){
 	diff=$(($end-$begin))
 	cad = "subdomains($1) finished in $(($diff / 60))m $(($diff % 60))s."
 	echo $cad | tee -a salida.txt
-	telegram $cad
+	send $cad
 }
 
 # Gets an url with curl and adds every header to check for potential sqli injections (if response time > 8 seconds)
@@ -841,7 +841,7 @@ install(){
 	sudo apt autoremove
 	sudo apt clean
 	sudo apt autoclean
-	telegram "Bashaliases installed!"
+	send "Bashaliases installed!"
 }
 
 crackzip(){
@@ -869,7 +869,7 @@ update(){
 	cd ~/tools/massdns && git pull
 	cd ~/tools/Sublist3r && git pull
 	cd ~/tools/ParamSpider && git pull
-	cd ~/tools/masscan && git pull
+	cd ~/tools/masscan && git pull && make && make install
 	cd ~/tools/XSStrike && git pull
 	cd ~/tools/Arjun && git pull
 	cd ~/tools/basecrack && git pull
@@ -889,7 +889,7 @@ update(){
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
 	nuclei -update-templates
-	telegram "Bashaliases updated!"
+	send "Bashaliases updated!"
 }
 
 export GOROOT=/usr/local/go
