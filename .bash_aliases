@@ -136,7 +136,7 @@ subdomains(){
 	python ~/tools/Sublist3r/sublist3r.py -d $1 -o 1scrap3$1.txt > /dev/null 2>&1
 	
 	echo -e "\e[32m\tDoing Amass...\033[0m" | tee -a salida.txt
-	amass enum -active -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
+	amass enum -active -noalts -norecursive -d $1 -o 1scrap4$1.txt > /dev/null 2>&1
 	
 	# junto los resultados, quito dominios que no sirven (si busco *.google.com a veces aparece ihategoogle.com, y no es parte del scope)
 	grep --no-filename "\.$1\|^$1$" 1scrap1$1.txt 1scrap2$1.txt 1scrap3$1.txt 1scrap4$1.txt > 1scrap$1.txt
