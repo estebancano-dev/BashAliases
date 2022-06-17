@@ -511,7 +511,7 @@ dirsearch(){
 				break
 				;;
 			"no ext file")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -l $1 -e , > $1dirsearch.txt
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -l $1 -e , | tee dirsearch$1.txt
 				break
 				;;
 			"all ext")
