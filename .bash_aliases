@@ -310,8 +310,8 @@ subdomains(){
 	echo -e "\e[32m******************** The End *******************\033[0m" | tee -a salida.txt
 	end=$(date +"%s")
 	diff=$(($end-$begin))
-	cad = "subdomains($1) finished in $(($diff / 60))m $(($diff % 60))s."
-	echo $cad | tee -a salida.txt
+	cad="subdomains($1) finished in $(($diff / 60))m $(($diff % 60))s."
+	echo "$cad" | tee -a salida.txt
 	send $cad
 }
 
