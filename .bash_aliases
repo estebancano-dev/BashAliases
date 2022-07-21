@@ -546,6 +546,15 @@ dirsearch(){
 				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 $4
 				break
 				;;
+			"custom dict from url and dirsearch")
+				customdictfromurl $1
+				if [[ -f ~/tools/__diccionarios/dictionary$1.txt && ! -s ~/tools/__diccionarios/dictionary$1.txt ]]; then
+					echo -e "\e[32mDict file is empty!\033[0m"
+					return
+				fi
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/dictionary$1.txt -u $1
+				break
+				;;
 			"Quit")
 				break
 				;;
@@ -655,14 +664,14 @@ geturls(){
 	sort -u -o $1urls$now.txt $1urls$now.txt
 }
 
-customdict(){
-	if [[ -f $1 && ! -s $1 ]]; then
-		echo -e "\e[32mUrls file is empty!\033[0m"
+customdictfromurl(){
+	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	if [[ ! $1 =~ $regex ]]; then 
+		echo -e "\e[32mURL not valid!\033[0m"
 		return
 	fi
 
-	now=$(date +"%Y%m%d%H%M%S")
-	cat $1 | httprobe | gau -subs -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | waybackurls | wordlistgen > dictionary$now.txt
+	echo $1 | httprobe | gau -subs -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | waybackurls | wordlistgen -fq > ~/tools/__diccionarios/dictionary$1.txt
 }
 
 decode(){
