@@ -665,9 +665,9 @@ geturls(){
 }
 
 customdictfromurl(){
-	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	regex='[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	if [[ ! $1 =~ $regex ]]; then 
-		echo -e "\e[32mURL not valid!\033[0m"
+		echo -e "\e[32mDomain not valid!\033[0m"
 		return
 	fi
 
