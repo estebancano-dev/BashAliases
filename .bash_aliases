@@ -498,7 +498,7 @@ checkwebalive(){
 
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("no ext" "no ext dicc" "no ext file" "all ext" "js" "php" "js dicc 1-4" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "Quit")
+	options=("no ext" "no ext dicc" "no ext file" "all ext" "js" "php" "js dicc 1-4" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "custom dict from url and dirsearch" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
