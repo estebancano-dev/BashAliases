@@ -665,14 +665,14 @@ geturls(){
 }
 
 customdictfromurl(){
-	regex='[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-	if [[ ! $1 =~ $regex ]]; then 
-		echo -e "\e[32mDomain not valid!\033[0m"
-		return
+	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	if [[ $url =~ $regex ]]; then 
+		echo -e "\e[32mCreating custom dictionary for $1...\033[0m"
+		echo $1 | gau -t 10 -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | sed -E '/(\.ttf$|\.woff$|\.svg$|\.png$|\.jpeg$|\.jpg$|\.ico$|\.woff2$|\.jpeg$)/d' | fff -b | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
+		sort -u -o ~/tools/__diccionarios/dictionary$1.txt ~/tools/__diccionarios/dictionary$1.txt
+	else
+		echo -e "\e[32mInvalid URL\033[0m"
 	fi
-	echo -e "\e[32mCreating custom dictionary for $1...\033[0m"
-	echo $1 | httprobe | gau -v -t 10 -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | timeout 120 waybackurls | sed -E '/(\.ttf$|\.woff$|\.svg$|\.png$|\.jpeg$|\.jpg$|\.ico$|\.woff2$|\.jpeg$)/d' | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
-	sort -u -o ~/tools/__diccionarios/dictionary$1.txt ~/tools/__diccionarios/dictionary$1.txt
 }
 
 decode(){
@@ -819,6 +819,7 @@ install(){
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/tomnomnom/unfurl
 	go get -u github.com/tomnomnom/waybackurls
+	go get -u github.com/tomnomnom/fff
 	go get -u github.com/lc/gau
 	go get -u github.com/ffuf/ffuf	
 	export GO111MODULE=on
@@ -893,6 +894,7 @@ update(){
 	go get -u github.com/tomnomnom/assetfinder
 	go get -u github.com/tomnomnom/unfurl
 	go get -u github.com/tomnomnom/waybackurls
+	go get -u github.com/tomnomnom/fff
 	go get -u github.com/lc/gau
 	go get -u github.com/ffuf/ffuf	
 	GO111MODULE=on go get -v github.com/OWASP/Amass/v3/...
