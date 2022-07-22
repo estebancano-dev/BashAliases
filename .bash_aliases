@@ -671,7 +671,7 @@ customdictfromurl(){
 		return
 	fi
 
-	echo $1 | httprobe | gau -subs -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | waybackurls | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
+	echo $1 | httprobe | gau -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | timeout 20 waybackurls | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
 	sort -u -o ~/tools/__diccionarios/dictionary$1.txt ~/tools/__diccionarios/dictionary$1.txt
 }
 
