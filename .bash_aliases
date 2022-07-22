@@ -666,7 +666,7 @@ geturls(){
 
 customdictfromurl(){
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-	if [[ $url =~ $regex ]]; then 
+	if [[ $1 =~ $regex ]]; then 
 		echo -e "\e[32mCreating custom dictionary for $1...\033[0m"
 		echo $1 | gau -t 10 -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | sed -E '/(\.ttf$|\.woff$|\.svg$|\.png$|\.jpeg$|\.jpg$|\.ico$|\.woff2$|\.jpeg$)/d' | fff -b | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
 		sort -u -o ~/tools/__diccionarios/dictionary$1.txt ~/tools/__diccionarios/dictionary$1.txt
