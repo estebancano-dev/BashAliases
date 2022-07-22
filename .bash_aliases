@@ -670,8 +670,8 @@ customdictfromurl(){
 		echo -e "\e[32mDomain not valid!\033[0m"
 		return
 	fi
-
-	echo $1 | httprobe | gau -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | timeout 20 waybackurls | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
+	echo -e "\e[32mCreating custom dictionary for $1...\033[0m"
+	echo $1 | httprobe | gau -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | timeout 30 waybackurls | sed -E '/(\.ttf$|\.woff$|\.svg$|\.png$|\.jpeg$|\.jpg$|\.ico$|\.woff2$|\.jpeg$)/d' | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
 	sort -u -o ~/tools/__diccionarios/dictionary$1.txt ~/tools/__diccionarios/dictionary$1.txt
 }
 
