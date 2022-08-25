@@ -552,7 +552,7 @@ dirsearch(){
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
 				fi
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/dictionary$1.txt -u $1
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/dictionary$1.txt -u $2
 				break
 				;;
 			"Quit")
