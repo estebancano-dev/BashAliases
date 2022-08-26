@@ -498,39 +498,37 @@ checkwebalive(){
 
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("no ext" "no ext dicc" "no ext file" "all ext" "js" "php" "js dicc 1-4" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "custom dict from url and dirsearch" "Quit")
+	options=("no ext" "dirs" "js" "php" "txt" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "no ext file" "all ext" "custom dict from url and dirsearch" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
 			"no ext")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/dirsearch/db/dicc.txt -u $1 $2
-				break
-				;;
-			"no ext dicc")
+				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/commonwords.txt | sort -u -o ~/tools/__diccionarios/commonwords.txt
 				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
-			"no ext file")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -l $1 -e , | tee dirsearch$1.txt
-				break
-				;;
-			"all ext")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+			"dirs")
+				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/dir.txt | sort -u -o ~/tools/__diccionarios/dir.txt
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/dir.txt -u $1 $2
 				break
 				;;
 			"js")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e js,js~ -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/js.txt | sort -u -o ~/tools/__diccionarios/js.txt
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/js.txt -u $1 $2
 				break
 				;;
 			"php")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e php,inc.php,php~ -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/php.txt | sort -u -o ~/tools/__diccionarios/php.txt
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/php.txt -u $1 $2
 				break
 				;;
-			"js dicc 1-4")
-				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e js -w ~/tools/__diccionarios/1-4.txt -u $1 $2
+			"txt")
+				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/txt.txt | sort -u -o ~/tools/__diccionarios/txt.txt
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e , -w ~/tools/__diccionarios/txt.txt -u $1 $2
 				break
 				;;
 			"custom ext")
+				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/commonwords.txt | sort -u -o ~/tools/__diccionarios/commonwords.txt
 				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 $3
 				break
 				;;
@@ -544,6 +542,14 @@ dirsearch(){
 					return
 				fi
 				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 $4
+				break
+				;;
+			"no ext file")
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -l $1 -e , | tee dirsearch$1.txt
+				break
+				;;
+			"all ext")
+				python ~/tools/dirsearch/dirsearch.py -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"custom dict from url and dirsearch")
