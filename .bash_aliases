@@ -727,7 +727,7 @@ testapk(){
 		echo ~/tools/apks/$folder | nuclei -silent -t ~/tools/apks/mobile-nuclei-templates/Keys
 		rm -rf ~/tools/apks/$folder
 		echo "\e[32mChecking for leaks..."
-		python3 ~/tools/apks/apkleaks/apkleaks.py -f "$f"
+		python ~/tools/apks/apkleaks/apkleaks.py -f "$f"
 		echo "\e[32mDone."
 	done
 }
