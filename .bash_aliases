@@ -503,36 +503,36 @@ dirsearch(){
 		case $opt in
 			"no ext")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/commonwords.txt | sort -u -o ~/tools/__diccionarios/commonwords.txt
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"dirs")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/dir.txt | sort -u -o ~/tools/__diccionarios/dir.txt
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/dir.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/dir.txt -u $1 $2
 				break
 				;;
 			"js")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/js.txt | sort -u -o ~/tools/__diccionarios/js.txt
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/js.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/js.txt -u $1 $2
 				break
 				;;
 			"php")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/php.txt | sort -u -o ~/tools/__diccionarios/php.txt
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/php.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/php.txt -u $1 $2
 				break
 				;;
 			"txt")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/txt.txt | sort -u -o ~/tools/__diccionarios/txt.txt
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/txt.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/txt.txt -u $1 $2
 				break
 				;;
 			"custom ext")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/commonwords.txt | sort -u -o ~/tools/__diccionarios/commonwords.txt
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 $3
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 $3
 				break
 				;;
 			"custom ext dicc 1-5")
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 $3
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 $3
 				break
 				;;
 			"custom ext custom dir")
@@ -540,15 +540,15 @@ dirsearch(){
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
 				fi
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 $4
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 $4
 				break
 				;;
 			"no ext file")
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -l $1 -e , | tee dirsearch$1.txt
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -l $1 -e , | tee dirsearch$1.txt
 				break
 				;;
 			"all ext")
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"custom dict from url and dirsearch")
@@ -557,7 +557,7 @@ dirsearch(){
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
 				fi
-				python ~/tools/dirsearch/dirsearch.py -r --recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/dictionary$1.txt -u $2
+				python ~/tools/dirsearch/dirsearch.py -r --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/dictionary$1.txt -u $2
 				break
 				;;
 			"Quit")
