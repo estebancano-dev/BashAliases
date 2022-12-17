@@ -9,7 +9,6 @@ on:
 jobs:
     deploy:
       runs-on: ubuntu-latest
-      environment: "${GITHUB_REF_NAME}"
       steps:
         - name: Deploy
           env:
