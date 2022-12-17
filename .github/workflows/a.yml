@@ -6,12 +6,13 @@ on:
         - master
   workflow_dispatch:
 
+env:
+    XXX: ${{ secrets.XXX }}
+
 jobs:
     deploy:
       runs-on: ubuntu-latest
       steps:
         - name: Deploy
-          env:
-            XXX: ${{ secrets.XXX }}
           run: |
             echo "${GITHUB_REF_NAME}=${XXX}"
