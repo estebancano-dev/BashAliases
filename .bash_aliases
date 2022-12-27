@@ -195,7 +195,10 @@ subdomains(){
 	echo -e "\e[32m********** Starting Alive Checking... *********\033[0m" | tee -a salida.txt
 	echo -e "\e[32m\tDoing httprobe...\033[0m" | tee -a salida.txt
 	cat 1scrap$1.txt | httprobe -t 5000 > 6httprobe$1.txt
-	
+
+	# save all contents for later cve scan
+	cat 6httprobe$1.txt ~/cvescan/myrecon.txt | sort -u -o >> ~/cvescan/myrecon.txt
+
 	# for sqlmap
 	cat 6httprobe$1.txt | unfurl -u format "%s://%d%:%P" > resolved$1.txt
 	
@@ -227,7 +230,7 @@ subdomains(){
 	# vuelo ip privadas, 0.0.0.0 (a veces aparece y el scan tarda mucho) y lineas en blanco. https://en.wikipedia.org/wiki/Private_network
 	sed -i -E '/192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|127.0.0.1|0.0.0.0|100\.[6789]|100\.1[01][0-9]\.|100\.12[0-7]\.|^$/d' 4nmapips$1.txt
 	
-	# cuento la fidad de alive hosts y la cantidad de IP únicas encontradas
+	# cuento la cantidad de alive hosts y la cantidad de IP únicas encontradas
 	count=$(grep -c "Host is up" 3nmap$1.txt)
 	ips=$(wc -l 4nmapips$1.txt | awk '{ print $1 }')
 	echo -e "\e[32m\t$count domains pointing to $ips IP addresses\033[0m" | tee -a salida.txt
@@ -695,6 +698,13 @@ sqlmap(){
 
 netcat(){
 	nc -lvnp 3333
+}
+
+validdomain(){
+	regex='(?=^.{4,253}$)(^(?:[a-zA-Z0-9](?:(?:[a-zA-Z0-9\-]){0,61}[a-zA-Z0-9])?\.)+([a-zA-Z]{2,}|xn--[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$)'
+	if [[ $1 =~ $regex ]]; then 
+		echo $1
+	fi
 }
 
 # Sends a file or text message through telegram bot
