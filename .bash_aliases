@@ -446,9 +446,17 @@ checkheaders(){
 }
 
 # Gets a file with lots of urls (with params) and tries to uniques them. Avoid images, fonts and css. Reduces urls for testing to 10%
-# usage: checkheadersforredirect urllist.txt output.txt
+# usage: uniqueurls urllist.txt output.txt
 # output: list of distinct urls. If same path, then different numbers of params
 uniqueurls(){
+	if [[ -f $1 && ! -s $1 ]]; then
+		echo -e "\e[32mUrls parameter missing!\033[0m"
+		return
+	fi
+	if [[ -f $2 && ! -s $2 ]]; then
+		echo -e "\e[32mOutput file parameter missing!\033[0m"
+		return
+	fi
 	querya=""
 	patha=""
 	urla=""
