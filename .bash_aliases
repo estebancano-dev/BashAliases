@@ -466,15 +466,10 @@ uniqueurls(){
 	for i in `cat $1`; do 
 		file=$(echo "$i" | unfurl format %p | tr '[:upper:]' '[:lower:]')
 		queryb=$(echo "$i" | unfurl format "%q")
-		if [[ ! $file =~ .jpg|.gif|.png|.css|.woff|.woff2|.eot|.svg|.ttf|.js && ! $queryb =~ utm_campaign|utm_source|utm_medium ]]; then 
-			pathb=$(echo "$i" | unfurl format "%s://%d%:%P%p")
+		if [[ ! $file =~ .jpg|.jpeg|.gif|.png|.css|.woff|.woff2|.eot|.svg|.ttf|.js|.ico|.htc && ! $queryb =~ utm_campaign|utm_source|utm_medium ]]; then 
 			paramsb=$(echo "$i" | unfurl keys | wc -l)
-			paramsa=$(echo "$urla" | unfurl keys | wc -l)
-			if [[ ("$patha" != "$pathb" && (( $paramsb>0 ))) || ("$patha" == "$pathb" && "$querya" != "" && "$querya" != "$queryb" && (( $paramsb>0 && $paramsa != $paramsb ))) ]]; then
+			if [[ (( $paramsb>0 )) ]]; then
 				echo "$i" >> $2
-				querya="$queryb"
-				patha="$pathb"
-				urla="$i"
 			fi
 		fi
 	done
