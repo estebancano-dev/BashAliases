@@ -453,6 +453,11 @@ uniqueurls(){
 		echo -e "\e[32mParameter is missing!\033[0m"
 		return
 	fi
+	if [[ -f $1 && ! -s $1 ]]; then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
+
 	querya=""
 	patha=""
 	urla=""
