@@ -448,6 +448,7 @@ checkheaders(){
 # Gets a file with lots of urls (with params) and tries to uniques them. Avoid images, fonts and css. Reduces urls for testing to 10%
 # usage: uniqueurls urllist.txt output.txt
 # output: list of distinct urls. If same path, then different numbers of params
+# now just uses a php script to do the trick as this is sooo slow
 uniqueurls(){
 	if [ ! $# -eq 2 ]; then
 		echo -e "\e[32mParameter is missing!\033[0m"
@@ -736,14 +737,15 @@ testapk(){
 		apktool -o ~/tools/apks/$folder d "$f" 1> /dev/null 2>&1
 		END=$(date +%s)
 		DIFF=$((END-START))
-		echo "\e[32m done in $DIFF seconds."
-		echo "\e[32mChecking for secrets..."
+		echo " done in $DIFF seconds."
+		echo "Checking for secrets..."
 		echo ~/tools/apks/$folder | nuclei -silent -t ~/tools/apks/mobile-nuclei-templates/Keys
 		rm -rf ~/tools/apks/$folder
 		echo "\e[32mChecking for leaks..."
 		python ~/tools/apks/apkleaks/apkleaks.py -f "$f"
-		echo "\e[32mDone."
+		echo "Done."
 	done
+	echo -e "\033[0m"
 }
 
 #para instalar todas las aplicaciones que utilizo
