@@ -743,6 +743,8 @@ testapk(){
 		rm -rf ~/tools/apks/$folder
 		echo "\e[32mChecking for leaks..."
 		python ~/tools/apks/apkleaks/apkleaks.py -f "$f"
+		echo "\e[32mChecking for vulnerabilities..."
+		trueseeing "$f"
 		echo "Done."
 	done
 	echo -e "\033[0m"
@@ -834,6 +836,10 @@ install(){
 	# ciphey https://github.com/Ciphey/Ciphey (for CTF)
 	python -m pip install ciphey --upgrade
 	
+	# apk vuln scanner https://github.com/alterakey/trueseeing
+	pip3 install trueseeing
+	trueseeing --bootstrap
+
 	# wordlistgen, httprobe, assetfinder, fuff, amass, subfinder
 	go get -u github.com/ameenmaali/wordlistgen
 	go get -u github.com/tomnomnom/httprobe
