@@ -762,6 +762,7 @@ xss(){
 		cat ~/tools/__diccionarios/xsslist.txt | while read xss; do 
 			h=$(echo "$host" | qsreplace "$xss")
 			curl -s --path-as-is --insecure "$h" | grep -qs "$xss" && echo "$host \033[0;31m Vulnerable" || echo -ne "\rTesting ${host:0:25}                                    " &
+		done
 	done
 }
 
