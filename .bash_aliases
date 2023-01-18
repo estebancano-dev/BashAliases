@@ -748,6 +748,23 @@ testapk(){
 	echo -e "\033[0m"
 }
 
+xss(){
+	if [[ -f $1 && ! -s $1 ]]; then
+		echo -e "\e[32mUrls file is empty!\033[0m"
+		return
+	fi
+	if [[ -f ~/tools/__diccionarios/xsslist.txt && ! -s ~/tools/__diccionarios/xsslist.txt ]]; then
+		echo -e "\e[32mXSS ~/tools/__diccionarios/xsslist.txt file is empty!\033[0m"
+		return
+	fi
+
+	cat $1 | while read host; do 
+		cat ~/tools/__diccionarios/xsslist.txt | while read xss; do 
+			h=$(echo "$host" | qsreplace "$xss")
+			curl -s --path-as-is --insecure "$h" | grep -qs "$xss" && echo "$host \033[0;31m Vulnerable" || echo -ne "\rTesting ${host:0:25}                                    " &
+	done
+}
+
 #para instalar todas las aplicaciones que utilizo
 install(){
 	cd ~
