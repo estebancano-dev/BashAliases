@@ -758,10 +758,10 @@ xss(){
 		return
 	fi
 
-	cat $1 | while read host; do 
+	cat $1 | grep "=" | while read host; do 
 		cat ~/tools/__diccionarios/xsslist.txt | while read xss; do 
 			h=$(echo "$host" | qsreplace "$xss")
-			curl -s --path-as-is --insecure "$h" | grep -qs "$xss" && echo "$h Vulnerable" || echo -ne "\rTesting ${host:0:50}                                    " &
+			curl -s --path-as-is --insecure "$h" | grep -qs "$xss" && echo "$h Vulnerable" || echo -ne "\rTesting ${host:0:50}                                    "
 		done
 	done
 }
