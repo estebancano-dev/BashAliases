@@ -940,6 +940,7 @@ update(){
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
 	GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
 	nuclei -update-templates
+	go clean -modcache
 	send "Bashaliases updated!"
 }
 
