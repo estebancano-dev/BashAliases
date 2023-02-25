@@ -559,7 +559,7 @@ dirsearch(){
 				python ~/tools/dirsearch/dirsearch.py -r --full-url --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
-			"backup files")
+			"Backup Files")
 				python ~/tools/dirsearch/dirsearch.py -r --full-url --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/backupfiles.txt -u $1 $3
 				break
 				;;
