@@ -505,7 +505,7 @@ checkwebalive(){
 
 dirsearch(){
 	PS3='Please enter your choice: '
-	options=("no ext" "dirs" "js" "php" "txt" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "no ext file" "all ext" "custom dict from url and dirsearch" "Quit")
+	options=("no ext" "dirs" "js" "php" "txt" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "no ext file" "all ext" "Backup Files" "custom dict from url and dirsearch" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
@@ -557,6 +557,10 @@ dirsearch(){
 				;;
 			"all ext")
 				python ~/tools/dirsearch/dirsearch.py -r --full-url --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+				break
+				;;
+			"backup files")
+				python ~/tools/dirsearch/dirsearch.py -r --full-url --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/backupfiles.txt -u $1 $3
 				break
 				;;
 			"custom dict from url and dirsearch")
