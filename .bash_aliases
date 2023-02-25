@@ -560,7 +560,7 @@ dirsearch(){
 				break
 				;;
 			"Backup Files")
-				python ~/tools/dirsearch/dirsearch.py -r --full-url --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e $2 -w ~/tools/__diccionarios/backupfiles.txt -u $1 $3
+				python ~/tools/dirsearch/dirsearch.py -r --full-url --max-recursion-depth 10 --recursion-status 200-399 -t 50 -f -e , -w ~/tools/__diccionarios/backupfiles.txt -u $1 $3
 				break
 				;;
 			"custom dict from url and dirsearch")
