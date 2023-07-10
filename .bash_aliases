@@ -927,7 +927,6 @@ update(){
 	cd ~/tools/XSStrike && git pull
 	cd ~/tools/Arjun && git pull
 	cd ~/tools/basecrack && git pull
-	cd ~/tools/pacu && git pull
 	cd ~/tools/sqlmap-dev && git pull
 	cd ~/tools/JohnTheRipper && git pull
 	cd ~/tools/apks/apkleaks/ && git pull
