@@ -197,7 +197,7 @@ subdomains(){
 	cat 1scrap$1.txt | httprobe -t 5000 > 6httprobe$1.txt
 
 	# save all contents for later cve scan
-	cat 6httprobe$1.txt ~/cvescan/myrecon.txt | sort -u -o >> ~/cvescan/myrecon.txt
+	cat 6httprobe$1.txt ~/cvescan/myrecon.txt | sort -u >> ~/cvescan/myrecon.txt
 
 	# for sqlmap
 	cat 6httprobe$1.txt | unfurl -u format "%s://%d%:%P" > resolved$1.txt
