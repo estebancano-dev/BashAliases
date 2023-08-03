@@ -594,13 +594,13 @@ sshbrute(){
 			echo -e "\e[32mUsers file does not exist!\033[0m"
 			return
 		fi
-		$opt1="--script-args userdb=$3"
+		opt1="--script-args userdb=$3"
 		if [ -f "$4" ]; then
 			if [[ -f $4 && ! -s $4 ]]; then
 				echo -e "\e[32mPasswords file does not exist!\033[0m"
 				return
 			fi
-			$opt2=",passdb=$4,brute.firstonly=1,brute.start=15"
+			opt2=",passdb=$4,brute.firstonly=1,brute.start=15"
 		fi
 	fi
 	
