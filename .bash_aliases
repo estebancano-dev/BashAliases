@@ -579,13 +579,36 @@ dirsearch(){
 		esac
 	done
 }
-
+# $1 IP
+# $2 port
+# $3 userdb file
+# $4 passdb file (required if $3 is not empty)
+# stops at first password found
+# https://www.infosecmatter.com/nmap-nse-library/?nse=ssh-brute
+# usage: sshbrute <ip> [port [userdb passdb]]
 sshbrute(){
+	opt1=''
+	opt2=''
+	if [ -f "$3" ]; then
+		if [[ -f $3 && ! -s $3 ]]; then
+			echo -e "\e[32mUsers file does not exist!\033[0m"
+			return
+		fi
+		$opt1="--script-args userdb=$3"
+		if [ -f "$4" ]; then
+			if [[ -f $4 && ! -s $4 ]]; then
+				echo -e "\e[32mPasswords file does not exist!\033[0m"
+				return
+			fi
+			$opt2=",passdb=$4,brute.firstonly=1"
+		fi
+	fi
+	
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
-		nmap -Pn -p$2 --script ssh-brute $1
+		nmap -Pn -p$2 --script=ssh-brute $opt1$opt2 $1
 	else
-		nmap -Pn -p22 --script ssh-brute $1
+		nmap -Pn -p22 --script=ssh-brute $opt1$opt2 $1
 	fi
 }
 
