@@ -583,7 +583,7 @@ dirsearch(){
 # $2 port
 # $3 userdb file
 # $4 passdb file (required if $3 is not empty)
-# stops at first password found
+# stops at first password found, 15 threads
 # https://www.infosecmatter.com/nmap-nse-library/?nse=ssh-brute
 # usage: sshbrute <ip> [port [userdb passdb]]
 sshbrute(){
@@ -600,7 +600,7 @@ sshbrute(){
 				echo -e "\e[32mPasswords file does not exist!\033[0m"
 				return
 			fi
-			$opt2=",passdb=$4,brute.firstonly=1"
+			$opt2=",passdb=$4,brute.firstonly=1,brute.start=15"
 		fi
 	fi
 	
