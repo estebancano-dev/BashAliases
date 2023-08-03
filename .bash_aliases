@@ -590,7 +590,7 @@ sshbrute(){
 	opt1=''
 	opt2=''
 	if [ -f "$3" ]; then
-		if [[ -f "$3" && ! -s "$3" ]]; then
+		if [[ ! -f "$3" ]]; then
 			echo -e "\e[32mUsers file does not exist!\033[0m"
 			return
 		fi
