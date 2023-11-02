@@ -799,8 +799,8 @@ install(){
 	# golang
 	cd /usr/local/
 	mkdir go
-	wget https://golang.org/dl/go1.16.4.linux-amd64.tar.gz
-	tar -C /usr/local -xzf go1.16.4.linux-amd64.tar.gz
+	wget https://golang.org/dl/go1.21.3.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.21.3.linux-amd64.tar.gz
 	export GOROOT=/usr/local/go
 	export GOPATH=$HOME/go
 	export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
@@ -877,19 +877,19 @@ install(){
 	# ciphey https://github.com/Ciphey/Ciphey (for CTF)
 	python -m pip install ciphey --upgrade
 	
-	# wordlistgen, httprobe, assetfinder, fuff, amass, subfinder
-	go get -u github.com/ameenmaali/wordlistgen
-	go get -u github.com/tomnomnom/httprobe
-	go get -u github.com/tomnomnom/assetfinder
-	go get -u github.com/tomnomnom/unfurl
-	go get -u github.com/tomnomnom/waybackurls
-	go get -u github.com/tomnomnom/fff
-	go get -u github.com/lc/gau
-	go get -u github.com/ffuf/ffuf	
+	# wordlistgen, httprobe, assetfinder, fuff, amass, subfinder, nuclei
 	export GO111MODULE=on
-	go get -v github.com/OWASP/Amass/v3/...
-	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
-	GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+	go install github.com/ameenmaali/wordlistgen
+	go install github.com/tomnomnom/httprobe
+	go install github.com/tomnomnom/assetfinder
+	go install github.com/tomnomnom/unfurl
+	go install github.com/tomnomnom/waybackurls
+	go install github.com/tomnomnom/fff
+	go install github.com/lc/gau
+	go install github.com/ffuf/ffuf	
+	go install github.com/owasp-amass/amass/v4/...@master
+	go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+	go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 	nuclei -update-templates
 	cd apks
 	git clone https://github.com/optiv/mobile-nuclei-templates.git
@@ -898,7 +898,6 @@ install(){
 	cd apkleaks/
 	pip3 install -r requirements.txt
 	cd ..
-	
 	
 	# jtr
 	git clone https://github.com/magnumripper/JohnTheRipper.git
@@ -914,7 +913,6 @@ install(){
 	
 	reinstall
 	sudo apt autoremove
-	sudo apt clean
 	sudo apt autoclean
 	send "Bashaliases installed!"
 }
@@ -952,17 +950,18 @@ update(){
 	cd ~/tools/JohnTheRipper && git pull
 	cd ~/tools/apks/apkleaks/ && git pull
 	cd ~/tools/ && python -m pip install ciphey --upgrade < /dev/null 2>&1
-	go get -u github.com/ameenmaali/wordlistgen
-	go get -u github.com/tomnomnom/httprobe
-	go get -u github.com/tomnomnom/assetfinder
-	go get -u github.com/tomnomnom/unfurl
-	go get -u github.com/tomnomnom/waybackurls
-	go get -u github.com/tomnomnom/fff
-	go get -u github.com/lc/gau
-	go get -u github.com/ffuf/ffuf	
-	GO111MODULE=on go get -v github.com/OWASP/Amass/v3/...
-	GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
-	GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+	export GO111MODULE=on
+	go install github.com/ameenmaali/wordlistgen
+	go install github.com/tomnomnom/httprobe
+	go install github.com/tomnomnom/assetfinder
+	go install github.com/tomnomnom/unfurl
+	go install github.com/tomnomnom/waybackurls
+	go install github.com/tomnomnom/fff
+	go install github.com/lc/gau
+	go install github.com/ffuf/ffuf	
+	go install github.com/owasp-amass/amass/v4/...@master
+	go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+	go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 	nuclei -update-templates
 	go clean -modcache
 	send "Bashaliases updated!"
