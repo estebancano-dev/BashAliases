@@ -798,7 +798,7 @@ install(){
 
 	# golang
 	cd /usr/local/
-	mkdir go
+	mkdir -p go
 	wget https://golang.org/dl/go1.21.3.linux-amd64.tar.gz
 	tar -C /usr/local -xzf go1.21.3.linux-amd64.tar.gz
 	export GOROOT=/usr/local/go
@@ -877,16 +877,22 @@ install(){
 	# ciphey https://github.com/Ciphey/Ciphey (for CTF)
 	python -m pip install ciphey --upgrade
 	
+	# golang
+	cd /usr/local/
+	mkdir -p go
+	wget https://golang.org/dl/go1.21.3.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.21.3.linux-amd64.tar.gz
+
 	# wordlistgen, httprobe, assetfinder, fuff, amass, subfinder, nuclei
 	export GO111MODULE=on
-	go install github.com/ameenmaali/wordlistgen
-	go install github.com/tomnomnom/httprobe
-	go install github.com/tomnomnom/assetfinder
-	go install github.com/tomnomnom/unfurl
-	go install github.com/tomnomnom/waybackurls
-	go install github.com/tomnomnom/fff
-	go install github.com/lc/gau
-	go install github.com/ffuf/ffuf	
+	go install github.com/ameenmaali/wordlistgen@latest
+	go install github.com/tomnomnom/httprobe@latest
+	go install github.com/tomnomnom/assetfinder@latest
+	go install github.com/tomnomnom/unfurl@latest
+	go install github.com/tomnomnom/waybackurls@latest
+	go install github.com/tomnomnom/fff@latest
+	go install github.com/lc/gau@latest
+	go install github.com/ffuf/ffuf@latest
 	go install github.com/owasp-amass/amass/v4/...@master
 	go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 	go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
@@ -951,14 +957,14 @@ update(){
 	cd ~/tools/apks/apkleaks/ && git pull
 	cd ~/tools/ && python -m pip install ciphey --upgrade < /dev/null 2>&1
 	export GO111MODULE=on
-	go install github.com/ameenmaali/wordlistgen
-	go install github.com/tomnomnom/httprobe
-	go install github.com/tomnomnom/assetfinder
-	go install github.com/tomnomnom/unfurl
-	go install github.com/tomnomnom/waybackurls
-	go install github.com/tomnomnom/fff
-	go install github.com/lc/gau
-	go install github.com/ffuf/ffuf	
+	go install github.com/ameenmaali/wordlistgen@latest
+	go install github.com/tomnomnom/httprobe@latest
+	go install github.com/tomnomnom/assetfinder@latest
+	go install github.com/tomnomnom/unfurl@latest
+	go install github.com/tomnomnom/waybackurls@latest
+	go install github.com/tomnomnom/fff@latest
+	go install github.com/lc/gau@latest
+	go install github.com/ffuf/ffuf@latest
 	go install github.com/owasp-amass/amass/v4/...@master
 	go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 	go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
