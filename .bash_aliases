@@ -201,7 +201,7 @@ subdomains(){
 
 	# for sqlmap
 	cat 6httprobe$1.txt | unfurl -u format "%s://%d%:%P" > resolved$1.txt
-	
+	exit
 	echo -e "\e[32m\tDoing Nmap to check if alive...\033[0m" | tee -a salida.txt
 	nmap -sP -T5 -iL 1scrap$1.txt > 3nmap$1.txt < /dev/null 2>&1
 	
