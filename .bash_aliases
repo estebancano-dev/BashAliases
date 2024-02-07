@@ -706,7 +706,7 @@ customdictfromurl(){
 	validate="^([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$"
 	if [[ $1 =~ $validate ]]; then 
 		echo -e "\e[32mCreating custom dictionary for $1...\033[0m"
-		echo $1 | gau -t 10 -b ttf,woff,svg,png,jpg,ico,woff2,jpeg | sed -E '/(\.ttf$|\.woff$|\.svg$|\.png$|\.jpeg$|\.jpg$|\.ico$|\.woff2$|\.jpeg$)/d' | grep "$1/" | timeout 30 fff | wordlistgen -fq >> ~/tools/__diccionarios/dictionary$1.txt
+		cewl $1 -w ~/tools/__diccionarios/dictionary$1.txt
 		sort -u -o ~/tools/__diccionarios/dictionary$1.txt ~/tools/__diccionarios/dictionary$1.txt
 	else
 		echo -e "\e[32mInvalid URL\033[0m"
