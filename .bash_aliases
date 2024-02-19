@@ -610,6 +610,37 @@ sshbrute(){
 	fi
 }
 
+# $1 IP
+# $2 port
+# $3 userdb file
+# $4 passdb file (required if $3 is not empty)
+# stops at first password found, 15 threads and no time limit
+# https://nmap.org/nsedoc/scripts/mysql-brute.html
+# usage: mysqlbrute <ip> [port [userdb passdb]]
+mysqlbrute(){
+	opt1=''
+	opt2=''
+	if [ -f "$3" ]; then
+		if [[ ! -f "$3" ]]; then
+			echo -e "\e[32mUsers file does not exist!\033[0m"
+			return
+		fi
+		opt1="--script-args userdb=$3"
+		if [[ ! -f "$4" ]]; then
+			echo -e "\e[32mPasswords file does not exist!\033[0m"
+			return
+		fi
+		opt2=",passdb=$4,brute.firstonly=1,brute.start=15,unpwdb.timelimit=0"
+	fi
+	
+	re='^[0-9]+$'
+	if [[ $2 =~ $re ]]; then
+		nmap -Pn -p$2 --script=mysql-brute $opt1$opt2 $1
+	else
+		nmap -Pn -p22 --script=mysql-brute $opt1$opt2 $1
+	fi
+}
+
 getparams(){
 	regex='(https?)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 	if [[ ! $1 =~ $regex ]]; then 
