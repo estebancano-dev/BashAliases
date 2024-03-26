@@ -543,7 +543,7 @@ dirsearch(){
 				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 $3
 				break
 				;;
-			"url <ext> <dict.txt> <otherparams>")
+			"url ext dict.txt otherparams")
 				if [[ -f ~/tools/__diccionarios/$3 && ! -s ~/tools/__diccionarios/$3 ]]; then
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
