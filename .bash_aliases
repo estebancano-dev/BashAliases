@@ -504,7 +504,9 @@ checkwebalive(){
 }
 
 dirsearch(){
-	PS3='Set HACKERONE_USERNAME env variable accordingly.\nPlease enter your choice: '
+	PS3="
+Set HACKERONE_USERNAME env variable accordingly.
+Please enter your choice: "
 	options=("no ext" "dirs" "js" "php" "txt" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "no ext file" "all ext" "Backup Files" "custom dict from url and dirsearch" "Quit")
 	select opt in "${options[@]}"
 	do
