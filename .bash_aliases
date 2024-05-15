@@ -504,63 +504,63 @@ checkwebalive(){
 }
 
 dirsearch(){
-	PS3='Please enter your choice: '
+	PS3='Set HACKERONE_USERNAME env variable accordingly.\nPlease enter your choice: '
 	options=("no ext" "dirs" "js" "php" "txt" "custom ext" "custom ext dicc 1-5" "custom ext custom dir" "no ext file" "all ext" "Backup Files" "custom dict from url and dirsearch" "Quit")
 	select opt in "${options[@]}"
 	do
 		case $opt in
 			"no ext")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/commonwords.txt | sort -u -o ~/tools/__diccionarios/commonwords.txt
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e , -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"dirs")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/dir.txt | sort -u -o ~/tools/__diccionarios/dir.txt
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e , -w ~/tools/__diccionarios/dir.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e , -w ~/tools/__diccionarios/dir.txt -u $1 $2
 				break
 				;;
 			"js")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/js.txt | sort -u -o ~/tools/__diccionarios/js.txt
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e , -w ~/tools/__diccionarios/js.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e , -w ~/tools/__diccionarios/js.txt -u $1 $2
 				break
 				;;
 			"php")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/php.txt | sort -u -o ~/tools/__diccionarios/php.txt
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e , -w ~/tools/__diccionarios/php.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e , -w ~/tools/__diccionarios/php.txt -u $1 $2
 				break
 				;;
 			"txt")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/txt.txt | sort -u -o ~/tools/__diccionarios/txt.txt
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e , -w ~/tools/__diccionarios/txt.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e , -w ~/tools/__diccionarios/txt.txt -u $1 $2
 				break
 				;;
 			"custom ext")
 				cat ~/tools/dirsearch/db/dicc.txt ~/tools/__diccionarios/commonwords.txt | sort -u -o ~/tools/__diccionarios/commonwords.txt
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 $3
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e $2 -w ~/tools/__diccionarios/commonwords.txt -u $1 $3
 				break
 				;;
 			"custom ext dicc 1-5")
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 $3
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e $2 -w ~/tools/__diccionarios/1-5.txt -u $1 $3
 				break
 				;;
-			"url ext dict.txt otherparams")
+			"url ext dict")
 				if [[ -f ~/tools/__diccionarios/$3 && ! -s ~/tools/__diccionarios/$3 ]]; then
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
 				fi
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 $4
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e $2 -w ~/tools/__diccionarios/$3 -u $1 $4
 				break
 				;;
 			"no ext file")
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -l $1 -e , | tee dirsearch$1.txt
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -l $1 -e , | tee dirsearch$1.txt
 				break
 				;;
 			"all ext")
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e ,json,js,html,htm,html~,htm~,bck,bck~,tmp,_js,js~,_tmp,tmp~,asp,aspx,inc.php,php,php~,txt,txt~,pl,jsp,jsp~,py,rb,cfg,cfg~,zip,zip~,pdf,gz,gz~,tar,tar~,tar.gz,tar.gz~,tgz,doc,doc~,docx,xls,xlsx,conf,conf~,do,action -w ~/tools/__diccionarios/commonwords.txt -u $1 $2
 				break
 				;;
 			"Backup Files")
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e , -w ~/tools/__diccionarios/backupfiles.txt -u $1 $3
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e , -w ~/tools/__diccionarios/backupfiles.txt -u $1 $3
 				break
 				;;
 			"custom dict from url and dirsearch")
@@ -569,7 +569,7 @@ dirsearch(){
 					echo -e "\e[32mDict file is empty!\033[0m"
 					return
 				fi
-				python ~/tools/dirsearch/dirsearch.py --crawl --random-agent --full-url -t 50 -f -e , -w ~/tools/__diccionarios/dictionary$1.txt -u $2
+				python ~/tools/dirsearch/dirsearch.py --crawl -H "Hackerone:$HACKERONE_USERNAME" --user-agent="h1.$HACKERONE_USERNAME" --full-url -t 50 -f -e , -w ~/tools/__diccionarios/dictionary$1.txt -u $2
 				break
 				;;
 			"Quit")
