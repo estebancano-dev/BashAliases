@@ -606,9 +606,9 @@ sshbrute(){
 	
 	re='^[0-9]+$'
 	if [[ $2 =~ $re ]]; then
-		nmap -Pn -p$2 --script=ssh-brute $opt1$opt2 $1
+		nmap -Pn -p $2 --script=ssh-brute $opt1$opt2 $1
 	else
-		nmap -Pn -p22 --script=ssh-brute $opt1$opt2 $1
+		nmap -Pn -p 22 --script=ssh-brute $opt1$opt2 $1
 	fi
 }
 
